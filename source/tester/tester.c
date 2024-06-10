@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 12:31:00
- * @ Modified time: 2024-06-10 20:31:02
+ * @ Modified time: 2024-06-10 21:32:13
  * @ Description:
  * 
  * The file contains all the testing utilities we will be using to benchmark our algorithms.
@@ -22,6 +22,7 @@
 #include "../utils/random.c"
 #include "./tester.h"
 
+#include <math.h>
 #include <stdlib.h>
 
 // We will sort a maximum of 1000000 records
@@ -211,18 +212,68 @@ void _Tester_recordsConfig(Tester *this) {
 }
 
 /**
- * Measures the entropy of a given shuffle of the data.
+ * Measures the Shannon entropy of a given shuffle of the data.
  * This function is automatically called by the tester after shuffling.
- * // ! to do measure this
+ * This is also where we use the histogram array. 
+ * Note that the entropy is 0 for a sorted array.
+ * 
+ * To compute the Shannon entropy of a shuffle, we rely on the differences of the indices of adjacent records 
+ * (these indices come from their order if they had been sorted). If the array is relatively sorted, then most 
+ * of these differences will have the same value and their distribution will be heavily skewed. Otherwise, a 
+ * more even distribution of differences would imply a more "shuffled" deck. We quantify this in the following
+ * manner:
+ * 
+ *    E = sum from k=0 to k=N-1 of (p_k * -ln(p_k))
+ * 
+ * I would've preferred to write this in LaTeX, but alas this is a C file. Basically, it sums the expected
+ * value of the probability of getting a certain difference k (p_k) multiplied by the  "surprisedness" (how 
+ * unlikely) of getting that difference.
  * 
  * @param   { Tester * }  this  The pointer to the tester to use.
 */
-double _Tester_computeEntropy(Tester *this) {
-  int i;
+void _Tester_computeEntropy(Tester *this) {
   
+  // Holding vars
+  int i;
+  int difference;
+  double pk;
 
+  t_RecordWrapper *rw_curr;
+  t_RecordWrapper *rw_next;
+
+  // Zero out the histogram first
+  for(i = 0; i < this->N; i++)
+    this->histogram[i] = 0;
+
+  // Zero out the entropy too
+  this->entropy = 0;
+
+  // Go through each of the wrapper records and 
+  for(i = 0; i < this->N; i++) {
+    
+    // Get references to the current record wrapper and the next one
+    rw_curr = ((t_RecordWrapper *) _Tester_wrappersGet(this, i));
+    rw_next = ((t_RecordWrapper *) _Tester_wrappersGet(this, i == this->N - 1 ? 0 : i + 1));
+
+    // Compute their difference
+    // Negative values are adjusted mod N
+    difference = rw_curr->index - rw_next->index;       
+    difference += difference < 0 ? this->N : 0;
+
+    // Add the frequency of each difference to the histogram
+    this->histogram[difference]++;
+  }
+
+  // Sum the differences times their inverse logs
   for(i = 0; i < this->N; i++) {
 
+    // Compute p_k
+    pk = this->histogram[i] / (this->N * 1.0);   
+
+    // Add to the entropy
+    // Don't bother computing log(pk) when pk = 0...
+    if(pk)
+      this->entropy += -pk * log(pk); 
   }
 }
 
@@ -232,7 +283,7 @@ double _Tester_computeEntropy(Tester *this) {
  * 
  * @param   { Tester * }  this  The pointer to the tester to use.
 */
-double _Tester_computeRSquared(Tester *this) {
+void _Tester_computeRSquared(Tester *this) {
 
 }
 
@@ -265,6 +316,13 @@ void Tester_recordsShuffle(Tester *this) {
   // Compute the parameters we need to measure shuffledness
   _Tester_computeEntropy(this);
   _Tester_computeRSquared(this);
+
+  // ! remove
+  // printf("wrappers:\n");
+  // for(i = 0; i < this->N; i++)
+  //   printf("%d %d %d \n", i, ((t_RecordWrapper *) _Tester_wrappersGet(this, i))->index, ((Record *)((t_RecordWrapper *) _Tester_wrappersGet(this, i))->record)->idNumber);
+
+  printf("Entropy: %lf", this->entropy);
 
   // Copy the arrangement of the shuffle into the 'shuffle' and 'tosort' arrays
   // Note that we have to do these separately AND in this order to prevent us from prematurely overwriting reference in the shuffle array
