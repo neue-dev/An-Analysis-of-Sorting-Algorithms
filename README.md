@@ -9,7 +9,7 @@ This repository currently only features a few select sorting algorithms. They ar
 4. Heap Sort
 5. Smooth Sort
 
-In hindsight Smooth Sort was the most difficult to implement, but it also brought the me most enjoyment. Because the implementations of the other algorithms are already widely-known, I put emphasis on explaining the mechanism of Smooth Sort below and leave out the others (except for Heap Sort... It'll become clear why I decided to explain this too).
+In hindsight Smooth Sort was the most difficult to implement, but it also brought me most enjoyment. Because the implementations of the other algorithms are already widely-known, I put emphasis on explaining the mechanism of Smooth Sort below and leave out the others (except for Heap Sort... It'll become clear why I decided to explain this too).
 
 Additionally, I'll outline the methods I used to benchmark the sorting algorithms. After much research, I decided to generate my own data sets (still using the `struct Record` provided by the starter code) to test the different implementations. I landed on a few ways to measure "entropy" (how shuffled an array is) to help me understand how the sorting algorithms would behave under different circumstances.
 
@@ -23,7 +23,7 @@ Likewise, to verify the amount by which the different algorithms would scale (in
 
 ### 4.1. Shuffling
 
-There is a well-known shuffling algorithm that generates a permutation of the elements of a sequence in a *reliably-random* way. By this, we mean to say that every possible permutation is equally likely, and the shuffling process does not favor any single one. This is called the ***Fisher-Yates algorithm***.
+There is a well-known shuffling algorithm that generates a permutation of the elements of a sequence in a *reliably-random* way. By this, we mean to say that every possible permutation is equally likely, and the shuffling process does not favor any single one. This is called the [Fisher-Yates algorithm](https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle).
 
 It's actually simpler than it sounds: you traverse an array of elements starting from the last element. At every element $k$, you randomly choose a new index $k'$ within the range $[0, k]$ and perform a swap with those two indices. You do this until you reach the start of the array. In pseudocode:
 
@@ -71,7 +71,9 @@ $$
 
 When $p_k=1$, then the event isn't suprising at all and the value above reduces to $0$. On the other hand, for smaller values of $p_k$, the value above increases and indicates that the event is "more surprising". Vaguely speaking maximizing entropy means "maximizing surprise", and this is achieved by dispersing our random variable across all possible values of the sample space. If some event were highly likely, then most of the time the outcome wouldn't surprise us at all. But if every outcome were equally likely, then each outcome would be very "surprising" because we would have no idea which one would likely happen next (as a fair warning, don't take the word "surprising" to mean anything rigorous here; it's only meant to be an analogy).
 
-So how can we use this to analyze the "shuffledness" of our arrays? In our case, we choose select the difference between adjacent records to be the random variable whose entropy we will measure. This apparently provides a great way of measuring the entropy of an array of elements.
+So how can we use this to analyze the "shuffledness" of our arrays? Entropy manifests in our sequences of records when it becomes hard to predict which record comes next. In a sorted list (or a list with some structure to it), this is easy because the records form a sort of pattern. Thus, when traversing the array, at any given point, it is reasonable to have an expectation for what the next record might be (it won't be anything surprising). However, when an array is shuffled really well, it becomes really hard to tell what record might come next, and so things are "uncertain" and "surprising". 
+
+[To approach this more rigorously](https://stats.stackexchange.com/questions/78591/correlation-between-two-decks-of-cards/79552#79552), we select the difference between adjacent records as our random variable. The entropy of this value provides a great metric for the shuffledness of the array.
 
 <!--! continue this part and explain better  -->
 

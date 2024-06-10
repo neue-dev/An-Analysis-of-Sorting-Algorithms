@@ -5,10 +5,10 @@ Here are all the resources I consulted for implementing the algorithms and doing
 [ Measuring the Entropy of a Deck of Cards ]              https://stats.stackexchange.com/questions/78591/correlation-between-two-decks-of-cards/79552#79552
 [ Merge Sort According to Wikipedia ]                     https://en.wikipedia.org/wiki/Merge_sort
 [ Merge Sort with 0 Aux Space ]                           https://www.geeksforgeeks.org/in-place-merge-sort/
-[ Proper Random Numbers in C]                             https://stackoverflow.com/questions/822323/how-to-generate-a-random-int-in-c
+[ Proper Random Numbers in C ]                            https://stackoverflow.com/questions/822323/how-to-generate-a-random-int-in-c
 [ Smooth Sort Demystified ]                               https://www.keithschwarz.com/smoothsort/#:~:text=Moreover%2C%20smoothsort%20is%20an%20in,space%20in%20the%20worst%20case.
 [ The Original Smooth Sort Paper by Dijkstra Himself! ]   https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=bec9f897d701a8326ccdfc97064f4ce2c07a732f
-
+[ Quote of Claude Shannon on Entropy ]                    https://mathoverflow.net/questions/403036/john-von-neumanns-remark-on-entropy
 
 Note that I was initially considering to implement merge sort with no aux space (and thus the reference above),
 but I found a way to simplify the implementation without having to do this. Removing the aux space needed by the
