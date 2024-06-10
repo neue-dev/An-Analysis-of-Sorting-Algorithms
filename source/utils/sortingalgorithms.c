@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-05-24 11:21:27
- * @ Modified time: 2024-06-11 00:25:24
+ * @ Modified time: 2024-06-11 00:53:23
  * @ Description:
  * 
  * The file contains a wrapper for each of the implementations of the sorting algorithms.
@@ -23,7 +23,6 @@
 #include "../sorters/merge_sort.c"
 #include "../sorters/heap_sort.c"
 #include "../sorters/smooth_sort.c"
-#include "../sorters/momo_sort.c"
 
 /**
  * Insertion sort.
@@ -88,19 +87,6 @@ void Record_smoothSort(Record *records, int n) {
 
   SmoothSort_init(&ss, &Record_comparator, &Record_swapper, &Record_copier, &Record_sizer);
   SmoothSort_main(ss, records, n);
-}
-
-/**
- * Momo sort.
- * 
- * @param   { Record * }  records   The records to sort.
- * @param   { int }       n         The number of records to sort.
-*/
-void Record_momoSort(Record *records, int n) {
-  MomoSort ms;
-
-  MomoSort_init(&ms, &Record_comparator, &Record_swapper, &Record_copier, &Record_sizer);
-  MomoSort_main(ms, records, n);
 }
 
 #endif

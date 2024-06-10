@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-05-24 11:21:27
- * @ Modified time: 2024-06-11 00:27:16
+ * @ Modified time: 2024-06-11 01:23:57
  * @ Description:
  * 
  * The main file.
@@ -12,7 +12,7 @@
 #include "./utils/random.c"
 
 // Import the tester
-#include "./tester/tester.c"
+#include "./engine.c"
 
 // Some useful libs
 #include <stdio.h>
@@ -23,24 +23,12 @@ int main() {
   // Init the random number generator
   Random_init();
 
-  // Create a new tester
-  Tester tester;
+  // Create the tester engine and init it
+  Engine engine;
+  Engine_init(&engine);
 
-  // Initialize the tester
-  Tester_init(&tester, &Record_comparator, &Record_swapper, &Record_copier, &Record_sizer);
-
-  // We will be using N = 100
-  Tester_setN(&tester, 1000);
-  Tester_setP(&tester, 0.01);
-
-  // Fill the tester with data then configure it
-  Tester_recordsFill(&tester, &Record_fill);
-  Tester_recordsShuffle(&tester);
-  
-  printf("Sorted? %s\n", Tester_checkSort(&tester) ? "yes" : "no");
-
-  // Perform some cleanup after
-  Tester_exit(&tester);
+  // ! remove
+  Engine_runOnce(&engine, 10000, 0.1);
 
   return 0;
 }
