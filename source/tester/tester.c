@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 12:31:00
- * @ Modified time: 2024-06-10 22:35:36
+ * @ Modified time: 2024-06-11 00:18:49
  * @ Description:
  * 
  * The file contains all the testing utilities we will be using to benchmark our algorithms.
@@ -412,13 +412,15 @@ void Tester_recordsFill(Tester *this, t_Filler filler) {
 
 /**
  * Reads the records from a provided file.
- * It also computes their entropies and what not.
+ * This method does not compute their entropies though.
+ * If you want to compute for their entropies
  * 
- * @param   { Tester * }  this  The tester data object.
- * @param   { char[] }    file  The path to the file to read.
+ * @param   { Tester * }  this    The tester data object.
+ * @param   { t_Reader }  reader  Reads the provided file and stores the data in the tester.
+ * @param   { char[] }    file    The path to the file to read.
 */
-void Tester_recordsRead(Tester *this, char file[]) {
-  // ! to implement
+void Tester_recordsRead(Tester *this, t_Reader reader, char file[]) {
+  reader(this->shuffle, this->N, MAX_RECORDS * this->sizer(), file);
 }
 
 /**
@@ -460,7 +462,6 @@ void Tester_setP(Tester *this, double P) {
  * Checks whether the current list is actuall sorted.
  * We do this by checking whether the comparator returns the same value or 0 across all adjacent records.
  * In other words, the array is either strictly decreasing or strictly increasing.
- * // ! please test if this is actually workin
  * 
  * @param   { Tester * }  this  A pointer to the tester data object to use.
  * @return  { int }             A boolean that indicates whether or not the list is sorted.

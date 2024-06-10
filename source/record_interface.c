@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 18:07:09
- * @ Modified time: 2024-06-10 20:24:39
+ * @ Modified time: 2024-06-11 00:19:05
  * @ Description:
  * 
  * Gives us utility functions for interacting with records.
@@ -10,6 +10,7 @@
 #ifndef RECORD_INTERFACE_C
 #define RECORD_INTERFACE_C
 
+#include "./filereader.c"
 #include "./record.c"
 #include "./utils/random.c"
 #include <stdlib.h>
@@ -107,6 +108,40 @@ void Record_fill(void *dest, int n, int max) {
     size += RECORD_SIZE;
     i++;
   }
+}
+
+/**
+ * Reads the records from a file then transfers them unto the provided array.
+ * 
+ * @param   { void * }  dest  The destination of the reading process.
+ * @param   { int }     n     The number of records to read.
+ * @param   { int }     max   The maximum number of bytes to encode.
+ * @param   { char[] }  file  The path to the file containing the records.     
+*/
+void Record_read(void *dest, int n, int max, char file[]) {
+  int size = 0;
+  int i = 0;
+
+  // Temp memory for the records to create
+  Record *records = calloc(n, RECORD_SIZE);
+
+  // Read the file
+  readFile(records, file);
+
+  // Populate the array
+  while(size + RECORD_SIZE < max && i < n) {
+    Record r = records[i];
+
+    // Copy the created record to 
+    memcpy(dest + size, &r, RECORD_SIZE);
+
+    // Increment counter and size
+    size += RECORD_SIZE;
+    i++;
+  }
+
+  // Free the temp memory
+  free(records);
 }
 
 #endif

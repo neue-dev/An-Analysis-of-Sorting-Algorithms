@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 12:35:40
- * @ Modified time: 2024-06-10 19:13:28
+ * @ Modified time: 2024-06-11 00:18:35
  * @ Description:
  * 
  * Defines some types our tester need.
@@ -30,8 +30,12 @@ typedef void (* t_Copier)();
 typedef int (* t_Sizer)();
 
 // Populates a provided array with data points or records
-// Signature should be: (t_Record records, int n, int max) -> void
+// Signature should be: (t_Record dest, int n, int max) -> void
 typedef void (* t_Filler)();
+
+// Populates a provided array with records read from a file
+// Signature should be: (t_Record dest, int n, int max, char file[]) -> void
+typedef void (* t_Reader)();
 
 // A generic record (doesn't have to be the one defined by record.c)
 typedef void * t_Record;
