@@ -1,4 +1,5 @@
 # 1. An Analysis of Sorting Algorithms
+#### *by Mo David*
 
 This repository currently only features a few select sorting algorithms. They are:
 
@@ -18,7 +19,7 @@ Likewise, to verify the amount by which the different algorithms would scale (in
 
 # 3. Smooth Sort
 
-# 4. Shuffling, Entropy, and Sorting
+# 4. Shuffling, Entropy & Correlation, and Sorting
 
 ### 4.1. Shuffling
 
@@ -45,13 +46,45 @@ for k = array.length to k = 0:
       swap array[k] with array[k']
 ```
 
-In the code, things are notated a bit differently and we have $<$ instead of $<=$, but that's okay because the computations in the actual implementation account for that subtlety.
+In the implementation, things are notated a bit differently and we have $<$ instead of $<=$, but that's okay because the computations in the actual code account for that subtlety.
 
-### 4.2. Entropy
+### 4.2. Entropy & Correlation
+
+When performing a shuffle on data, it's helpful to know just how much of a shuffle we were able to do. To help us measure this idea of "shuffling", we come up with two metrics, the first of which is entropy.
+
+#### Entropy
+
+Entropy has analogues in physics and other aspects of life, and rightfully so. The concept of "disorder" is not too far from the concept of "messing up" a deck of cards, although context necessitates that we refer to the second case as "information entropy". Interestingly enough, both information theory and statistical mechanics have characterized entropy in much the same way. We focus on Claude Shannon's formulation in information theory (who impressively came up with this form [independent of any knowledge of statistical mechanics](https://mathoverflow.net/questions/403036/john-von-neumanns-remark-on-entropy)):
+
+$$
+\begin{align}
+E = \sum_{k \in S} p_k \cdot -ln(p_k)
+\end{align}
+$$
+
+gives the entropy of a discrete random variable $X$, where for some $k$ in the sample space $S$, $p_k$ is $P(X=k)$. The important thing to see here is that we're multiplying the probabilities of each of the outcomes in the sample space by how "surprising" they are. That's all $-ln(p_k)$ is telling us, because:
+
+$$
+\begin{align}
+& -ln(p_k) \\
+& =ln(\frac{1}{p_k})
+\end{align}
+$$
+
+When $p_k=1$, then the event isn't suprising at all and the value above reduces to $0$. On the other hand, for smaller values of $p_k$, the value above increases and indicates that the event is "more surprising". Vaguely speaking maximizing entropy means "maximizing surprise", and this is achieved by dispersing our random variable across all possible values of the sample space. If some event were highly likely, then most of the time the outcome wouldn't surprise us at all. But if every outcome were equally likely, then each outcome would be very "surprising" because we would have no idea which one would likely happen next (as a fair warning, don't take the word "surprising" to mean anything rigorous here; it's only meant to be an analogy).
+
+So how can we use this to analyze the "shuffledness" of our arrays? In our case, we choose select the difference between adjacent records to be the random variable whose entropy we will measure. This apparently provides a great way of measuring the entropy of an array of elements.
+
+<!--! continue this part and explain better  -->
 
 ### 4.3. Sorting
 
 
 # 5. Author
 
-Mo David
+```
+                                                    |\      _,,,---,,_
+                                             ZZZzz /,`.-'`'    -.  ;-;;,_
+                                                  |,4-  ) )-,_. ,\ (  `'-'
+                                                 '---''(_/--'  `-'\_)
+```
