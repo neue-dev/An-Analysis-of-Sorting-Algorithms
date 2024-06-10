@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 12:31:00
- * @ Modified time: 2024-06-10 21:32:13
+ * @ Modified time: 2024-06-10 21:57:22
  * @ Description:
  * 
  * The file contains all the testing utilities we will be using to benchmark our algorithms.
@@ -99,6 +99,7 @@ typedef struct Tester {
   t_Record tosort;                  // The records to sort
   t_Record shuffle;                 // A copy of the shuffled records so we can use the same shuffle multiple times (testing consistency)
   int N;                            // The number of records to consider; we won't always be sorting MAX_RECORDS
+  double P;                         // The probability of a swap occurring during shuffling
 
   double entropy;                   // The currently computed Shannon entropy
   double rsquared;                  // The currently computed coefficient of determination.
@@ -145,6 +146,10 @@ void Tester_init(Tester *this, t_Comparator comparator, t_Swapper swapper, t_Cop
   // Initially sets the entropy and r squared to 0
   this->entropy = 0;
   this->rsquared = 0;
+
+  // Set defaults to N and P
+  this->N = 0;
+  this->P = 1.0;
 
   // Configure the fast stable sorting algo to use
   MergeSort_init(&this->sorter, this->comparator, this->swapper, this->copier, this->sizer);
@@ -309,7 +314,8 @@ void Tester_recordsShuffle(Tester *this) {
 
     // Just do the swap if it doesn't swap with itself
     // We're swapping the wrappers here
-    if(swap != i)
+    // ! replace probabilty with number
+    if(swap != i && Random_probability(this->P))
       _Wrapper_swap(this->shuffleWrappers, i, swap); 
   }
 
@@ -386,6 +392,25 @@ void Tester_setN(Tester *this, int N) {
   // We cant exceed the limit though
   if(N > MAX_RECORDS)
     this->N = MAX_RECORDS;
+}
+
+/**
+ * Sets the current value of P for the tester.
+ * 
+ * @param   { Tester * }  this  The tester data object.
+ * @param   { double }    P     The probability of swapping during shuffling.
+*/
+void Tester_setP(Tester *this, double P) {
+
+  // Set P to the value
+  this->P = P;
+
+  // Limits for the value of P
+  if(this->P > 1)
+    this->P = 1.0;
+
+  if(this->P < 0)
+    this->P = 0.0;
 }
 
 /**
