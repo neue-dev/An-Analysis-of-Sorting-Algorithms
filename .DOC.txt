@@ -1,0 +1,13 @@
+Here are all the resources I consulted for implementing the algorithms and doing the testing :))
+
+[ Heap Sort According to Wikipedia ]                      https://en.wikipedia.org/wiki/Heapsort
+[ Measuring the Entropy of a Deck of Cards ]              https://stats.stackexchange.com/questions/78591/correlation-between-two-decks-of-cards/79552#79552
+[ Merge Sort with 0 Aux Space ]                           https://www.geeksforgeeks.org/in-place-merge-sort/
+[ Smooth Sort Demystified ]                               https://www.keithschwarz.com/smoothsort/#:~:text=Moreover%2C%20smoothsort%20is%20an%20in,space%20in%20the%20worst%20case.
+[ The Original Smooth Sort Paper by Dijkstra Himself! ]   https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=bec9f897d701a8326ccdfc97064f4ce2c07a732f
+
+
+Note that I was initially considering to implement merge sort with no aux space (and thus the reference above),
+but I found a way to simplify the implementation without having to do this. Removing the aux space needed by the
+algorithm would increase its time complexity to at least O(n(logn)^2), which I didn't want.
+
