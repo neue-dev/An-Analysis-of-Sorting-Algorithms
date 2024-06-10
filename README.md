@@ -41,9 +41,11 @@ for k = array.length to k = 0:
     k' = random number from 0 to k
     t = random float from 0 to 1
 
-    if t <= p:
+    if t <= p and t > 0:
       swap array[k] with array[k']
 ```
+
+In the code, things are notated a bit differently and we have $<$ instead of $<=$, but that's okay because the computations in the actual implementation account for that subtlety.
 
 ### 4.2. Entropy
 
