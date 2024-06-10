@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 19:44:13
- * @ Modified time: 2024-06-10 21:54:37
+ * @ Modified time: 2024-06-11 02:26:40
  * @ Description:
  * 
  * A small utility file for generating random numbers.
@@ -49,7 +49,7 @@ int Random_probability(double p) {
     p = 0.0;
 
   // Probabilistic 1 or 0
-  if(Random_generate(max) < max * p)
+  if(Random_generate(max) <= max * p)
     return 1;
   return 0;
 }
