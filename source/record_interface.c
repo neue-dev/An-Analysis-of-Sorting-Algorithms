@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 18:07:09
- * @ Modified time: 2024-06-10 19:28:20
+ * @ Modified time: 2024-06-10 19:52:12
  * @ Description:
  * 
  * Gives us utility functions for interacting with records.
@@ -11,10 +11,11 @@
 #define RECORD_INTERFACE_C
 
 #include "./record.c"
+#include "./random.c"
 #include <stdlib.h>
-#include <time.h>
 
 #define RECORD_SIZE sizeof(Record)
+#define DEFAULT_NAME "moo"
 
 /**
  * This function compares two records.
@@ -81,7 +82,7 @@ void Record_copier(Record *dest, Record *src, int i, int j) {
 
 /**
  * Fills a provided array with random records.
- * Note that record ids are generated using the rand() function of the C standard library.
+ * Note that record ids are generated randomly.
  * 
  * @param   { void * }  dest  The destination to receive the records.
  * @param   { int }     n     The number of records to generate.
@@ -91,16 +92,13 @@ void Record_fill(void *dest, int n, int max) {
   int size = 0;
   int i = 0;
 
-  // Set the seed
-  srand(time(NULL));
-
   // Create a bunch of records and populate the array
   while(size + RECORD_SIZE < max && i < n) {
     Record r;
 
     // Create the record info
-    r.idNumber = rand() % n;
-    strcpy(r.name, "mo");
+    r.idNumber = Random_generate(n);
+    strcpy(r.name, DEFAULT_NAME);
 
     // Copy the created record to 
     memcpy(dest + size, &r, RECORD_SIZE);

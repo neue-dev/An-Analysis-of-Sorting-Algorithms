@@ -2,14 +2,16 @@
 #include "sortingalgorithms.c"
 #include "filereader.c"
 #include "timer.c"
+#include "random.c"
 #include "./tester/tester.c"
 
 #include <stdio.h>
-#include <time.h>
 #include <string.h>
 #include <stdlib.h>
 
 int main() {
+
+  Random_init();
 
   // Create a new tester
   Tester tester;
@@ -22,7 +24,7 @@ int main() {
 
   // Fill the tester with data then configure it
   Tester_recordsFill(&tester, &Record_fill);
-  Tester_recordsConfig(&tester);
+  Tester_recordsShuffle(&tester);
 
   // Perform some cleanup after
   Tester_exit(&tester);

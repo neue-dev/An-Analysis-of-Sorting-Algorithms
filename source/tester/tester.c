@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 12:31:00
- * @ Modified time: 2024-06-10 19:21:44
+ * @ Modified time: 2024-06-10 19:49:22
  * @ Description:
  * 
  * The file contains all the testing utilities we will be using to benchmark our algorithms.
@@ -19,6 +19,7 @@
 // We use merge sort to fix our records by default so we can compute their entropy
 // Merge sort is chosen because it is the fastest stable sort we have in this project
 #include "../sorters/merge_sort.c"
+#include "../random.c"
 #include "./tester.h"
 
 #include <stdlib.h>
@@ -154,35 +155,11 @@ t_Record _Tester_recordsGet(Tester *this, int i) {
 }
 
 /**
- * Shuffles the array using the Fisher-Yates shuffle.
- * It's simpler than it sounds, trust me.
- * Note that this shuffles the 'shuffle' array, not the 'records' array.
+ * Configures the data set so we can compute the entropy and r squared values after.
  * 
  * @param   { Tester * }  this  The tester data object.
 */
-void _Tester_recordsShuffle(Tester *this) {
-  int i;
-  int swap;
-
-  // Start from the back going forwards
-  for(i = this->N; --i >= 0;) {
-
-    // We do (i + 1) because the element must have a chance of swapping with itself
-    swap = rand() % (i + 1);
-
-    // Just do the swap if it doesn't swap with itself
-    if(swap != i)
-      this->swapper(this->shuffle, i, swap);      
-  }
-}
-
-/**
- * Fills the records array with an sorted line of random records.
- * Each record has  a random id within 0-MAX_RECORDS. These ids may not be unique.
- * 
- * @param   { Tester * }  this  The tester data object.
-*/
-void Tester_recordsConfig(Tester *this) {
+void _Tester_recordsConfig(Tester *this) {
   int i;
 
   // Sort the array so we can compute its entropy later
@@ -203,13 +180,39 @@ void Tester_recordsConfig(Tester *this) {
   }
 
   for(int i = 0; i < this->N; i++)
-    printf("%d %d \n", i, ((Record *)((t_RecordWrapper *)_Tester_wrappersGet(this, i))->record)->idNumber);
+    printf("%d %d %d \n", i, ((t_RecordWrapper *)_Tester_wrappersGet(this, i))->index, ((Record *)((t_RecordWrapper *)_Tester_wrappersGet(this, i))->record)->idNumber);
 
   // ! assign an id to each record
   // ! shuffle the wrapped records 
   // ! compute the entropy and determination
   // ! copy the shuffled array into "this->shuffle"
   // ! copy the shuffled array into "this->records"
+}
+
+/**
+ * Shuffles the array using the Fisher-Yates shuffle.
+ * It's simpler than it sounds, trust me.
+ * Note that this shuffles the 'shuffle' array, not the 'records' array.
+ * 
+ * @param   { Tester * }  this  The tester data object.
+*/
+void Tester_recordsShuffle(Tester *this) {
+  int i;
+  int swap;
+
+  // Configure the 
+  _Tester_recordsConfig(this);
+
+  // Start from the back going forwards
+  for(i = this->N; --i >= 0;) {
+
+    // We do (i + 1) because the element must have a chance of swapping with itself
+    swap = Random_generate(i);
+
+    // Just do the swap if it doesn't swap with itself
+    if(swap != i)
+      this->swapper(this->shuffle, i, swap);      
+  }
 }
 
 /**
