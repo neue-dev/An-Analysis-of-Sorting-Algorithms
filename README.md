@@ -19,7 +19,7 @@ Likewise, to verify the amount by which the different algorithms would scale (in
 
 # 3. Smooth Sort
 
-# 4. Shuffling, Entropy & Correlation, and Sorting
+# 4. Shuffling, Entropy, and Correlation
 
 ### 4.1. Shuffling
 
@@ -28,7 +28,7 @@ There is a well-known shuffling algorithm that generates a permutation of the el
 It's actually simpler than it sounds: you traverse an array of elements starting from the last element. At every element $k$, you randomly choose a new index $k'$ within the range $[0, k]$ and perform a swap with those two indices. You do this until you reach the start of the array. In pseudocode:
 
 ```Python
-for k = array.length to k = 0:
+for k = (array.length - 1) to k = 0:
     k' = random number from 0 to k
     swap array[k] with array[k']
 ```
@@ -38,7 +38,7 @@ Despite it's simplicity, it reliably selects a permutation of the original array
 To perform shuffling for this project, a slight variation of the original algorithm is used. Whereas the original Fisher-Yates always executes a shuffle for each element, the variation used here only performs swaps probabilitically. A swap happens $p$ amount of the time ($p=1$ means we always swap, $p=0$ means we never swap). In pseudocode:
 
 ```Python
-for k = array.length to k = 0:
+for k = (array.length - 1) to k = 0:
     k' = random number from 0 to k
     t = random float from 0 to 1
 
@@ -48,11 +48,9 @@ for k = array.length to k = 0:
 
 In the implementation, things are notated a bit differently and we have $<$ instead of $<=$, but that's okay because the computations in the actual code account for that subtlety.
 
-### 4.2. Entropy & Correlation
-
 When performing a shuffle on data, it's helpful to know just how much of a shuffle we were able to do. To help us measure this idea of "shuffling", we come up with two metrics, the first of which is entropy.
 
-#### Entropy
+### 4.2. Entropy
 
 Entropy has analogues in physics and other aspects of life, and rightfully so. The concept of "disorder" is not too far from the concept of "messing up" a deck of cards, although context necessitates that we refer to the second case as "information entropy". Interestingly enough, both information theory and statistical mechanics have characterized entropy in much the same way. We focus on Claude Shannon's formulation in information theory (who impressively came up with this form [independent of any knowledge of statistical mechanics](https://mathoverflow.net/questions/403036/john-von-neumanns-remark-on-entropy)):
 
@@ -77,10 +75,15 @@ So how can we use this to analyze the "shuffledness" of our arrays? In our case,
 
 <!--! continue this part and explain better  -->
 
-### 4.3. Sorting
+### 4.3. Correlation
 
+# 5. Comparison and Individual Analyses
 
-# 5. Author
+### 5.1 Comparisons
+
+### 5.2 Analyses of Each Algorithm
+
+# 6. Author
 
 ```
                                                     |\      _,,,---,,_
