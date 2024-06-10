@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 02:49:16
- * @ Modified time: 2024-06-10 12:54:15
+ * @ Modified time: 2024-06-10 18:40:32
  * @ Description:
  * 
  * My own sorting algorithm, inspired by smooth sort.
@@ -18,7 +18,8 @@ typedef struct MomoSort {
   
   t_Comparator comparator;
   t_Swapper swapper;
-  int recordSize;
+  t_Copier copier;
+  t_Sizer sizer;
 
   // 'Private' variables
   int _powers2Less1List[31];
@@ -32,14 +33,16 @@ typedef struct MomoSort {
  * @param   { MomoSort * }    this        The momo sort data object.      
  * @param   { t_Comparator }  comparator  The comparator to use for sorting.
  * @param   { t_Swapper }     swapper     The swapper to use for sorting.
- * @param   { int }           recordSize  The size of each record.
+ * @param   { t_Copier }      copier      The copier to use in case needed.
+ * @param   { t_Sizer }       sizer       A function that returns the size of a record.
 */
-void MomoSort_init(MomoSort *this, t_Comparator comparator, t_Swapper swapper, int recordSize) {
+void MomoSort_init(MomoSort *this, t_Comparator comparator, t_Swapper swapper, t_Copier copier, t_Sizer sizer) {
   int i;
 
   this->comparator = comparator;
   this->swapper = swapper;
-  this->recordSize = recordSize;
+  this->copier = copier;
+  this->sizer = sizer;
 
   // Set the number of powers of 2
   this->_powers2Less1Count = 31;

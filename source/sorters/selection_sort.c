@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-09 01:32:05
- * @ Modified time: 2024-06-10 02:46:20
+ * @ Modified time: 2024-06-10 18:39:12
  * @ Description:
  * 
  * Selection sort implementation.
@@ -21,7 +21,8 @@ typedef struct SelectionSort {
   
   t_Comparator comparator;
   t_Swapper swapper;
-  int recordSize;
+  t_Copier copier;
+  t_Sizer sizer;
   
 } SelectionSort;
 
@@ -31,12 +32,14 @@ typedef struct SelectionSort {
  * @param   { SelectionSort * }     this        The selection sort data object to init.
  * @param   { t_Comparator }        comparator  The comparator to use for sorting.
  * @param   { t_Swapper }           swapper     The swapper to use for sorting.
- * @param   { int }                 recordSize  The size (in bytes) of a single record.
+ * @param   { t_Copier }            copier      The copier to use in case needed.
+ * @param   { t_Sizer }             sizer       A function that returns the size of a record.
 */
-void SelectionSort_init(SelectionSort *this, t_Comparator comparator, t_Swapper swapper, int recordSize) {
+void SelectionSort_init(SelectionSort *this, t_Comparator comparator, t_Swapper swapper, t_Copier copier, t_Sizer sizer) {
   this->comparator = comparator;
   this->swapper = swapper;
-  this->recordSize = recordSize;
+  this->copier = copier;
+  this->sizer = sizer;
 }
 
 /**

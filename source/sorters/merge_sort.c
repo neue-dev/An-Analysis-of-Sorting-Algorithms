@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-09 01:31:50
- * @ Modified time: 2024-06-10 14:08:23
+ * @ Modified time: 2024-06-10 18:45:14
  * @ Description:
  * 
  * An implementation of merge sort.
@@ -21,7 +21,8 @@ typedef struct MergeSort {
   
   t_Comparator comparator;
   t_Swapper swapper;
-  int recordSize;
+  t_Copier copier;
+  t_Sizer sizer;
 
 } MergeSort;
 
@@ -31,31 +32,34 @@ typedef struct MergeSort {
  * @param   { MergeSort * }   this        The merge sort object to init.
  * @param   { t_Comparator }  comparator  The comparator to use for sorting.
  * @param   { t_Swapper }     swapper     The swapper to use for sorting.
- * @param   { int }           recordSize  The size (in bytes) of a single record.
+ * @param   { t_Copier }      copier      The copier to use in case needed.
+ * @param   { t_Sizer }       sizer       A function that returns the size of a record.
 */
-void MergeSort_init(MergeSort *this, t_Comparator comparator, t_Swapper swapper, int recordSize) {
+void MergeSort_init(MergeSort *this, t_Comparator comparator, t_Swapper swapper, t_Copier copier, t_Sizer sizer) {
   this->comparator = comparator;
   this->swapper = swapper;
-  this->recordSize = recordSize;
+  this->copier = copier;
+  this->sizer = sizer;
 } 
 
-/**
- * Places the jth entry of src into the ith slot of dest.
- * 
- * @param   { MergeSort }   this      The merge sort config object.
- * @param   { t_Record }    records   The records array.
- * @param   { t_Record }    src       The source array.
- * @param   { int }         i         The ith slot of records.
- * @param   { int }         j         The jth entry in src.
-*/
-void _MergeSort_copy(MergeSort this, t_Record dest, t_Record src, int i, int j) {
+// ! remove
+// /**
+//  * Places the jth entry of src into the ith slot of dest.
+//  * 
+//  * @param   { MergeSort }   this      The merge sort config object.
+//  * @param   { t_Record }    records   The records array.
+//  * @param   { t_Record }    src       The source array.
+//  * @param   { int }         i         The ith slot of records.
+//  * @param   { int }         j         The jth entry in src.
+// */
+// void _MergeSort_copy(MergeSort this, t_Record dest, t_Record src, int i, int j) {
 
-  // Copy the record
-  memcpy(
-    dest + i * this.recordSize, 
-    src + j * this.recordSize,
-    this.recordSize);
-}
+//   // Copy the record
+//   // memcpy(
+//   //   dest + i * this.recordSize, 
+//   //   src + j * this.recordSize,
+//   //   this.recordSize);
+// }
 
 /**
  * Copies the source array unto the records array.
@@ -71,7 +75,7 @@ void _MergeSort_copySorted(MergeSort this, t_Record records, t_Record src, int n
   
   // Copy the individual records
   for(i = 0; i < n; i++) 
-    _MergeSort_copy(this, records, src, i, i);
+    this.copier(records, src, i, i);
 }
 
 /**
@@ -96,13 +100,13 @@ void _MergeSort_merge(MergeSort this, t_Record records, t_Record target, int lef
 
     // The left boundary has hit the middle
     if(left >= middle) {
-      _MergeSort_copy(this, target, records, i, right++);
+      this.copier(target, records, i, right++);
       continue;
     }
 
     // The right boundary has hit the end
     if(right >= end) { 
-      _MergeSort_copy(this, target, records, i, left++);
+      this.copier(target, records, i, left++);
       continue;  
     }
 
@@ -110,12 +114,12 @@ void _MergeSort_merge(MergeSort this, t_Record records, t_Record target, int lef
     switch(this.comparator(records, left, right)) {
       
       case -1:  // The left comes first
-        _MergeSort_copy(this, target, records, i, left++);
+        this.copier(target, records, i, left++);
         break;
       
       case 0:   // Default behaviour when theyre the same
       case 1:   // The right comes first
-        _MergeSort_copy(this, target, records, i, right++);
+        this.copier(target, records, i, right++);
         break; 
     }
   }
@@ -137,7 +141,7 @@ void MergeSort_main(MergeSort this, t_Record records, int n) {
   int l, r, e;
 
   // Allocate memory for the sorted array
-  t_Record sorted = calloc(n, this.recordSize);
+  t_Record sorted = calloc(n, this.sizer());
 
   // For each length of subarray (starting from 1 element)
   for(i = 1; i < n; i *= 2) {

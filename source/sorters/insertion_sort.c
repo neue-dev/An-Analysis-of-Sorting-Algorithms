@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-09 01:31:42
- * @ Modified time: 2024-06-10 02:45:27
+ * @ Modified time: 2024-06-10 18:39:38
  * @ Description:
  * 
  * An implementation of insertion sort.
@@ -21,8 +21,9 @@ typedef struct InsertionSort {
 
   t_Comparator comparator;
   t_Swapper swapper;
-  int recordSize;
-  
+  t_Copier copier;
+  t_Sizer sizer;
+
 } InsertionSort;
 
 /**
@@ -31,12 +32,14 @@ typedef struct InsertionSort {
  * @param   { InsertionSort * }     this        The insertion sort data object to init.
  * @param   { t_Comparator }        comparator  The comparator to use for sorting.
  * @param   { t_Swapper }           swapper     The swapper to use for sorting.
- * @param   { int }                 recordSize  The size (in bytes) of a single record.
+ * @param   { t_Copier }            copier      The copier to use in case needed.
+ * @param   { t_Sizer }             sizer       A function that returns the size of a record.
 */
-void InsertionSort_init(InsertionSort *this, t_Comparator comparator, t_Swapper swapper, int recordSize) {
+void InsertionSort_init(InsertionSort *this, t_Comparator comparator, t_Swapper swapper, t_Copier copier, t_Sizer sizer) {
   this->comparator = comparator;
   this->swapper = swapper;
-  this->recordSize = recordSize;  
+  this->copier = copier;  
+  this->sizer = sizer;
 }
 
 /**

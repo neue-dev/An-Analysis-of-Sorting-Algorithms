@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-09 01:32:10
- * @ Modified time: 2024-06-10 02:46:53
+ * @ Modified time: 2024-06-10 18:40:05
  * @ Description:
  * 
  * An implementation of smoort sort.
@@ -21,7 +21,8 @@ typedef struct SmoothSort {
   
   t_Comparator comparator;
   t_Swapper swapper;
-  int recordSize;
+  t_Copier copier;
+  t_Sizer sizer;
   
   // 'Private' variables
   int _leonardoList[43];
@@ -41,15 +42,17 @@ typedef struct SmoothSort {
  * @param   { SmoothSort * }  this        The smooth sort data object to init.
  * @param   { t_Comparator }  comparator  The comparator to use for sorting.
  * @param   { t_Swapper }     swapper     The swapper to use for sorting.
- * @param   { int }           recordSize  The size (in bytes) of a single record.
+ * @param   { t_Copier }      copier      The copier to use in case needed.
+ * @param   { t_Sizer }       sizer       A function that returns the size of a record.
 */
-void SmoothSort_init(SmoothSort *this, t_Comparator comparator, t_Swapper swapper, int recordSize) {
+void SmoothSort_init(SmoothSort *this, t_Comparator comparator, t_Swapper swapper, t_Copier copier, t_Sizer sizer) {
   int i;
 
   // Comparator and swapper
   this->comparator = comparator;
   this->swapper = swapper;
-  this->recordSize = recordSize;
+  this->copier = copier;
+  this->sizer = sizer;
 
   // Init the state of the first two Leonardo numbers
   this->_leonardoList[0] = 1;
