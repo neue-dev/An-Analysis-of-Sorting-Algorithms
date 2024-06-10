@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 18:07:09
- * @ Modified time: 2024-06-10 19:52:12
+ * @ Modified time: 2024-06-10 19:58:46
  * @ Description:
  * 
  * Gives us utility functions for interacting with records.
@@ -11,7 +11,7 @@
 #define RECORD_INTERFACE_C
 
 #include "./record.c"
-#include "./random.c"
+#include "./utils/random.c"
 #include <stdlib.h>
 
 #define RECORD_SIZE sizeof(Record)

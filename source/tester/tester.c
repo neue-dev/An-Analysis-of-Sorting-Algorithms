@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 12:31:00
- * @ Modified time: 2024-06-10 19:49:22
+ * @ Modified time: 2024-06-10 19:59:07
  * @ Description:
  * 
  * The file contains all the testing utilities we will be using to benchmark our algorithms.
@@ -19,7 +19,7 @@
 // We use merge sort to fix our records by default so we can compute their entropy
 // Merge sort is chosen because it is the fastest stable sort we have in this project
 #include "../sorters/merge_sort.c"
-#include "../random.c"
+#include "../utils/random.c"
 #include "./tester.h"
 
 #include <stdlib.h>

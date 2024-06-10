@@ -2,7 +2,7 @@
 #include "sortingalgorithms.c"
 #include "filereader.c"
 #include "timer.c"
-#include "random.c"
+#include "./utils/random.c"
 #include "./tester/tester.c"
 
 #include <stdio.h>
@@ -11,6 +11,7 @@
 
 int main() {
 
+  // Init the random number generator
   Random_init();
 
   // Create a new tester
