@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 18:07:09
- * @ Modified time: 2024-06-11 00:19:05
+ * @ Modified time: 2024-06-11 00:25:00
  * @ Description:
  * 
  * Gives us utility functions for interacting with records.
@@ -12,7 +12,7 @@
 
 #include "./filereader.c"
 #include "./record.c"
-#include "./utils/random.c"
+#include "./random.c"
 #include <stdlib.h>
 
 #define RECORD_SIZE sizeof(Record)

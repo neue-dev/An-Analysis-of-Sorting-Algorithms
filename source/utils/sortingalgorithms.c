@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-05-24 11:21:27
- * @ Modified time: 2024-06-10 18:45:51
+ * @ Modified time: 2024-06-11 00:25:24
  * @ Description:
  * 
  * The file contains a wrapper for each of the implementations of the sorting algorithms.
@@ -14,16 +14,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "record.c"
-#include "record_interface.c"
+#include "./record.c"
+#include "./record_interface.c"
 
 // Import the different sorting algorithms
-#include "./sorters/insertion_sort.c"
-#include "./sorters/selection_sort.c"
-#include "./sorters/merge_sort.c"
-#include "./sorters/heap_sort.c"
-#include "./sorters/smooth_sort.c"
-#include "./sorters/momo_sort.c"
+#include "../sorters/insertion_sort.c"
+#include "../sorters/selection_sort.c"
+#include "../sorters/merge_sort.c"
+#include "../sorters/heap_sort.c"
+#include "../sorters/smooth_sort.c"
+#include "../sorters/momo_sort.c"
 
 /**
  * Insertion sort.

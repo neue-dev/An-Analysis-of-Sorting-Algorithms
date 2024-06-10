@@ -1,12 +1,21 @@
-#include "record.c"
-#include "sortingalgorithms.c"
-#include "filereader.c"
-#include "timer.c"
+/**
+ * @ Author: Mo David
+ * @ Create Time: 2024-05-24 11:21:27
+ * @ Modified time: 2024-06-11 00:27:16
+ * @ Description:
+ * 
+ * The main file.
+ */
+
+// Import the needed utils
+#include "./utils/sortingalgorithms.c"
 #include "./utils/random.c"
+
+// Import the tester
 #include "./tester/tester.c"
 
+// Some useful libs
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 
 int main() {
