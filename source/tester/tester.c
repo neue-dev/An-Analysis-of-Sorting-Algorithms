@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 12:31:00
- * @ Modified time: 2024-06-10 19:05:58
+ * @ Modified time: 2024-06-10 19:21:44
  * @ Description:
  * 
  * The file contains all the testing utilities we will be using to benchmark our algorithms.
@@ -78,6 +78,7 @@ void Tester_init(Tester *this, t_Comparator comparator, t_Swapper swapper, t_Cop
   int wrapperSize = sizeof(t_RecordWrapper);
   int intSize = sizeof(int);
 
+  // Save the provided functions
   this->comparator = comparator;
   this->swapper = swapper;
   this->copier = copier;
@@ -96,22 +97,6 @@ void Tester_init(Tester *this, t_Comparator comparator, t_Swapper swapper, t_Cop
 
   // Configure the fast stable sorting algo to use
   MergeSort_init(&this->sorter, this->comparator, this->swapper, this->copier, this->sizer);
-}
-
-/**
- * Sets the current value of N for the tester.
- * 
- * @param   { Tester * }  this  The tester data object.
- * @param   { int }       N     The number of object to sort.
-*/
-void Tester_setN(Tester *this, int N) {
-
-  // Set N to the value
-  this->N = N;
-
-  // We cant exceed the limit though
-  if(N > MAX_RECORDS)
-    this->N = MAX_RECORDS;
 }
 
 /**
@@ -197,50 +182,45 @@ void _Tester_recordsShuffle(Tester *this) {
  * 
  * @param   { Tester * }  this  The tester data object.
 */
-void Tester_recordsFill(Tester *this) {
+void Tester_recordsConfig(Tester *this) {
   int i;
-
-  // Fill the array with N random records
-  for(i = 0; i < this->N; i++) {
-
-    // ! dont put this here
-    Record r;
-
-    // Set a random id number 
-    // Doesn't matter what the name is
-    r.idNumber = rand() % this->N;
-    strcpy(r.name, "mo");
-
-    // Copy the record data unto the shuffle array
-    _Tester_recordsCopy(this, this->shuffle, &r, i, 0);
-  }
-
-  for(i = 0; i < this->N; i++) {
-    printf("%d %d\n", i, ((Record *) (this->shuffle + i * this->sizer()))->idNumber);
-  }
 
   // Sort the array so we can compute its entropy later
   MergeSort_main(this->sorter, this->shuffle, this->N);
 
-  // // Create a copy of the array with the wrapper struct
-  // for(i = 0; i < this->N; i++) {
+  // Create a copy of the array with the wrapper struct
+  for(i = 0; i < this->N; i++) {
 
-  //   // Create a wrapper for the record
-  //   t_RecordWrapper wrapper;
+    // Create a wrapper for the record
+    t_RecordWrapper wrapper;
 
-  //   // Save the index and reference to record
-  //   wrapper.index = i;
-  //   wrapper.record = _Tester_recordsGet(this, i);
+    // Save the index and reference to record
+    wrapper.index = i;
+    wrapper.record = _Tester_recordsGet(this, i);
 
-  //   // Copy the wrapped record unto the wrapped shuffle 
-  //   _Tester_wrappersCopy(this, this->shuffleWrappers, &wrapper, i, 0);
-  // }
+    // Copy the wrapped record unto the wrapped shuffle 
+    _Tester_wrappersCopy(this, this->shuffleWrappers, &wrapper, i, 0);
+  }
+
+  for(int i = 0; i < this->N; i++)
+    printf("%d %d \n", i, ((Record *)((t_RecordWrapper *)_Tester_wrappersGet(this, i))->record)->idNumber);
 
   // ! assign an id to each record
   // ! shuffle the wrapped records 
   // ! compute the entropy and determination
   // ! copy the shuffled array into "this->shuffle"
   // ! copy the shuffled array into "this->records"
+}
+
+/**
+ * Initializes the array of records using a given function.
+ * It also computes their entropies and what not.
+ * 
+ * @param   { Tester * }  this    The tester data object.
+ * @param   { t_Filler }  filler  A function that fills an array with data / records.  
+*/
+void Tester_recordsFill(Tester *this, t_Filler filler) {
+  filler(this->shuffle, this->N, MAX_RECORDS * this->sizer());
 }
 
 /**
@@ -252,6 +232,22 @@ void Tester_recordsFill(Tester *this) {
 */
 void Tester_recordsRead(Tester *this, char file[]) {
   
+}
+
+/**
+ * Sets the current value of N for the tester.
+ * 
+ * @param   { Tester * }  this  The tester data object.
+ * @param   { int }       N     The number of object to sort.
+*/
+void Tester_setN(Tester *this, int N) {
+
+  // Set N to the value
+  this->N = N;
+
+  // We cant exceed the limit though
+  if(N > MAX_RECORDS)
+    this->N = MAX_RECORDS;
 }
 
 /**

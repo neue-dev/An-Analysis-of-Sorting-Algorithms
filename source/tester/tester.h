@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 12:35:40
- * @ Modified time: 2024-06-10 12:52:33
+ * @ Modified time: 2024-06-10 19:13:28
  * @ Description:
  * 
  * Defines some types our tester need.
@@ -16,6 +16,22 @@
 // A comparison function
 // Signature should be: (t_Record records, int i, int j)
 typedef int (* t_Comparator)();
+
+// A swapper function
+// Signature should be: (t_Record records, int i, int j) -> void
+typedef void (* t_Swapper)();
+
+// A copier function
+// Signature should be: (t_Record dest, t_Record src, int i, int j) -> void
+typedef void (* t_Copier)();
+
+// Returns the size of a single record
+// Signature should be: (void) -> int
+typedef int (* t_Sizer)();
+
+// Populates a provided array with data points or records
+// Signature should be: (t_Record records, int n, int max) -> void
+typedef void (* t_Filler)();
 
 // A generic record (doesn't have to be the one defined by record.c)
 typedef void * t_Record;

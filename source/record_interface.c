@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 18:07:09
- * @ Modified time: 2024-06-10 19:00:08
+ * @ Modified time: 2024-06-10 19:28:20
  * @ Description:
  * 
  * Gives us utility functions for interacting with records.
@@ -12,6 +12,7 @@
 
 #include "./record.c"
 #include <stdlib.h>
+#include <time.h>
 
 #define RECORD_SIZE sizeof(Record)
 
@@ -89,6 +90,9 @@ void Record_copier(Record *dest, Record *src, int i, int j) {
 void Record_fill(void *dest, int n, int max) {
   int size = 0;
   int i = 0;
+
+  // Set the seed
+  srand(time(NULL));
 
   // Create a bunch of records and populate the array
   while(size + RECORD_SIZE < max && i < n) {
