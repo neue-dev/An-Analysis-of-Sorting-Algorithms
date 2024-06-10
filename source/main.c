@@ -21,7 +21,7 @@ int main() {
   Tester_init(&tester, &Record_comparator, &Record_swapper, &Record_copier, &Record_sizer);
 
   // We will be using N = 100
-  Tester_setN(&tester, 10000);
+  Tester_setN(&tester, 10);
 
   // Fill the tester with data then configure it
   Tester_recordsFill(&tester, &Record_fill);

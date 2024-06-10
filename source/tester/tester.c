@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 12:31:00
- * @ Modified time: 2024-06-10 19:59:07
+ * @ Modified time: 2024-06-10 20:16:09
  * @ Description:
  * 
  * The file contains all the testing utilities we will be using to benchmark our algorithms.
@@ -26,8 +26,14 @@
 
 // We will sort a maximum of 1000000 records
 #define MAX_RECORDS 1000000
+#define WRAPPER_SIZE sizeof(t_RecordWrapper)
 
-// We need a temporary struct to wrap around the records so we can assign its index to the item
+/**
+ * We need a temporary struct to wrap around the records so we can assign its index to the item.
+ * This is a wrapper 'class' around the record struct.
+ * 
+ * @class
+*/
 typedef struct t_RecordWrapper {
 
   t_Record record;                // The actual record instance
@@ -35,9 +41,50 @@ typedef struct t_RecordWrapper {
   
 } t_RecordWrapper;
 
-// Holds the information we use while testing
-// From hereon, all the functions will accept pointers to an instance of the Tester struct
-// This is so we don't end up copying a million array entry pointers each time.
+/**
+ * Returns a pointer to the wrapped record stored at a given index in the records array.
+ * A wrapped record contains a reference to the original record and a new field containing the order of that record in a sorted array.
+ * 
+ * @param   { t_RecordWrapper * }   dest      The destination array.
+ * @param   { t_RecordWrapper * }   src       The source array.
+ * @param   { int }                 i         The ith slot of dest.
+ * @param   { int }                 j         The jth entry in src.
+*/
+void _Wrapper_copy(t_RecordWrapper *dest, t_RecordWrapper *src, int i, int j) {
+  
+  // Copy the record
+  memcpy(
+    dest + i * WRAPPER_SIZE, 
+    src + j * WRAPPER_SIZE,
+    WRAPPER_SIZE);
+}
+
+/**
+ * Swaps two different wrappers at the given locations.
+ * 
+ * @param   { t_RecordWrapper * }   wrappers  The array of wrappers where the swap will occur.
+ * @param   { int }                 i         The ith slot of dest.
+ * @param   { int }                 j         The jth entry in src.
+*/
+void _Wrapper_swap(t_RecordWrapper *wrappers, int i, int j) {
+
+  // Temp record
+  t_RecordWrapper rw;
+
+  // Swap the two
+  _Wrapper_copy(&rw, wrappers, 0, i);
+  _Wrapper_copy(wrappers, wrappers, i, j);
+  _Wrapper_copy(wrappers, &rw, j, 0);
+}
+
+/**
+ * This is our tester 'class'.
+ * Holds the information we use while testing.
+ * From hereon, all the functions will accept pointers to an instance of the Tester struct.
+ * This is so we don't end up copying a million array entry pointers each time.
+ * 
+ * @class
+*/
 typedef struct Tester {
 
   MergeSort sorter;                 // A fast stable sorting algorithm which we ONLY USE to compute the entropy.
@@ -116,25 +163,6 @@ void Tester_exit(Tester *this) {
  * Returns a pointer to the wrapped record stored at a given index in the records array.
  * A wrapped record contains a reference to the original record and a new field containing the order of that record in a sorted array.
  * 
- * @param   { Tester * }            this      The tester data object.
- * @param   { t_RecordWrapper * }   dest      The destination array.
- * @param   { t_RecordWrapper * }   src       The source array.
- * @param   { int }                 i         The ith slot of dest.
- * @param   { int }                 j         The jth entry in src.
-*/
-void _Tester_wrappersCopy(Tester *this, t_RecordWrapper *dest, t_RecordWrapper *src, int i, int j) {
-  
-  // Copy the record
-  memcpy(
-    dest + i * this->wrapperSize, 
-    src + j * this->wrapperSize,
-    this->wrapperSize);
-}
-
-/**
- * Returns a pointer to the wrapped record stored at a given index in the records array.
- * A wrapped record contains a reference to the original record and a new field containing the order of that record in a sorted array.
- * 
  * @param   { Tester * }  this  The tester data object.
  * @param   { int }       i     The index of the requested wrapped record.
  * @return  { t_Record }        A pointer to the requested wrapped record.
@@ -176,17 +204,8 @@ void _Tester_recordsConfig(Tester *this) {
     wrapper.record = _Tester_recordsGet(this, i);
 
     // Copy the wrapped record unto the wrapped shuffle 
-    _Tester_wrappersCopy(this, this->shuffleWrappers, &wrapper, i, 0);
+    _Wrapper_copy(this->shuffleWrappers, &wrapper, i, 0);
   }
-
-  for(int i = 0; i < this->N; i++)
-    printf("%d %d %d \n", i, ((t_RecordWrapper *)_Tester_wrappersGet(this, i))->index, ((Record *)((t_RecordWrapper *)_Tester_wrappersGet(this, i))->record)->idNumber);
-
-  // ! assign an id to each record
-  // ! shuffle the wrapped records 
-  // ! compute the entropy and determination
-  // ! copy the shuffled array into "this->shuffle"
-  // ! copy the shuffled array into "this->records"
 }
 
 /**
@@ -203,6 +222,9 @@ void Tester_recordsShuffle(Tester *this) {
   // Configure the 
   _Tester_recordsConfig(this);
 
+  for(int i = 0; i < this->N; i++)
+    printf("%d %d %d \n", i, ((t_RecordWrapper *)_Tester_wrappersGet(this, i))->index, ((Record *)((t_RecordWrapper *)_Tester_wrappersGet(this, i))->record)->idNumber);
+
   // Start from the back going forwards
   for(i = this->N; --i >= 0;) {
 
@@ -210,9 +232,17 @@ void Tester_recordsShuffle(Tester *this) {
     swap = Random_generate(i);
 
     // Just do the swap if it doesn't swap with itself
+    // We're swapping the wrappers here
     if(swap != i)
-      this->swapper(this->shuffle, i, swap);      
+      _Wrapper_swap(this->shuffleWrappers, i, swap); 
   }
+
+  for(int i = 0; i < this->N; i++)
+    printf("%d %d %d \n", i, ((t_RecordWrapper *)_Tester_wrappersGet(this, i))->index, ((Record *)((t_RecordWrapper *)_Tester_wrappersGet(this, i))->record)->idNumber);
+ 
+  // ! compute the entropy and determination
+  // ! copy the shuffled array into "this->shuffle"
+  // ! copy the shuffled array into "this->records"
 }
 
 /**
