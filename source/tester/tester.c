@@ -1,16 +1,16 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 12:31:00
- * @ Modified time: 2024-06-10 14:22:12
+ * @ Modified time: 2024-06-10 17:12:01
  * @ Description:
  * 
  * The file contains all the testing utilities we will be using to benchmark our algorithms.
  * Thankfully, we can also check whether or not a list is sorted in O(n) time, and we do that here.
  * Additionally, this portion will include a custom testing rig that generates a shuffle of data 
- * and measures it's Shannon entropy and variance. The Shannon entropy helps us determine how 
- * "shuffled" our array is, while the variance can give us an idea of how "spread out" the values 
- * we're sorting are. We will also be using some of the provided starter data and will compute the
- * same parameters for those samples.
+ * and measures it's Shannon entropy and coefficient of determination (with respect to its sorted order). 
+ * Both the Shannon entropy and determination coefficient (also called R squared) can help us determine 
+ * a rough estimate of how "shuffled" our array is. We will also be using some of the provided starter 
+ * data and will compute the same parameters for those samples.
  */
 
 #ifndef TESTER_C
@@ -44,7 +44,7 @@ typedef struct Tester {
   int N;                            // The number of records to consider; we won't always be sorting MAX_RECORDS
 
   double entropy;                   // The currently computed Shannon entropy
-  double variance;                  // The currently computed variance
+  double rsquared;                  // The currently computed coefficient of determination.
   int histogram[MAX_RECORDS];       // We need this for computing the entropy; to be explained more below
 
   // We need a temporary struct to wrap around the records so we can assign its index to the item
@@ -79,9 +79,9 @@ void Tester_init(Tester *this, t_Comparator comparator, t_Swapper swapper, int r
   this->records = calloc(MAX_RECORDS, recordSize);
   this->shuffle = calloc(MAX_RECORDS, recordSize);
 
-  // Initially sets the entropy and variance to 0
+  // Initially sets the entropy and r squared to 0
   this->entropy = 0;
-  this->variance = 0;
+  this->rsquared = 0;
 
   // Configure the fast stable sorting algo to use
   MergeSort_init(&this->sorter, this->comparator, this->swapper, recordSize);
@@ -153,7 +153,7 @@ void Tester_recordsFill(Tester *this) {
 
   // ! assign an id to each record
   // ! shuffle the wrapped records 
-  // ! compute the entropy and variance
+  // ! compute the entropy and determination
   // ! copy the shuffled array into "this->shuffle"
   // ! copy the shuffled array into "this->records"
 }
@@ -186,12 +186,12 @@ double _Tester_measureEntropy(Tester *this) {
 }
 
 /**
- * Measures the variance of a given shuffle of the data.
+ * Measures the R squared of a given shuffle of the data to its sorted order.
  * This function is automatically calld by the tester after sorting.
  * 
  * @param   { Tester * }  this  The pointer to the tester to use.
 */
-double _Tester_measureVariance() {
+double _Tester_measureRSquared(Tester *this) {
 
 }
 
