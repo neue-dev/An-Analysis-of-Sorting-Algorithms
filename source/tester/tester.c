@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 12:31:00
- * @ Modified time: 2024-06-10 21:57:22
+ * @ Modified time: 2024-06-10 22:35:36
  * @ Description:
  * 
  * The file contains all the testing utilities we will be using to benchmark our algorithms.
@@ -175,7 +175,7 @@ void Tester_exit(Tester *this) {
  * @param   { int }       i     The index of the requested wrapped record.
  * @return  { t_Record }        A pointer to the requested wrapped record.
 */
-t_Record _Tester_wrappersGet(Tester *this, int i) {
+t_RecordWrapper *_Tester_wrappersGet(Tester *this, int i) {
   return this->shuffleWrappers + i * this->wrapperSize;
 }
 
@@ -257,8 +257,8 @@ void _Tester_computeEntropy(Tester *this) {
   for(i = 0; i < this->N; i++) {
     
     // Get references to the current record wrapper and the next one
-    rw_curr = ((t_RecordWrapper *) _Tester_wrappersGet(this, i));
-    rw_next = ((t_RecordWrapper *) _Tester_wrappersGet(this, i == this->N - 1 ? 0 : i + 1));
+    rw_curr = _Tester_wrappersGet(this, i);
+    rw_next = _Tester_wrappersGet(this, i == this->N - 1 ? 0 : i + 1);
 
     // Compute their difference
     // Negative values are adjusted mod N
@@ -286,10 +286,57 @@ void _Tester_computeEntropy(Tester *this) {
  * Measures the R squared of a given shuffle of the data to its sorted order.
  * This function is automatically calld by the tester after sorting.
  * 
+ * Technically, variance of X and variance of Y are the same in the function body below,
+ * but I still compute both separately in case we want to change how the index is assigned to
+ * the records inside the config() function. Likewise, we still compute their means to account
+ * for this possibility.
+ * 
  * @param   { Tester * }  this  The pointer to the tester to use.
 */
 void _Tester_computeRSquared(Tester *this) {
+  int i;
 
+  // Some statistics
+  double covXY = 0;   // Covariance of order in shuffle and order in sorted
+  double varX = 0;    // Variance of the order in shuffle
+  double varY = 0;    // Variance of the order in sorted
+  double uX = 0;      // Mean of X
+  double uY = 0;      // Mean of Y
+
+  // Holding variable
+  t_RecordWrapper *rw;
+
+  // Compute the means first
+  for(i = 0; i < this->N; i++) {
+
+    // Grab the current record wrapper
+    rw = _Tester_wrappersGet(this, i);
+
+    // Add the shuffle index to uX
+    uX += i;
+
+    // Add the sorted index to uY
+    uY += rw->index;
+  }
+
+  // Divide the means by N
+  uX /= this->N;
+  uY /= this->N;
+
+  // Compute the covariance and variances
+  for(i = 0; i < this->N; i++) {
+    
+    // Grab the current record wrapper
+    rw = _Tester_wrappersGet(this, i);
+
+    // Update the cov and variances
+    covXY += (i - uX) * (rw->index - uY);
+    varX += (i - uX) * (i - uX);
+    varY += (rw->index - uY) * (rw->index - uY);
+  }
+
+  // Compute R^2
+  this->rsquared = covXY * covXY / (varX * varY);
 }
 
 /**
@@ -314,7 +361,6 @@ void Tester_recordsShuffle(Tester *this) {
 
     // Just do the swap if it doesn't swap with itself
     // We're swapping the wrappers here
-    // ! replace probabilty with number
     if(swap != i && Random_probability(this->P))
       _Wrapper_swap(this->shuffleWrappers, i, swap); 
   }
@@ -323,19 +369,12 @@ void Tester_recordsShuffle(Tester *this) {
   _Tester_computeEntropy(this);
   _Tester_computeRSquared(this);
 
-  // ! remove
-  // printf("wrappers:\n");
-  // for(i = 0; i < this->N; i++)
-  //   printf("%d %d %d \n", i, ((t_RecordWrapper *) _Tester_wrappersGet(this, i))->index, ((Record *)((t_RecordWrapper *) _Tester_wrappersGet(this, i))->record)->idNumber);
-
-  printf("Entropy: %lf", this->entropy);
-
   // Copy the arrangement of the shuffle into the 'shuffle' and 'tosort' arrays
   // Note that we have to do these separately AND in this order to prevent us from prematurely overwriting reference in the shuffle array
   for(i = 0; i < this->N; i++) {
     
     // Get the reference of the ith wrapped record
-    t_Record r = ((t_RecordWrapper *) _Tester_wrappersGet(this, i))->record;
+    t_Record r =  _Tester_wrappersGet(this, i)->record;
     
     // Copies r unto the ith slot of tosort
     this->copier(this->tosort, r, i, 0);
@@ -344,16 +383,20 @@ void Tester_recordsShuffle(Tester *this) {
   // Finally, copy unto the shuffle so we have a reference
   for(i = 0; i < this->N; i++) 
     this->copier(this->shuffle, this->tosort, i, i);
+}
 
+/**
+ * Copies the existing shuffle in the 'shuffle' array unto the 'tosort' array.
+ * That way, when benchmarking different sorting algorithms, the shuffle can be used to test them.
+ * 
+ * @param   { Tester * }  this  The tester data object.
+*/
+void Tester_recordsRepeatShuffle(Tester *this) {
+  int i;
 
-  // ! remove
-  // printf("copied\n");
-  // for(i = 0; i < this->N; i++)
-  //   printf("%d %d \n", i, ((Record *) _Tester_recordsGet(this, i))->idNumber);
- 
-  // ! compute the entropy and determination
-  // ! copy the shuffled array into "this->shuffle"
-  // ! copy the shuffled array into "this->records"
+  // Copy unto the tosort array
+  for(i = 0; i < this->N; i++) 
+    this->copier(this->tosort, this->shuffle, i, i);
 }
 
 /**
@@ -375,7 +418,7 @@ void Tester_recordsFill(Tester *this, t_Filler filler) {
  * @param   { char[] }    file  The path to the file to read.
 */
 void Tester_recordsRead(Tester *this, char file[]) {
-  
+  // ! to implement
 }
 
 /**
@@ -432,7 +475,7 @@ int Tester_checkSort(Tester *this) {
 
     // Get the result of the comparison
     comparison = this->comparator(this->tosort, i, i + 1);
-    
+
     // If the order has not been determined, set it
     if(!order)
       order = comparison;

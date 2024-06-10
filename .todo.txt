@@ -1,2 +1,4 @@
 REMOVE MOMO SORT OR FINISH IT
 ADD NOTE ABOUT COMPILING -lm IN LINUX
+
+just finished doing the coefficient of determination (rsquared) and verified the check sort function.

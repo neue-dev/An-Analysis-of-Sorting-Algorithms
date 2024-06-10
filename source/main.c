@@ -22,10 +22,13 @@ int main() {
 
   // We will be using N = 100
   Tester_setN(&tester, 1000);
+  Tester_setP(&tester, 0.01);
 
   // Fill the tester with data then configure it
   Tester_recordsFill(&tester, &Record_fill);
   Tester_recordsShuffle(&tester);
+  
+  printf("Sorted? %s\n", Tester_checkSort(&tester) ? "yes" : "no");
 
   // Perform some cleanup after
   Tester_exit(&tester);
