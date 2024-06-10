@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-09 01:31:50
- * @ Modified time: 2024-06-10 02:45:51
+ * @ Modified time: 2024-06-10 14:08:23
  * @ Description:
  * 
  * An implementation of merge sort.
@@ -40,7 +40,7 @@ void MergeSort_init(MergeSort *this, t_Comparator comparator, t_Swapper swapper,
 } 
 
 /**
- * Places the jth entry of src into the ith slot of records.
+ * Places the jth entry of src into the ith slot of dest.
  * 
  * @param   { MergeSort }   this      The merge sort config object.
  * @param   { t_Record }    records   The records array.

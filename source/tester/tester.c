@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 12:31:00
- * @ Modified time: 2024-06-10 13:50:25
+ * @ Modified time: 2024-06-10 14:22:12
  * @ Description:
  * 
  * The file contains all the testing utilities we will be using to benchmark our algorithms.
@@ -32,17 +32,20 @@
 // This is so we don't end up copying a million array entry pointers each time.
 typedef struct Tester {
 
+  MergeSort sorter;                 // A fast stable sorting algorithm which we ONLY USE to compute the entropy.
   t_Comparator comparator;          // Of course we still need this to check for the sortedness of a list
-  t_Swapper swapper;                // We also need this because computing the entropy requires knowing 
-                                    //    the sorted version of the list
+  t_Swapper swapper;                // We also need this because computing the entropy requires knowing the sorted version of the list
+  int recordSize;                   // This is here because we need to compute the size of the arrays when using calloc()
 
   // 'Private' variables
-  t_Record records[MAX_RECORDS];    // The records to sort
-  int N;                            // The number of records to consider; 
-                                    //    we won't always be sorting MAX_RECORDS
+
+  t_Record records;                 // The records to sort
+  t_Record shuffle;                 // A copy of the shuffled records so we can use the same shuffle multiple times (testing consistency)
+  int N;                            // The number of records to consider; we won't always be sorting MAX_RECORDS
 
   double entropy;                   // The currently computed Shannon entropy
   double variance;                  // The currently computed variance
+  int histogram[MAX_RECORDS];       // We need this for computing the entropy; to be explained more below
 
   // We need a temporary struct to wrap around the records so we can assign its index to the item
   struct t_RecordWrapper {
@@ -65,23 +68,94 @@ typedef struct Tester {
  * @param   { Tester * }      this        A pointer to the tester object itself.
  * @param   { t_Comparator }  comparator  The comparator to use.
  * @param   { t_Swapper }     swapper     The swapper to use.
+ * @param   { recordSize }    recordSize  The size of each record in bytes.
 */
-void Tester_init(Tester *this, t_Comparator comparator, t_Swapper swapper) {
+void Tester_init(Tester *this, t_Comparator comparator, t_Swapper swapper, int recordSize) {
   this->comparator = comparator;
+  this->swapper = swapper;
+  this->recordSize = recordSize;
+
+  // We initialize the arrays using calloc()
+  this->records = calloc(MAX_RECORDS, recordSize);
+  this->shuffle = calloc(MAX_RECORDS, recordSize);
 
   // Initially sets the entropy and variance to 0
   this->entropy = 0;
   this->variance = 0;
+
+  // Configure the fast stable sorting algo to use
+  MergeSort_init(&this->sorter, this->comparator, this->swapper, recordSize);
 }
 
 /**
- * Fills the records array with a sorted line of random records.
+ * This is just here so we can do some garbage collection.
+ * 
+ * @param   { Tester * }  this  The tester to exit.
+*/
+void Tester_exit(Tester *this) {
+  free(this->records);
+  free(this->shuffle);
+}
+
+/**
+ * Places the jth entry of src into the ith slot of dest.
+ * 
+ * @param   { MergeSort }   this      The merge sort config object.
+ * @param   { t_Record }    records   The records array.
+ * @param   { t_Record }    src       The source array.
+ * @param   { int }         i         The ith slot of records.
+ * @param   { int }         j         The jth entry in src.
+*/
+void _Tester_copy(Tester *this, t_Record dest, t_Record src, int i, int j) {
+
+  // Copy the record
+  memcpy(
+    dest + i * this->recordSize, 
+    src + j * this->recordSize,
+    this->recordSize);
+}
+
+/**
+ * Shuffles the array using the Fisher-Yates shuffle.
+ * It's simpler than it sounds, trust me.
+ * 
+ * // !
+ * // ! todo: implement this
+*/
+void _Tester_recordsShuffle(Tester *this) {
+  
+}
+
+/**
+ * Fills the records array with an sorted line of random records.
  * Each record has  a random id within 0-MAX_RECORDS. These ids may not be unique.
  * 
  * @param   { Tester * }  this  The tester data object.
 */
 void Tester_recordsFill(Tester *this) {
+  int i;
 
+  // Fill the array with N random records
+  for(i = 0; i < this->N; i++) {
+    Record r;
+
+    // Set a random id number 
+    // Doesn't matter what the name is
+    r.idNumber = rand() % this->N;
+    strcpy(r.name, "mo");
+
+    // Copy the record data unto the records array
+    _Tester_copy(this, this->records, &r, i, 0);
+  }
+
+  // Sort the array so we can compute its entropy later
+  MergeSort_main(this->sorter, this->records, this->N);
+
+  // ! assign an id to each record
+  // ! shuffle the wrapped records 
+  // ! compute the entropy and variance
+  // ! copy the shuffled array into "this->shuffle"
+  // ! copy the shuffled array into "this->records"
 }
 
 /**
@@ -98,6 +172,7 @@ void Tester_recordsRead(Tester *this, char file[]) {
 /**
  * Measures the entropy of a given shuffle of the data.
  * This function is automatically called by the tester after shuffling.
+ * // ! to do measure this
  * 
  * @param   { Tester * }  this  The pointer to the tester to use.
 */
@@ -124,6 +199,7 @@ double _Tester_measureVariance() {
  * Checks whether the current list is actuall sorted.
  * We do this by checking whether the comparator returns the same value or 0 across all adjacent records.
  * In other words, the array is either strictly decreasing or strictly increasing.
+ * // ! please test if this is actually workin
  * 
  * @param   { Tester * }  this  A pointer to the tester data object to use.
  * @return  { int }             A boolean that indicates whether or not the list is sorted.

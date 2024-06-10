@@ -1,5 +1,6 @@
 Here are all the resources I consulted for implementing the algorithms and doing the testing :))
 
+[ Fisher-Yates Shuffling ]                                https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
 [ Heap Sort According to Wikipedia ]                      https://en.wikipedia.org/wiki/Heapsort
 [ Measuring the Entropy of a Deck of Cards ]              https://stats.stackexchange.com/questions/78591/correlation-between-two-decks-of-cards/79552#79552
 [ Merge Sort According to Wikipedia ]                     https://en.wikipedia.org/wiki/Merge_sort
