@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 12:31:00
- * @ Modified time: 2024-06-10 17:12:01
+ * @ Modified time: 2024-06-10 19:05:58
  * @ Description:
  * 
  * The file contains all the testing utilities we will be using to benchmark our algorithms.
@@ -19,13 +19,20 @@
 // We use merge sort to fix our records by default so we can compute their entropy
 // Merge sort is chosen because it is the fastest stable sort we have in this project
 #include "../sorters/merge_sort.c"
-#include "../record.c"
 #include "./tester.h"
 
 #include <stdlib.h>
 
 // We will sort a maximum of 1000000 records
 #define MAX_RECORDS 1000000
+
+// We need a temporary struct to wrap around the records so we can assign its index to the item
+typedef struct t_RecordWrapper {
+
+  t_Record record;                // The actual record instance
+  int index;                      // This is what helps us compute the Shannon entropy + r squared
+  
+} t_RecordWrapper;
 
 // Holds the information we use while testing
 // From hereon, all the functions will accept pointers to an instance of the Tester struct
@@ -35,28 +42,23 @@ typedef struct Tester {
   MergeSort sorter;                 // A fast stable sorting algorithm which we ONLY USE to compute the entropy.
   t_Comparator comparator;          // Of course we still need this to check for the sortedness of a list
   t_Swapper swapper;                // We also need this because computing the entropy requires knowing the sorted version of the list
-  int recordSize;                   // This is here because we need to compute the size of the arrays when using calloc()
+  t_Copier copier;                  // This copies records between two different locations
+  t_Sizer sizer;                    // This returns the size of the record for us
+  int wrapperSize;                  // Size of the wrapper struct
 
   // 'Private' variables
-
-  t_Record records;                 // The records to sort
+  t_Record tosort;                  // The records to sort
   t_Record shuffle;                 // A copy of the shuffled records so we can use the same shuffle multiple times (testing consistency)
   int N;                            // The number of records to consider; we won't always be sorting MAX_RECORDS
 
   double entropy;                   // The currently computed Shannon entropy
   double rsquared;                  // The currently computed coefficient of determination.
-  int histogram[MAX_RECORDS];       // We need this for computing the entropy; to be explained more below
-
-  // We need a temporary struct to wrap around the records so we can assign its index to the item
-  struct t_RecordWrapper {
-
-    t_Record record;  // The actual record instance
-    int id;           // This is what helps us compute the Shannon entropy
-    
-  };
+  int *histogram;                   // We need this for computing the entropy; to be explained more below
 
   // An array to temporarily store the wrapped records
-  struct t_RecordWrapper _records[MAX_RECORDS];
+  // We only need this for the shuffling process
+  // So we can compute the entropy and r squared
+  t_RecordWrapper *shuffleWrappers;
   
 } Tester;
 
@@ -68,23 +70,48 @@ typedef struct Tester {
  * @param   { Tester * }      this        A pointer to the tester object itself.
  * @param   { t_Comparator }  comparator  The comparator to use.
  * @param   { t_Swapper }     swapper     The swapper to use.
- * @param   { recordSize }    recordSize  The size of each record in bytes.
+ * @param   { t_Copier }      copier      The copier function.
+ * @param   { t_Sizer }       sizer       A function that returns the size of a record.
 */
-void Tester_init(Tester *this, t_Comparator comparator, t_Swapper swapper, int recordSize) {
+void Tester_init(Tester *this, t_Comparator comparator, t_Swapper swapper, t_Copier copier, t_Sizer sizer) {
+  int recordSize = sizer();
+  int wrapperSize = sizeof(t_RecordWrapper);
+  int intSize = sizeof(int);
+
   this->comparator = comparator;
   this->swapper = swapper;
-  this->recordSize = recordSize;
+  this->copier = copier;
+  this->sizer = sizer;
+  this->wrapperSize = wrapperSize;
 
   // We initialize the arrays using calloc()
-  this->records = calloc(MAX_RECORDS, recordSize);
+  this->tosort = calloc(MAX_RECORDS, recordSize);
   this->shuffle = calloc(MAX_RECORDS, recordSize);
+  this->shuffleWrappers = calloc(MAX_RECORDS, wrapperSize);
+  this->histogram = calloc(MAX_RECORDS, intSize);
 
   // Initially sets the entropy and r squared to 0
   this->entropy = 0;
   this->rsquared = 0;
 
   // Configure the fast stable sorting algo to use
-  MergeSort_init(&this->sorter, this->comparator, this->swapper, recordSize);
+  MergeSort_init(&this->sorter, this->comparator, this->swapper, this->copier, this->sizer);
+}
+
+/**
+ * Sets the current value of N for the tester.
+ * 
+ * @param   { Tester * }  this  The tester data object.
+ * @param   { int }       N     The number of object to sort.
+*/
+void Tester_setN(Tester *this, int N) {
+
+  // Set N to the value
+  this->N = N;
+
+  // We cant exceed the limit though
+  if(N > MAX_RECORDS)
+    this->N = MAX_RECORDS;
 }
 
 /**
@@ -93,37 +120,75 @@ void Tester_init(Tester *this, t_Comparator comparator, t_Swapper swapper, int r
  * @param   { Tester * }  this  The tester to exit.
 */
 void Tester_exit(Tester *this) {
-  free(this->records);
+  free(this->tosort);
   free(this->shuffle);
+  free(this->shuffleWrappers);
+  free(this->histogram);
 }
 
 /**
- * Places the jth entry of src into the ith slot of dest.
+ * Returns a pointer to the wrapped record stored at a given index in the records array.
+ * A wrapped record contains a reference to the original record and a new field containing the order of that record in a sorted array.
  * 
- * @param   { MergeSort }   this      The merge sort config object.
- * @param   { t_Record }    records   The records array.
- * @param   { t_Record }    src       The source array.
- * @param   { int }         i         The ith slot of records.
- * @param   { int }         j         The jth entry in src.
+ * @param   { Tester * }            this      The tester data object.
+ * @param   { t_RecordWrapper * }   dest      The destination array.
+ * @param   { t_RecordWrapper * }   src       The source array.
+ * @param   { int }                 i         The ith slot of dest.
+ * @param   { int }                 j         The jth entry in src.
 */
-void _Tester_copy(Tester *this, t_Record dest, t_Record src, int i, int j) {
-
+void _Tester_wrappersCopy(Tester *this, t_RecordWrapper *dest, t_RecordWrapper *src, int i, int j) {
+  
   // Copy the record
   memcpy(
-    dest + i * this->recordSize, 
-    src + j * this->recordSize,
-    this->recordSize);
+    dest + i * this->wrapperSize, 
+    src + j * this->wrapperSize,
+    this->wrapperSize);
+}
+
+/**
+ * Returns a pointer to the wrapped record stored at a given index in the records array.
+ * A wrapped record contains a reference to the original record and a new field containing the order of that record in a sorted array.
+ * 
+ * @param   { Tester * }  this  The tester data object.
+ * @param   { int }       i     The index of the requested wrapped record.
+ * @return  { t_Record }        A pointer to the requested wrapped record.
+*/
+t_Record _Tester_wrappersGet(Tester *this, int i) {
+  return this->shuffleWrappers + i * this->wrapperSize;
+}
+
+/**
+ * Returns a pointer to the record stored at a given index in the records array.
+ * 
+ * @param   { Tester * }  this  The tester data object.
+ * @param   { int }       i     The index of the requested record.
+ * @return  { t_Record }        A pointer to the requested record.
+*/
+t_Record _Tester_recordsGet(Tester *this, int i) {
+  return this->shuffle + i * this->sizer();
 }
 
 /**
  * Shuffles the array using the Fisher-Yates shuffle.
  * It's simpler than it sounds, trust me.
+ * Note that this shuffles the 'shuffle' array, not the 'records' array.
  * 
- * // !
- * // ! todo: implement this
+ * @param   { Tester * }  this  The tester data object.
 */
 void _Tester_recordsShuffle(Tester *this) {
-  
+  int i;
+  int swap;
+
+  // Start from the back going forwards
+  for(i = this->N; --i >= 0;) {
+
+    // We do (i + 1) because the element must have a chance of swapping with itself
+    swap = rand() % (i + 1);
+
+    // Just do the swap if it doesn't swap with itself
+    if(swap != i)
+      this->swapper(this->shuffle, i, swap);      
+  }
 }
 
 /**
@@ -137,6 +202,8 @@ void Tester_recordsFill(Tester *this) {
 
   // Fill the array with N random records
   for(i = 0; i < this->N; i++) {
+
+    // ! dont put this here
     Record r;
 
     // Set a random id number 
@@ -144,12 +211,30 @@ void Tester_recordsFill(Tester *this) {
     r.idNumber = rand() % this->N;
     strcpy(r.name, "mo");
 
-    // Copy the record data unto the records array
-    _Tester_copy(this, this->records, &r, i, 0);
+    // Copy the record data unto the shuffle array
+    _Tester_recordsCopy(this, this->shuffle, &r, i, 0);
+  }
+
+  for(i = 0; i < this->N; i++) {
+    printf("%d %d\n", i, ((Record *) (this->shuffle + i * this->sizer()))->idNumber);
   }
 
   // Sort the array so we can compute its entropy later
-  MergeSort_main(this->sorter, this->records, this->N);
+  MergeSort_main(this->sorter, this->shuffle, this->N);
+
+  // // Create a copy of the array with the wrapper struct
+  // for(i = 0; i < this->N; i++) {
+
+  //   // Create a wrapper for the record
+  //   t_RecordWrapper wrapper;
+
+  //   // Save the index and reference to record
+  //   wrapper.index = i;
+  //   wrapper.record = _Tester_recordsGet(this, i);
+
+  //   // Copy the wrapped record unto the wrapped shuffle 
+  //   _Tester_wrappersCopy(this, this->shuffleWrappers, &wrapper, i, 0);
+  // }
 
   // ! assign an id to each record
   // ! shuffle the wrapped records 
@@ -213,7 +298,7 @@ int Tester_checkSort(Tester *this) {
   for(i = 0; i < this->N - 1; i++) {
 
     // Get the result of the comparison
-    comparison = this->comparator(this->records, i, i + 1);
+    comparison = this->comparator(this->tosort, i, i + 1);
     
     // If the order has not been determined, set it
     if(!order)
