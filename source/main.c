@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-05-24 11:21:27
- * @ Modified time: 2024-06-11 01:23:57
+ * @ Modified time: 2024-06-11 01:32:02
  * @ Description:
  * 
  * The main file.
@@ -28,7 +28,10 @@ int main() {
   Engine_init(&engine);
 
   // ! remove
-  Engine_runOnce(&engine, 10000, 0.1);
+  Engine_runOnce(&engine, 10000, 0.1, 
+    SORTER_HEAP |
+    SORTER_MERGE |
+    SORTER_SMOOTH);
 
   return 0;
 }

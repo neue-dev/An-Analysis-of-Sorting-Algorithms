@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-11 00:20:03
- * @ Modified time: 2024-06-11 01:21:44
+ * @ Modified time: 2024-06-11 01:31:28
  * @ Description:
  * 
  * Handles the overall flow of the program.
@@ -20,17 +20,17 @@
 // The first four rows will contain information about the data set to be sorted
 // The next n rows will contain the times it took each sorting algorithm to sort the data set
 #define _PARAM 0
-#define PARAM_ENTROPY (1 << _PARAM)
-#define PARAM_RSQUARED (2 << _PARAM)
-#define PARAM_SIZE (3 << _PARAM)
+#define PARAM_ENTROPY (1 << _PARAM  + 0)
+#define PARAM_RSQUARED (1 << _PARAM + 1)
+#define PARAM_SIZE (1 << _PARAM + 2)
 #define PARAM_COUNT 3
 
-#define _SORTER 2
-#define SORTER_HEAP (1 << _SORTER)
-#define SORTER_INSERTION (2 << _SORTER)
-#define SORTER_MERGE (3 << _SORTER)
-#define SORTER_SELECTION (4 << _SORTER)
-#define SORTER_SMOOTH (5 << _SORTER)
+#define _SORTER PARAM_COUNT
+#define SORTER_HEAP (1 << (_SORTER + 0))
+#define SORTER_INSERTION (1 << (_SORTER + 1))
+#define SORTER_MERGE (1 << (_SORTER + 2))
+#define SORTER_SELECTION (1 << (_SORTER + 3))
+#define SORTER_SMOOTH (1 << (_SORTER + 4))
 #define SORTER_COUNT 5
 
 #define MAX_ROWS 16
@@ -92,12 +92,13 @@ void Engine_exit(Engine *this) {
 /**
  * Performs a single run of the benchmarking with all algorithms.
  * 
- * @param   { Engine * }  this  The tester engine to run.
- * @param   { int }             N     How many records we wanna sort.
- * @param   { double }          P     Probability of swapping during shuffling stage.
+ * @param   { Engine * }        this      The tester engine to run.
+ * @param   { int }             N         How many records we wanna sort.
+ * @param   { double }          P         Probability of swapping during shuffling stage.
+ * @param   { int }             sorters   The sorters we want to consider
 */
-void Engine_runOnce(Engine *this, int N, double P) {
-  int i;
+void Engine_runOnce(Engine *this, int N, double P, int sorters) {
+  int i, sorter;
   long start, stop;
   
   // Grab the tester
@@ -121,13 +122,20 @@ void Engine_runOnce(Engine *this, int N, double P) {
   // Run the algo for each of the sorters
   for(i = 0; i < SORTER_COUNT; i++) {
 
+    // The sorter we're at
+    sorter = 1 << (_SORTER + i);
+
+    // We're excluding the algorithm
+    if(!(sorter & sorters))
+      continue;
+
     // Make sure to reshuffle the array
     Tester_recordsRepeatShuffle(tester);
 
     // Start the timer
     start = currentTimeMillis();
     
-    switch((i + 1) << _SORTER) {
+    switch(sorter) {
       case SORTER_HEAP:
         Record_heapSort(tester->tosort, tester->N);
         stop = currentTimeMillis();
@@ -153,7 +161,9 @@ void Engine_runOnce(Engine *this, int N, double P) {
         stop = currentTimeMillis();
         printf("Smooth sort took %ldms...\n", stop - start);
         break;
-      default: break;
+
+      default: 
+        break;
     }
   }
 
