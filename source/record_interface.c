@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 18:07:09
- * @ Modified time: 2024-06-10 19:58:46
+ * @ Modified time: 2024-06-10 20:24:39
  * @ Description:
  * 
  * Gives us utility functions for interacting with records.
@@ -46,12 +46,12 @@ int Record_comparator(Record *records, int i, int j) {
 void Record_swapper(Record *records, int i, int j) {
   
   // Temp record
-  Record rt;
+  Record r;
 
   // Swap the two
-  rt = records[i];
+  r = records[i];
   records[i] = records[j];
-  records[j] = rt;
+  records[j] = r;
 }
 
 /**

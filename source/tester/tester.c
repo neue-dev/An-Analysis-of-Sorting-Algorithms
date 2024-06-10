@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 12:31:00
- * @ Modified time: 2024-06-10 20:16:09
+ * @ Modified time: 2024-06-10 20:31:02
  * @ Description:
  * 
  * The file contains all the testing utilities we will be using to benchmark our algorithms.
@@ -122,6 +122,8 @@ typedef struct Tester {
  * @param   { t_Sizer }       sizer       A function that returns the size of a record.
 */
 void Tester_init(Tester *this, t_Comparator comparator, t_Swapper swapper, t_Copier copier, t_Sizer sizer) {
+  
+  // Get the size of the data types
   int recordSize = sizer();
   int wrapperSize = sizeof(t_RecordWrapper);
   int intSize = sizeof(int);
@@ -209,9 +211,35 @@ void _Tester_recordsConfig(Tester *this) {
 }
 
 /**
+ * Measures the entropy of a given shuffle of the data.
+ * This function is automatically called by the tester after shuffling.
+ * // ! to do measure this
+ * 
+ * @param   { Tester * }  this  The pointer to the tester to use.
+*/
+double _Tester_computeEntropy(Tester *this) {
+  int i;
+  
+
+  for(i = 0; i < this->N; i++) {
+
+  }
+}
+
+/**
+ * Measures the R squared of a given shuffle of the data to its sorted order.
+ * This function is automatically calld by the tester after sorting.
+ * 
+ * @param   { Tester * }  this  The pointer to the tester to use.
+*/
+double _Tester_computeRSquared(Tester *this) {
+
+}
+
+/**
  * Shuffles the array using the Fisher-Yates shuffle.
  * It's simpler than it sounds, trust me.
- * Note that this shuffles the 'shuffle' array, not the 'records' array.
+ * This function also automatically computes the entropy and r squared value associated with the shuffle.
  * 
  * @param   { Tester * }  this  The tester data object.
 */
@@ -221,9 +249,6 @@ void Tester_recordsShuffle(Tester *this) {
 
   // Configure the 
   _Tester_recordsConfig(this);
-
-  for(int i = 0; i < this->N; i++)
-    printf("%d %d %d \n", i, ((t_RecordWrapper *)_Tester_wrappersGet(this, i))->index, ((Record *)((t_RecordWrapper *)_Tester_wrappersGet(this, i))->record)->idNumber);
 
   // Start from the back going forwards
   for(i = this->N; --i >= 0;) {
@@ -237,8 +262,30 @@ void Tester_recordsShuffle(Tester *this) {
       _Wrapper_swap(this->shuffleWrappers, i, swap); 
   }
 
-  for(int i = 0; i < this->N; i++)
-    printf("%d %d %d \n", i, ((t_RecordWrapper *)_Tester_wrappersGet(this, i))->index, ((Record *)((t_RecordWrapper *)_Tester_wrappersGet(this, i))->record)->idNumber);
+  // Compute the parameters we need to measure shuffledness
+  _Tester_computeEntropy(this);
+  _Tester_computeRSquared(this);
+
+  // Copy the arrangement of the shuffle into the 'shuffle' and 'tosort' arrays
+  // Note that we have to do these separately AND in this order to prevent us from prematurely overwriting reference in the shuffle array
+  for(i = 0; i < this->N; i++) {
+    
+    // Get the reference of the ith wrapped record
+    t_Record r = ((t_RecordWrapper *) _Tester_wrappersGet(this, i))->record;
+    
+    // Copies r unto the ith slot of tosort
+    this->copier(this->tosort, r, i, 0);
+  }
+
+  // Finally, copy unto the shuffle so we have a reference
+  for(i = 0; i < this->N; i++) 
+    this->copier(this->shuffle, this->tosort, i, i);
+
+
+  // ! remove
+  // printf("copied\n");
+  // for(i = 0; i < this->N; i++)
+  //   printf("%d %d \n", i, ((Record *) _Tester_recordsGet(this, i))->idNumber);
  
   // ! compute the entropy and determination
   // ! copy the shuffled array into "this->shuffle"
@@ -281,32 +328,6 @@ void Tester_setN(Tester *this, int N) {
   // We cant exceed the limit though
   if(N > MAX_RECORDS)
     this->N = MAX_RECORDS;
-}
-
-/**
- * Measures the entropy of a given shuffle of the data.
- * This function is automatically called by the tester after shuffling.
- * // ! to do measure this
- * 
- * @param   { Tester * }  this  The pointer to the tester to use.
-*/
-double _Tester_measureEntropy(Tester *this) {
-  int i;
-  
-
-  for(i = 0; i < this->N; i++) {
-
-  }
-}
-
-/**
- * Measures the R squared of a given shuffle of the data to its sorted order.
- * This function is automatically calld by the tester after sorting.
- * 
- * @param   { Tester * }  this  The pointer to the tester to use.
-*/
-double _Tester_measureRSquared(Tester *this) {
-
 }
 
 /**
