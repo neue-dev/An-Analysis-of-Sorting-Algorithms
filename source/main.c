@@ -67,7 +67,7 @@ int main() {
     //     RecordArray_smoothSort(records, N);
     //     break;
     // }
-    RecordArray_momoSort(records, N);
+    RecordArray_smoothSort(records, N);
     end = currentTimeMillis();
 
     printf("After: \n");
