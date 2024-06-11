@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-09 01:32:10
- * @ Modified time: 2024-06-11 21:37:24
+ * @ Modified time: 2024-06-12 00:49:01
  * @ Description:
  * 
  * An implementation of smoort sort.
@@ -183,7 +183,6 @@ void _SmoothSort_siftDown(SmoothSort this, t_Record records, int n, int k, int s
     if(largest == c2)
       _SmoothSort_siftDown(this, records, n, k - 2, start + _SmoothSort_leonardoGet(this, k - 1), c2);
   }
-
 }
 
 /**
@@ -261,6 +260,8 @@ void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, long ls
     if(this.comparator(records, root, new) > 0 && 
       this.comparator(records, root, c1) > 0 &&
       this.comparator(records, root, c2) > 0) {
+
+      // Swap the two roots
       this.swapper(records, root, new);
 
       // If this is the last iteration, better fix the heap structure now
@@ -274,7 +275,7 @@ void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, long ls
       
       // Note that we're considering the slice from [root, new] since no swap occured
       _SmoothSort_siftDown(this, records, n, porder, root, new);
-      break; 
+      return; 
     }
 
     // Finally, save the order into porder (previous order) for later retrieval
@@ -390,9 +391,37 @@ void SmoothSort_main(SmoothSort this, t_Record records, int n) {
     
     // Compute the new value of lseq for the current i
     lseq = _SmoothSort_computeLseqIncrement(lseq);
+    lfirst = lseq & -lseq;
 
-    // Insert the current ith element into the heapified slice
-    _SmoothSort_insert(this, records, n, i, lseq);
+    // Get the smallest Leonardo heap size
+    exp = (int) (log(lfirst) / log(2));
+    offset = _SmoothSort_leonardoGet(this, exp);
+
+    // Sift down the new roots if theyre not singletons
+    if(lfirst > 2)
+      _SmoothSort_siftDown(this, records, n, exp, i - offset, i);
+  }
+
+  // Set some important stuff
+  offset = 0;
+
+  // We go through each of the heaps in reverse and sort the roots in ascending order
+  // The 64 - 1 here is for traversing all the bits in a long
+  for(i = 64 - 1; --i >= 0;) {
+    lfirst = (lseq >> i) % 2;
+
+    // We don't have a heap of that size
+    if(!lfirst)
+      continue;
+
+    // The exponent here is actually just i
+    exp = i;
+    
+    // Update the offset
+    offset += _SmoothSort_leonardoGet(this, exp);
+
+    // Do insertion only if we're not inserting the 0th element
+    _SmoothSort_insert(this, records, n, offset - 1, (lseq >> exp) << exp);
   }
 
   // Finally, after generating the correct forest, we sort the sht
