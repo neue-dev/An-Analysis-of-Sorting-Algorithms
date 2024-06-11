@@ -21,7 +21,11 @@ Heap sort has been described as ["selection sort using the right data structure"
 
 Heap sort treats the array differently: instead of viewing it as a sequential list of elements, heap sort visualizes it in the form of a tree, with the associations between parent nodes and child nodes outlined in a simple and defined manner. Every $i^\text{th}$ element in the array is the child of the $\lfloor \frac{n - 1}{2} \rfloor^\text{th}$ entry and a parent of elements $2i + 1$ and $2i + 2$. By defining the tree in this way, adjacent nodes can be found easily at the expense of just a multiplication or two.
 
+### 2.1 Why Do We Use A Tree?
+
 But what benefit does a tree have over an array of elements? Because of the structure of a heap, we are guaranteed to know that every element is greater than all its descendants. This invariant allows us to shift an element to its right place within the structure without having to compare with every single element in the array.
+
+### 2.2 The Heap Sort Algorithm
 
 <!-- !To be continued -->
 
@@ -32,6 +36,12 @@ The reason I decided to explain heap sort prior to smooth sort is because the tw
 Smooth sort, on the other hand, takes an unorthodox approach. For one thing, it doesn't create a single tree but rather a *forest of max-heaps*. For another, it builds these trees such that their root nodes are on the right. This entails way less computations for lists that are close to being sorted.
 
 But how does it do this, exactly? That's where things get exciting.
+
+### 3.1 Leonardo Numbers and Leonardo Heaps
+
+### 3.2 Generating the Forest
+
+### 3.3 The Smooth Sort Algorithm
 
 <!-- !To be continued -->
 
