@@ -17,7 +17,23 @@ Likewise, to verify the amount by which the different algorithms would scale (in
 
 # 2. Heap Sort
 
+Heap sort has been described as ["selection sort using the right data structure"](https://link.springer.com/chapter/10.1007/978-3-030-54256-6_4). While that was not something that made sense to me the first time around, it was something that clicked eventually.
+
+Heap sort treats the array differently: instead of viewing it as a sequential list of elements, heap sort visualizes it in the form of a tree, with the associations between parent nodes and child nodes outlined in a simple and defined manner. Every $i\th$ element in the array is the child of the $\lfloor \frac{n - 1}{2} \rfloor\th$ entry and a parent of elements $2i + 1$ and $2i + 2$. By defining the tree in this way, adjacent nodes can be found easily at the expense of just a multiplication or two.
+
+But what benefit does a tree have over an array of elements? Because of the structure of a heap, we are guaranteed to know that every element is greater than all its descendants. This invariant allows us to shift an element to its right place within the structure without having to compare with every single element in the array.
+
+<!-- !To be continued -->
+
 # 3. Smooth Sort
+
+The reason I decided to explain heap sort prior to smooth sort is because the two algorithms rely on the same fundamental ideas: visualizing an array in a manner that neglects its linear structure. However, smooth sort attempts to remedy a certain problem with heap sort: the largest element of the array is always at the root (the beginning) of the array, when ultimately it must end up at the opposite end. This means that regardless of the initial state of our array, $n log(n)$ operations must necessarily happen. Heap sort does not care whether or not our data is sorted to some degree.
+
+Smooth sort, on the other hand, takes an unorthodox approach. For one thing, it doesn't create a single tree but rather a *forest of max-heaps*. For another, it builds these trees such that their root nodes are on the right. This entails way less computations for lists that are close to being sorted.
+
+But how does it do this, exactly? That's where things get exciting.
+
+<!-- !To be continued -->
 
 # 4. Shuffling, Entropy, and Correlation
 
