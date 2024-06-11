@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-11 00:20:03
- * @ Modified time: 2024-06-11 11:47:27
+ * @ Modified time: 2024-06-11 11:50:45
  * @ Description:
  * 
  * Handles the overall flow of the program.
@@ -382,7 +382,9 @@ void Engine_run(Engine *this, int N, double P, int cycles, int runs, int sorters
   // Do the runOnce function n times
   for(i = 0; i < runs; i++) {
     printf("\e[1;1H\e[2J");
-    printf("[#] ======== RUN #%d ========", i + 1);
+    printf("\n[#] =========================");
+    printf("\n[#] [        RUN %3d        ]", i + 1);
+    printf("\n[#] =========================\n\n");
 
     Engine_runOnce(this, N, P, cycles, sorters);
   }
