@@ -9,7 +9,7 @@ This repository currently only features a few select sorting algorithms. They ar
 4. Heap Sort
 5. Smooth Sort
 
-In hindsight Smooth Sort was the most difficult to implement, but it also brought me most enjoyment. Because the implementations of the other algorithms are already widely-known, I put emphasis on explaining the mechanism of Smooth Sort below and leave out the others (except for Heap Sort... It'll become clear why I decided to explain this too).
+In hindsight smooth sort was the most difficult to implement, but it also brought me most enjoyment. Because the implementations of the other algorithms are already widely-known, I put emphasis on explaining the mechanism of Smooth Sort below and leave out the others (except for Heap Sort... It'll become clear why I decided to explain this too).
 
 Additionally, I'll outline the methods I used to benchmark the sorting algorithms. After much research, I decided to generate my own data sets (still using the `struct Record` provided by the starter code) to test the different implementations. I landed on a few ways to measure "entropy" (how shuffled an array is) to help me understand how the sorting algorithms would behave under different circumstances.
 

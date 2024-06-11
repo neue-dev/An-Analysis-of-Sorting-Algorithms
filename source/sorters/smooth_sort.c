@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-09 01:32:10
- * @ Modified time: 2024-06-10 18:40:05
+ * @ Modified time: 2024-06-11 21:37:24
  * @ Description:
  * 
  * An implementation of smoort sort.

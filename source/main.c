@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-05-24 11:21:27
- * @ Modified time: 2024-06-11 11:55:22
+ * @ Modified time: 2024-06-11 21:36:06
  * @ Description:
  * 
  * The main file.
@@ -23,14 +23,17 @@ int main() {
   // Init the random number generator
   Random_init();
 
+  // Init our sorters so we can use them
+  Record_initSorters();
+
   // Create the tester engine and init it
   Engine engine;
   Engine_init(&engine);
 
   // ! remove
-  Engine_run(&engine, 100000, 0.2, 5, 10,
+  Engine_run(&engine, 100000, 0.5, 5, 10,
     SORTER_HEAP |
-    SORTER_MERGE |
+    // SORTER_MERGE |
     SORTER_SMOOTH);
 
   return 0;
