@@ -27,7 +27,7 @@ But what benefit does a tree have over an array of elements? Because of the stru
 
 # 3. Smooth Sort
 
-The reason I decided to explain heap sort prior to smooth sort is because the two algorithms rely on the same fundamental ideas: visualizing an array in a manner that neglects its linear structure. However, smooth sort attempts to remedy a certain problem with heap sort: the largest element of the array is always at the root (the beginning) of the array, when ultimately it must end up at the opposite end. This means that regardless of the initial state of our array, $n log(n)$ operations must necessarily happen. Heap sort does not care whether or not our data is sorted to some degree.
+The reason I decided to explain heap sort prior to smooth sort is because the two algorithms rely on the same fundamental ideas: visualizing an array in a manner that neglects its linear structure. However, smooth sort attempts to remedy a certain problem with heap sort: the largest element of the array is always at the root (the beginning) of the array, when ultimately it must end up at the opposite end. This means that regardless of the initial state of our array, $n \cdot log(n)$ operations must necessarily happen. Heap sort does not care whether or not our data is sorted to some degree.
 
 Smooth sort, on the other hand, takes an unorthodox approach. For one thing, it doesn't create a single tree but rather a *forest of max-heaps*. For another, it builds these trees such that their root nodes are on the right. This entails way less computations for lists that are close to being sorted.
 
@@ -70,13 +70,19 @@ When performing a shuffle on data, it's helpful to know just how much of a shuff
 
 Entropy is often associated with the idea of disorder. Fundamentally, the concept of "disorder" is not too far from the concept of "messing up" a deck of cards, although context necessitates that we refer to the second case as [information entropy](https://en.wikipedia.org/wiki/Entropy_(information_theory)#:~:text=Generally%2C%20information%20entropy%20is%20the,referred%20to%20as%20Shannon%20entropy.). Interestingly enough, both information theory and statistical mechanics have characterized their notions of entropy in much the same way. We focus on the formulation Claude Shannon's provided for information theory (who impressively came up with the form [independent of any knowledge of statistical mechanics](https://mathoverflow.net/questions/403036/john-von-neumanns-remark-on-entropy)):
 
+<br>
+
 $$
 \begin{align}
-E = \sum_{x \in S} p_x \cdot -ln(p_x)
+E = -\sum_{x \in S} p_x \cdot ln(p_x)
 \end{align}
 $$
 
+<br>
+
 gives the entropy of a discrete random variable $X$, where for some $x$ in the sample space $S$, $p_x$ is $P(X=x)$. The important thing to see here is that we're multiplying the probabilities of each of the outcomes in the sample space by how "surprising" they are. That's all $-ln(p_x)$ is telling us, because:
+
+<br>
 
 $$
 \begin{align}
@@ -85,17 +91,23 @@ $$
 \end{align}
 $$
 
+<br>
+
 When $p_x=1$, then the event isn't suprising at all and the value above reduces to $0$. On the other hand, for smaller values of $p_x$, the value above increases and indicates that the event is "more surprising". Vaguely speaking maximizing entropy means "maximizing surprise and uncertainty", and this is achieved by dispersing our random variable across all possible values of the sample space. If some event were highly likely, then most of the time the outcome wouldn't surprise us at all. But if every outcome were equally likely, then each outcome would be very "surprising" because we would have no idea which one would likely happen next (as a fair warning, don't take the word "surprising" to mean anything rigorous here; it's only meant to be an analogy).
 
 So how can we use this to analyze the "shuffledness" of our arrays? Entropy manifests in our sequences of records when it becomes hard to expect which record comes after a given record. In a sorted list (or a list with some structure to it), this is easy because the records form a sort of pattern. Thus, when traversing the array, at any given point, it is reasonable to have an expectation for what the next record might be (it won't be anything surprising). However, when an array is shuffled really well, it becomes really hard to tell what record might come next, and so things are "uncertain" and "surprising". 
 
 [To approach this more rigorously](https://stats.stackexchange.com/questions/78591/correlation-between-two-decks-of-cards/79552#79552), we define a random variable $X$ to represent the possible differences between any two adjacent records. That is, for any two adjacent records $r_i$ and $r_{i + 1}$ along the shuffled array, we define $x_i$ to be
 
+<br>
+
 $$
 \begin{align}
 x_i = s(r_{i + 1}) - s(r_{i})
 \end{align}
 $$
+
+<br>
 
 where $s(r_i)$ returns the index of the record *in the sorted array*. Thus, a highly entropic array will have $X$ vary considerably, whereas in a sorted array, $P(X=1)$ is $1$ and no other differences occur.
 
