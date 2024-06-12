@@ -21,14 +21,13 @@ Compiling the program is relatively straightforward. Just use `gcc` and run `gcc
 
 Depending on what exactly you want to run, the program accepts a number of different command-line arguments. They are listed below.
 
-* 'toedit'
-* 'addsmth'
-* 'yeah'
-* 'algos'
-* 'N'
-* 'P'
+* `algos`, the algorithms to run, default is `insertion,selection,heap,merge,smooth`.
+* `N`, the number of records to sort, default is `100,1000,10000`.
+* `P`, the shuffling amount (explained below), default is `0,0.5,1.0`.
+* `cycles`, the number of cycles per run (explained below).
+* `runs`, the number of runs per $(N, P)$, (also explained below).
 
-So for example you could run the executable from above with the command `main yeah toedit algos=smooth,heap,merge N=500,5000,50000 P=0.005,0.05,0.5,1.0`.
+So for example you could run the executable from above with the command `main algos=smooth,heap,merge N=500,5000,50000 P=0.005,0.05,0.5,1.0`. You can leave out *any or all* of the arguments above, and the program will run with the default values assigned to the unspecified arguments. Also, ***strictly no spaces*** when inputting comma-separated arguments.
 
 <!-- Detail how running the main program with different parameters can give different results -->
 
