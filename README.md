@@ -166,6 +166,40 @@ However, there is something else we must account for: if the array was in revers
 
 # 5. Comparison and Individual Analyses
 
+As mentioned a number of times above, a testing framework was also constructed to aid in the comparison and analyses of the different algorithms. The framework allows us to execute a number of different *runs*, each of which perform a set of specific *cycles*. In this case, a run refers to different shufflings of records for a given $(N, P)$, while a cycle refers to a set of attempts (for all algorithms) to sort a certain shuffle. Multiple cycles ensure that we account for the actual time it takes each algorithm to sort a given array (in case outliers of bad timing happen to be present); runs allow us to be confident that the times we're getting aren't for a particularly "good" or "bad" shuffle (the shuffle wasn't unlikely). If this still isn't clear, the pseudocode below should elucidate what I mean:
+
+```python
+
+// This performs a test for a given N and a given P
+set value of N
+set value of P
+
+// Testing algorithm for a given N and P
+for(i in number of runs)
+    shuffle = new shuffle of records according to N and P
+    times = 2d array to store execution times
+
+    // Perform the required number of cycles
+    for(j in number of cycles)
+
+        // Do the sort for each algorithm
+        for(each algorithm)
+            tosort = copy order of shuffled records
+            
+            start = get start time
+            algorithm.sort(tosort)
+            end = get end time
+
+            times.save(algorithm, end - start)
+
+    // After all the cycles, compute the averages of the times
+    for(each algorithm)
+        compute_ave(times.get(algorithm))
+        save data somewhere else
+```
+
+Note that when we "save data somewhere else", we're saving it alongside the values of $N$ and $P$ that were used for those runs. The choice of $(N, P)$ definitely affects the times we will be seeing, and so it is imperative we keep track of them. Additionally, the choice for the number of cycles is often set to `cycles=5`, while runs have `runs=5`.
+
 ### 5.1 Comparisons and Testing
 
 <!-- Mention P and N here again -->
