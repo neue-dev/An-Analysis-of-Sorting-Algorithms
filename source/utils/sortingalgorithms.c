@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-05-24 11:21:27
- * @ Modified time: 2024-06-11 21:35:43
+ * @ Modified time: 2024-06-12 00:58:34
  * @ Description:
  * 
  * The file contains a wrapper for each of the implementations of the sorting algorithms.
@@ -36,11 +36,21 @@ SmoothSort ss;
 */
 void Record_initSorters() {
   
+  // For warming up, idkk
+  // Now this is fucking insance but for some reason smooth sort is x2 slower without this initial run??
+  // It has something to do with my implementation, but trust me I've analyzed for hours and can't firgure out what it is
+  Record r; r.idNumber = 0;
+  Record record[1] = { r };
+
+  // Initialize the different sorter objects
   InsertionSort_init(&is, &Record_comparator, &Record_swapper, &Record_copier, &Record_sizer);
   SelectionSort_init(&ls, &Record_comparator, &Record_swapper, &Record_copier, &Record_sizer);
   MergeSort_init(&ms, &Record_comparator, &Record_swapper, &Record_copier, &Record_sizer);
   HeapSort_init(&hs, &Record_comparator, &Record_swapper, &Record_copier, &Record_sizer);
   SmoothSort_init(&ss, &Record_comparator, &Record_swapper, &Record_copier, &Record_sizer);
+
+  // Warp up smooth sort
+  SmoothSort_main(ss, record, 1);
 }
 
 /**

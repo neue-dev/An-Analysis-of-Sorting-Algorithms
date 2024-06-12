@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-09 01:32:10
- * @ Modified time: 2024-06-12 00:49:01
+ * @ Modified time: 2024-06-12 11:24:38
  * @ Description:
  * 
  * An implementation of smoort sort.
@@ -190,14 +190,14 @@ void _SmoothSort_siftDown(SmoothSort this, t_Record records, int n, int k, int s
  * property. At the start of insertion, note that the new element automatically becomes the root
  * of the smallest Leonardo heap in our sequence.
  * 
- * @param   { SmoothSort }  this      The smooth sort data object.
- * @param   { t_Record }    records   The array of records to use.
- * @param   { int }         n         The total number of records.
- * @param   { int }         i         We're inserting the ith element of the original array into
- *                                      the [0, i - 1] slice.
- * @param   { long }        lseq      Information about which Leonardo numbers we're using.
+ * @param   { SmoothSort }    this      The smooth sort data object.
+ * @param   { t_Record }      records   The array of records to use.
+ * @param   { int }           n         The total number of records.
+ * @param   { int }           i         We're inserting the ith element of the original array into
+ *                                        the [0, i - 1] slice.
+ * @param   { unsigned int }  lseq      Information about which Leonardo numbers we're using.
 */
-void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, long lseq) {
+void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, unsigned int lseq) {
   int bit, exp, order, porder;    // Holding variables
   int c1, c2, root, new;          // Children and root variables, newly inserted element
 
@@ -287,14 +287,14 @@ void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, long ls
  * For a given integer n, if lseq represents the members of the Leonardo sequence that sum to n,
  * then this function computes the new lseq for n + 1.
  * 
- * @param   { long }  lseq  The current bit vector that represents the used Leonardo numbers.
- * @return  { long }        The new bit vector for the Leonardo numbers that sum to n + 1.
+ * @param   { unsigned int }  lseq  The current bit vector that represents the used Leonardo numbers.
+ * @return  { unsigned int }        The new bit vector for the Leonardo numbers that sum to n + 1.
 */
-long _SmoothSort_computeLseqIncrement(long lseq) {
+unsigned int _SmoothSort_computeLseqIncrement(unsigned int lseq) {
   
   // Stores the rightmost bit of lseq
   // Gives us the index of the smallest used Leonardo number
-  long lfirst = lseq & -lseq;
+  unsigned int lfirst = lseq & -lseq;
 
   // If the two smallest Leonardo's in the sequence are adjacent
   if(lseq & (lfirst << 1)) {
@@ -322,14 +322,14 @@ long _SmoothSort_computeLseqIncrement(long lseq) {
  * For a given integer n, if lseq represents the members of the Leonardo sequence that sum to n,
  * then this function computes the new lseq for n - 1.
  * 
- * @param   { long }  lseq  The current bit vector that represents the used Leonardo numbers.
- * @return  { long }        The new bit vector for the Leonardo numbers that sum to n - 1.
+ * @param   { unsigned int }  lseq  The current bit vector that represents the used Leonardo numbers.
+ * @return  { unsigned int }        The new bit vector for the Leonardo numbers that sum to n - 1.
 */
-long _SmoothSort_computeLseqDecrement(long lseq) {
+unsigned int _SmoothSort_computeLseqDecrement(unsigned int lseq) {
   
   // Stores the rightmost bit of lseq
   // Gives us the index of the smallest used Leonardo number
-  long lfirst = lseq & -lseq;
+  unsigned int lfirst = lseq & -lseq;
 
   // If we have a pair of 1's in our Leonardo seq, remove L0
   if(lseq % 4 == 3) {
@@ -380,8 +380,8 @@ long _SmoothSort_computeLseqDecrement(long lseq) {
 void SmoothSort_main(SmoothSort this, t_Record records, int n) {
   int i;
 
-  // We use the bits of the following long to indicate which Leonardo numbers are in use
-  long lseq = 0, lfirst;
+  // We use the bits of the following unsigned int to indicate which Leonardo numbers are in use
+  unsigned int lseq = 0, lfirst;
   
   // These just hold bits and other info for us
   int exp, offset;
@@ -406,8 +406,8 @@ void SmoothSort_main(SmoothSort this, t_Record records, int n) {
   offset = 0;
 
   // We go through each of the heaps in reverse and sort the roots in ascending order
-  // The 64 - 1 here is for traversing all the bits in a long
-  for(i = 64 - 1; --i >= 0;) {
+  // The iterator here is for traversing all the bits in a unsigned int
+  for(i = sizeof(int) * 8 - 1; --i >= 0;) {
     lfirst = (lseq >> i) % 2;
 
     // We don't have a heap of that size

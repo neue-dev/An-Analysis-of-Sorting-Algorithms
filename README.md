@@ -31,7 +31,7 @@ But what benefit does a tree have over an array of elements? Because of the stru
 
 # 3. Smooth Sort
 
-The reason I decided to explain heap sort prior to smooth sort is because the two algorithms rely on the same fundamental ideas: visualizing an array in a manner that neglects its linear structure. However, smooth sort attempts to remedy a certain problem with heap sort: the largest element of the array is always at the root (the beginning) of the array, when ultimately it must end up at the opposite end. This means that regardless of the initial state of our array, $n \cdot log(n)$ operations must necessarily happen. Heap sort does not care whether or not our data is sorted to some degree.
+The reason I decided to explain heap sort prior to smooth sort is because the two algorithms rely on the same fundamental ideas: visualizing an array in a manner that neglects its linear structure. However, smooth sort attempts to remedy a certain problem with heap sort: the largest element of the array is always at the root (the beginning) of the array, when ultimately it must end up at the opposite end. This means that regardless of the initial state of our array, $n \cdot \log n$ operations must necessarily happen. Heap sort does not care whether or not our data is sorted to some degree.
 
 Smooth sort, on the other hand, takes an unorthodox approach. For one thing, it doesn't create a single tree but rather a *forest of max-heaps*. For another, it builds these trees such that their root nodes are on the right. This entails way less computations for lists that are close to being sorted.
 
@@ -134,6 +134,42 @@ However, there is something else we must account for: if the array was in revers
 ### 5.1 Comparisons
 
 ### 5.2 Analyses of Each Algorithm
+
+### 5.3 Some Interesting Realizations
+
+At some point I got kind of worried with my implementation of smooth sort because it seemed to behave in a manner that contradicted its $O(n\log n)$ promise. Since all three of our faster sorting algorithms (merge sort, heap sort, and smooth sort) must behave in this way (most of the time), I expected their execution times to scale by roughly the same amount for increasing dataset sizes. Indeed, when comparing heap sort and merge sort, this seemed to hold true. Assuming $P$ was held constant, if heap sort took twice as much time to sort a larger list, merge sort took about twice as much of its own time too.
+
+However, when looking at smooth sort against those other two algorithms, it seemed to perform twice as much *and a little more*. The larger the datasets, the more this difference became apparent; it wasn't something you could just ignore. It seemed like there was another factor at play and for a moment I thought the either the $O(n\log n)$ wasn't right for smooth sort or my implementation was kaput. Did my implementation secretly have another factor, like $O(n\log n\cdot\log n)$? I tried in vain to verify the correctness of my implementation, and I was certain I wasn't performing any unnecessary steps.
+
+And then it hit me. Whenever we say an algorithm runs in $O(\log n)$ (or in this case, $O(n \log n)$) time we sometimes drop the base of the logarithm and leave it out when performing Big-O analyses. I got all these expressions for the different behaviours of our algorithms without actually paying mind to their underlying nuances. The moment we consider the difference of what $\log n$ means for all heap, merge and smooth sort, our comparisons between these algorithms begin to make sense.  
+
+Heap and merge sort have the usual $\log_2 n$; the former uses a *binary* tree to perform sorting, while the latter uses a sequence of *divisions by 2*. Smooth sort, on the other hand, has $\log_\varphi$. For the uninitiated, 
+
+<br>
+
+$$
+\begin{align}
+\varphi &= \frac{\sqrt{5} + 1}{2}\\
+\varphi &= 1.61803...
+\end{align}
+$$
+
+<br>
+
+and is often called the golden ratio. Logically, because smooth sort utilizes Leonardo numbers to define the structure of its heaps, the number of operations we perform must grow with respect to the number of Leonardo numbers under $n$. Since every Leonardo number [can be bounded by a multiple of a Fibonacci number](https://www.keithschwarz.com/smoothsort/), and every Fibonacci number [can be represented as a scaled power of $\varphi$](https://en.wikipedia.org/wiki/Fibonacci_sequence#Closed-form_expression), then Leonardo numbers must grow by at least $\varphi^x$. In other words, given some $k \text{th}$ Leonardo number, we can be sure that $k$ is at least as great as $\alpha \log_\varphi n$ for some constant $\alpha$.
+
+Finally, we have the true behaviour of our sorting algorithms:
+
+* Heap sort: $O(n \log_2 n)$
+* Merge sort: $O(n \log_2 n)$
+* Smooth sort: $O(n \log_\varphi n)$
+
+Plotting these functions on desmos, we can see that Smooth sort must scale differently from the other algorithms.
+
+ALSO talkABOUT HOW WHEN COMPUTING THE RATIO OF THE FUNCTIONS, THE RATIO TENDS TO BE SMALL ( < 2 for the most part, and it grows logarithmically too>) BUT THIS IS ENOUGH TO CREATE BIG DIFFERENCES FOR LARGER DATA SETS
+
+CONTINUE EXPLAINING, TALK ABOUT ADDING FACTOR alpha AND THE NEEDED CONSTANT $\frac{\sqrt{5}}{2}$ for smooth sort
+<!-- ! insert graph of functions -->
 
 # 6. Author
 
