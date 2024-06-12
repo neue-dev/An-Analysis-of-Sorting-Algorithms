@@ -68,9 +68,9 @@ But what benefit does a tree have over an array of elements? Because of the stru
 
 The reason I decided to explain heap sort prior to smooth sort is because the two algorithms rely on the same fundamental ideas: visualizing an array in a manner that neglects its linear structure. However, smooth sort attempts to remedy a certain problem with heap sort: the largest element of the array is always at the root (the beginning) of the array, when ultimately it must end up at the opposite end. This means that regardless of the initial state of our array, $n \cdot \log n$ operations must necessarily happen. Heap sort does not care whether or not our data is sorted to some degree.
 
-Smooth sort, on the other hand, takes an unorthodox approach. For one thing, it doesn't create a single tree but rather a *forest of max-heaps*. For another, it builds these trees such that their root nodes are on the right. This entails way less computations for lists that are close to being sorted.
+Smooth sort, on the other hand, takes an unorthodox approach. For one thing, it doesn't create a single tree but rather a *forest of max-heaps*. For another, it builds these trees such that their root nodes are on the right. This entails way less computations for lists that are close to being sorted. It also means that smooth sort, in the best case, is $\mathcal{O}(n)$! Note that as amazing as this sounds, we will see towards the latter half of this paper whether or not the merit this brings makes it worth using smooth sort.
 
-But how does it do this, exactly? That's where things get exciting.
+But how does it work, exactly? That's where things get exciting.
 
 ### 3.1 Leonardo Numbers and Leonardo Heaps
 
@@ -174,13 +174,13 @@ However, there is something else we must account for: if the array was in revers
 
 ### 5.3 Some Interesting Realizations
 
-At some point I got kind of worried with my implementation of smooth sort because it seemed to behave in a manner that contradicted its $O(n\log n)$ promise. Since all three of our faster sorting algorithms (merge sort, heap sort, and smooth sort) must behave in this way (most of the time), I expected their execution times to scale by roughly the same amount for increasing dataset sizes. Indeed, when comparing heap sort and merge sort, this seemed to hold true. Assuming $P$ was held constant, when heap sort took twice as much time to sort a larger list, merge sort took about twice as much of its own time too.
+At some point I got kind of worried with my implementation of smooth sort because it seemed to behave in a manner that contradicted its $\mathcal{O}(n\log n)$ promise. Since all three of our faster sorting algorithms (merge sort, heap sort, and smooth sort) must behave in this way (most of the time), I expected their execution times to scale by roughly the same amount for increasing dataset sizes. Indeed, when comparing heap sort and merge sort, this seemed to hold true. Assuming $P$ was held constant, when heap sort took twice as much time to sort a larger list, merge sort took about twice as much of its own time too.
 
-However, when looking at smooth sort against those other two algorithms, it seemed to perform twice as much *and a little more*. The larger the datasets, the more this difference became apparent; it wasn't something you could just ignore. It seemed like there was another factor at play and for a moment I thought I introduced another factor to the runtime behaviour of my smooth sort. Did my implementation secretly have another multiplier, like $O(n\log n\cdot\log n)$? I tried in vain to verify the correctness of my implementation, but I was certain I wasn't performing any unnecessary steps.
+However, when looking at smooth sort against those other two algorithms, it seemed to perform twice as much *and a little more*. The larger the datasets, the more this difference became apparent; it wasn't something you could just ignore. It seemed like there was another factor at play, and for a moment I thought I introduced another component to the runtime behaviour of my smooth sort. Did my implementation secretly have another multiplier, like $\mathcal{O}(n\log n\cdot\log n)$? I tried in vain to verify the correctness of my implementation, but I was certain I wasn't performing any unnecessary steps.
 
-And then it hit me. Whenever we say an algorithm runs in $O(\log n)$ (or in this case, $O(n \log n)$ ), we sometimes drop the base of the logarithm and leave it out when performing Big-O analyses. I got all these expressions for the different behaviours of our algorithms without actually paying mind to their underlying nuances. The moment we consider the difference of what $\log n$ means for all heap, merge and smooth sort, our comparisons between these algorithms begin to make sense.  
+And then it hit me. Whenever we say an algorithm runs in $\mathcal{O}(\log n)$ (or in this case, $\mathcal{O}(n \log n)$ ), we sometimes generalize a bit too much and neglect to include the base of the logarithm. After all, when we say things like *logarithmic growth* or *superlinear growth*, we make no mention of the base--it's usually implied that we're comparing our functions using the same base. But this habit of leaving out the base led to a slight oversight. The moment we consider the difference of what it means for all heap, merge and smooth sort to grow *superlinearly*, our comparisons between these algorithms begin to make sense.
 
-Heap and merge sort have the usual $\log_2 n$; the former uses a *binary* tree to perform sorting, while the latter uses a sequence of *divisions by 2*. Smooth sort, on the other hand, has $\log_\varphi$. For the uninitiated, 
+Heap and merge sort have the usual $\log_2 n$ term; the former uses a *binary* tree to perform sorting, while the latter uses a sequence of *divisions by 2*. Smooth sort, on the other hand, has $\log_\varphi n$. For the uninitiated, 
 
 <br>
 
@@ -195,11 +195,11 @@ $$
 
 and is often called the golden ratio. Logically, because smooth sort utilizes Leonardo numbers to define the structure of its heaps, the number of operations we perform must grow with respect to the number of Leonardo numbers under $n$. Since every Leonardo number [can be bounded by a multiple of a Fibonacci number](https://www.keithschwarz.com/smoothsort/), and every Fibonacci number [can be represented as a scaled power of the ratio above](https://en.wikipedia.org/wiki/Fibonacci_sequence#Closed-form_expression), then Leonardo numbers must grow by at least $\varphi^x$. In other words, given some $k \text{th}$ Leonardo number, we can be sure that $k$ is at least as great as $\alpha \log_\varphi n$ for some constant $\alpha$. The number of Leonardos under a given $n$ must thus be a logarithmic function (in base $\varphi$) of $n$.
 
-After all this, we finally, we have the true behaviours of our sorting algorithms:
+After all this, we finally have the true behaviours of our sorting algorithms:
 
-* Heap sort: $O(n \log_2 n)$
-* Merge sort: $O(n \log_2 n)$
-* Smooth sort: $O(n \log_\varphi n)$
+* Heap sort: $\mathcal{O}(n \log_2 n)$
+* Merge sort: $\mathcal{O}(n \log_2 n)$
+* Smooth sort: $\mathcal{O}(n \log_\varphi n)$
 
 Plotting these functions on desmos, we can see that smooth sort must scale differently from the other algorithms.
 

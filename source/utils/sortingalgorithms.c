@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-05-24 11:21:27
- * @ Modified time: 2024-06-12 15:27:22
+ * @ Modified time: 2024-06-12 15:29:45
  * @ Description:
  * 
  * The file contains a wrapper for each of the implementations of the sorting algorithms.
@@ -38,7 +38,7 @@ void Record_initSorters() {
   
   // For warming up, idkk
   // Now this is fucking insane but for some reason smooth sort is x2 slower without this initial run??
-  // It has something to do with my implementation, but trust me I've analyzed for hours and can't firgure out what it is
+  // It has something to do with my implementation, but trust me I've analyzed for hours and can't figure out what it is
   Record r; r.idNumber = 0;
   Record record[1] = { r };
 
