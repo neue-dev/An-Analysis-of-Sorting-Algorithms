@@ -15,6 +15,39 @@ Additionally, I'll outline the methods I used to benchmark the sorting algorithm
 
 Likewise, to verify the amount by which the different algorithms would scale (in terms of execution time), the sizes of the custom data sets were varied too.
 
+### 1.1 Running the Program
+
+Compiling the program is relatively straightforward. Just use `gcc` and run `gcc main.c -o main`, after which you can run the built `main` executable. **For linux users**, I do leave another important note as the math library is not linked by default: if you are using a Linux device, run `gcc main.c -o main -lm` instead.
+
+Depending on what exactly you want to run, the program accepts a number of different command-line parameters. They are listed below.
+
+* 'toedit'
+* 'addsmth'
+* 'yeah'
+
+So for example you could run the executable from above with the command `main yeah toedit`.
+
+<!-- Detail how running the main program with different parameters can give different results -->
+
+### 1.2 Doing Custom Tests
+
+Because of the way the program is structured, it is possible to import `sortingalgorithms.c` into your own main function and test each of the following functions with your own data:
+
+1. `Record_insertionSort(Record *records, int n)`
+2. `Record_selectionSort(Record *records, int n)`
+3. `Record_heapSort(Record *records, int n)`
+4. `Record_mergeSort(Record *records, int n)`
+5. `Record_smoothSort(Record *records, int n)`
+
+Note how all the functions preserve the same signature to facilitate testing. Functions that use recursion (such as merge sort) have been abstracted into their own files to avoid succumbing to spaghetti code.
+
+> <b style="color: rgba(255, 55, 55, 1); background-color: rgba(255, 55, 55, 0.16); padding: 4px 8px;">IMPORTANT REMINDERS</b>
+>
+> Please keep the following in mind to avoid any problems running your custom tests:
+>
+> 1. When importing `sortingalgorithms.c` and using any of the `Record_...Sort()` functions, <b style="color: rgba(255, 55, 55, 1);">DO NOT FORGET TO RUN</b> `Record_initSorters()` at the start of the main function (with no parameters). This function has to be run once before any of the sorting algorithms can work.
+> 2. <b style="color: rgba(255, 55, 55, 1);">DO NOT MOVE</b> any of the files around to prevent breaking any of the imports.
+
 # 2. Heap Sort
 
 Heap sort has been described as ["selection sort using the right data structure"](https://link.springer.com/chapter/10.1007/978-3-030-54256-6_4). While that was not something that made sense to me the first time around, it was something that clicked eventually.
@@ -23,7 +56,7 @@ Heap sort treats the array differently: instead of viewing it as a sequential li
 
 ### 2.1 Why Do We Use A Tree?
 
-But what benefit does a tree have over an array of elements? Because of the structure of a heap, we are guaranteed to know that every element is greater than all its descendants. This invariant allows us to shift an element to its right place within the structure without having to compare with every single element in the array.
+But what benefit does a tree have over an array of elements? Because of the structure of a heap, we are guaranteed to know that every element is greater than all its descendants. This invariant allows us to shift an element to its right place within the structure without having to compare it with every single element in the array.
 
 ### 2.2 The Heap Sort Algorithm
 

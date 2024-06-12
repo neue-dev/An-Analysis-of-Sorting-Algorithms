@@ -1,4 +1,2 @@
-REMOVE MOMO SORT OR FINISH IT
+ADD NOTE ABOUT Record_initSorters() BEING REQUIRED
 ADD NOTE ABOUT COMPILING -lm IN LINUX
-
-check robustness of sortcheck
