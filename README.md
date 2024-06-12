@@ -170,19 +170,19 @@ As mentioned a number of times above, a testing framework was also constructed t
 
 ```python
 
-// This performs a test for a given N and a given P
+# This performs a test for a given N and a given P
 set value of N
 set value of P
 
-// Testing algorithm for a given N and P
+# Testing algorithm for a given N and P
 for(i in number of runs)
     shuffle = new shuffle of records according to N and P
     times = 2d array to store execution times
 
-    // Perform the required number of cycles
+    # Perform the required number of cycles
     for(j in number of cycles)
 
-        // Do the sort for each algorithm
+        # Do the sort for each algorithm
         for(each algorithm)
             tosort = copy order of shuffled records
             
@@ -192,7 +192,7 @@ for(i in number of runs)
 
             times.save(algorithm, end - start)
 
-    // After all the cycles, compute the averages of the times
+    # After all the cycles, compute the averages of the times
     for(each algorithm)
         compute_ave(times.get(algorithm))
         save data somewhere else
