@@ -19,13 +19,16 @@ Likewise, to verify the amount by which the different algorithms would scale (in
 
 Compiling the program is relatively straightforward. Just use `gcc` and run `gcc main.c -o main`, after which you can run the built `main` executable. **For linux users**, I do leave another important note as the math library is not linked by default: if you are using a Linux device, run `gcc main.c -o main -lm` instead.
 
-Depending on what exactly you want to run, the program accepts a number of different command-line parameters. They are listed below.
+Depending on what exactly you want to run, the program accepts a number of different command-line arguments. They are listed below.
 
 * 'toedit'
 * 'addsmth'
 * 'yeah'
+* 'algos'
+* 'N'
+* 'P'
 
-So for example you could run the executable from above with the command `main yeah toedit`.
+So for example you could run the executable from above with the command `main yeah toedit algos=smooth,heap,merge N=500,5000,50000 P=0.005,0.05,0.5,1.0`.
 
 <!-- Detail how running the main program with different parameters can give different results -->
 
