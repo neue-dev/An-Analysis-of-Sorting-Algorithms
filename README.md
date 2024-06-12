@@ -96,14 +96,14 @@ for k = (array.length - 1) to k = 0:
 
 Despite it's simplicity, it reliably selects a permutation of the original array in a uniform manner (assuming your random function for choosing a number between each $[0, k]$ is unbiased).
 
-To perform shuffling for this project, a slight variation of the original algorithm is used. Whereas the original Fisher-Yates always executes a shuffle for each element, the variation used here only performs swaps probabilitically. A swap happens $p$ amount of the time ($p=1$ means we always swap, $p=0$ means we never swap). In pseudocode:
+To perform shuffling for this project, a slight variation of the original algorithm is used. Whereas the original Fisher-Yates always executes a shuffle for each element, the variation used here only performs swaps probabilitically. A swap happens $P$ amount of the time ($P=1$ means we always swap, $P=0$ means we never swap). In pseudocode:
 
 ```Python
 for k = (array.length - 1) to k = 0:
     k' = random number from 0 to k
     t = random float from 0 to 1
 
-    if t <= p and t > 0:
+    if t <= P and t > 0:
       swap array[k] with array[k']
 ```
 
@@ -125,7 +125,7 @@ $$
 
 <br>
 
-gives the entropy of a discrete random variable $X$, where for some $x$ in the sample space $S$, $p_x$ is $P(X=x)$. The important thing to see here is that we're multiplying the probabilities of each of the outcomes in the sample space by how "surprising" they are. That's all $-ln(p_x)$ is telling us, because:
+gives the entropy of a discrete random variable $X$, where for some $x$ in the sample space $S$, $p_x$ is $\text{I\kern-0.15em P}(X=x)$. The important thing to see here is that we're multiplying the probabilities of each of the outcomes in the sample space by how "surprising" they are. That's all $-ln(p_x)$ is telling us, because:
 
 <br>
 
@@ -166,7 +166,9 @@ However, there is something else we must account for: if the array was in revers
 
 # 5. Comparison and Individual Analyses
 
-### 5.1 Comparisons
+### 5.1 Comparisons and Testing
+
+<!-- Mention P and N here again -->
 
 ### 5.2 Analyses of Each Algorithm
 
