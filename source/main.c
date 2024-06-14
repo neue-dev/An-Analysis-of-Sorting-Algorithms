@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-05-24 11:21:27
- * @ Modified time: 2024-06-15 00:49:52
+ * @ Modified time: 2024-06-15 01:17:56
  * @ Description:
  * 
  * The main file.
@@ -11,6 +11,9 @@
 #include "./utils/sortingalgorithms.c"
 #include "./utils/random.c"
 
+// Import the cli file
+#include "./cli.c"
+
 // Import the tester
 #include "./engine.c"
 
@@ -18,7 +21,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main() {
+int main(int argc, char *argv[]) {
+
+  initArgs(argc, argv);
+  return 0;
 
   // Init the random number generator
   Random_init();
