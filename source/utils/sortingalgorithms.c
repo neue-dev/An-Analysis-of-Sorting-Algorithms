@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-05-24 11:21:27
- * @ Modified time: 2024-06-12 15:29:45
+ * @ Modified time: 2024-06-15 00:08:01
  * @ Description:
  * 
  * The file contains a wrapper for each of the implementations of the sorting algorithms.
@@ -23,6 +23,7 @@
 #include "../sorters/merge_sort.c"
 #include "../sorters/heap_sort.c"
 #include "../sorters/smooth_sort.c"
+#include "../sorters/tim_sort.c"
 
 // Our different sorters
 InsertionSort _Record_IS;
@@ -30,6 +31,7 @@ SelectionSort _Record_LS;
 MergeSort _Record_MS;
 HeapSort _Record_HS;
 SmoothSort _Record_SS;
+TimSort _Record_TS;
 
 /**
  * Initializes our sorters.
@@ -53,6 +55,8 @@ void Record_initSorters() {
     &_Record_HS, &Record_comparator, &Record_swapper, &Record_copier, &Record_sizer);
   SmoothSort_init(
     &_Record_SS, &Record_comparator, &Record_swapper, &Record_copier, &Record_sizer);
+  TimSort_init(
+    &_Record_TS, &Record_comparator, &Record_swapper, &Record_copier, &Record_sizer);
 
   // Warp up smooth sort
   SmoothSort_main(_Record_SS, record, 1);
@@ -106,6 +110,16 @@ void Record_heapSort(Record *records, int n) {
 */
 void Record_smoothSort(Record *records, int n) {
   SmoothSort_main(_Record_SS, records, n);
+}
+
+/**
+ * Tim sort.
+ * 
+ * @param   { Record * }  records   The records to sort.
+ * @param   { int }       n         The number of records to sort.
+*/
+void Record_timSort(Record *records, int n) {
+  TimSort_main(_Record_TS, records, n);
 }
 
 #endif

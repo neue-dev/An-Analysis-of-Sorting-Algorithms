@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-09 01:31:50
- * @ Modified time: 2024-06-10 18:45:14
+ * @ Modified time: 2024-06-15 00:41:24
  * @ Description:
  * 
  * An implementation of merge sort.
@@ -41,25 +41,6 @@ void MergeSort_init(MergeSort *this, t_Comparator comparator, t_Swapper swapper,
   this->copier = copier;
   this->sizer = sizer;
 } 
-
-// ! remove
-// /**
-//  * Places the jth entry of src into the ith slot of dest.
-//  * 
-//  * @param   { MergeSort }   this      The merge sort config object.
-//  * @param   { t_Record }    records   The records array.
-//  * @param   { t_Record }    src       The source array.
-//  * @param   { int }         i         The ith slot of records.
-//  * @param   { int }         j         The jth entry in src.
-// */
-// void _MergeSort_copy(MergeSort this, t_Record dest, t_Record src, int i, int j) {
-
-//   // Copy the record
-//   // memcpy(
-//   //   dest + i * this.recordSize, 
-//   //   src + j * this.recordSize,
-//   //   this.recordSize);
-// }
 
 /**
  * Copies the source array unto the records array.

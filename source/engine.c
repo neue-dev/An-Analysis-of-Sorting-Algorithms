@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-11 00:20:03
- * @ Modified time: 2024-06-11 21:25:18
+ * @ Modified time: 2024-06-15 00:24:16
  * @ Description:
  * 
  * Handles the overall flow of the program.
@@ -32,7 +32,8 @@
 #define SORTER_MERGE (1 << (_SORTER + 2))
 #define SORTER_SELECTION (1 << (_SORTER + 3))
 #define SORTER_SMOOTH (1 << (_SORTER + 4))
-#define SORTER_COUNT 5
+#define SORTER_TIM (1 << (_SORTER + 5))
+#define SORTER_COUNT 6
 
 #define MAX_ROWS 16
 #define MAX_RUNS 1024
@@ -170,6 +171,10 @@ void _Engine_doSort(Engine *this, int sorter) {
       Record_smoothSort(tester->tosort, tester->N);
       break;
 
+    case SORTER_TIM:
+      Record_timSort(tester->tosort, tester->N);
+      break;
+
     default: break;
   }
 }
@@ -187,6 +192,7 @@ char *_Engine_getName(Engine *this, int sorter) {
     case SORTER_MERGE:      return "merge sort";
     case SORTER_SELECTION:  return "selection sort";
     case SORTER_SMOOTH:     return "smooth sort";
+    case SORTER_TIM:        return "tim sort";
     default:                return "?? sort";
   }
 }
@@ -349,6 +355,9 @@ void Engine_runOnce(Engine *this, int N, double P, int cycles, int sorters) {
   // Grab the tester
   Tester *tester = &this->tester;
 
+  // We init the sorters here again
+  Record_initSorters();
+
   // Max cycles
   if(cycles >= MAX_CYCLES)
     cycles = MAX_CYCLES - 1;
@@ -397,7 +406,7 @@ void Engine_run(Engine *this, int N, double P, int cycles, int runs, int sorters
     Engine_runOnce(this, N, P, cycles, sorters);
 
     // ! remove
-    long j = 2000000000;
+    long j = 500000000;
     while(j--);
   }
 }
