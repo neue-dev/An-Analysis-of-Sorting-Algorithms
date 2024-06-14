@@ -78,11 +78,15 @@ But how does it work, exactly? That's where things get exciting.
 
 ### 3.3 The Smooth Sort Algorithm
 
-<!-- !To be continued -->
+# 4. Tim Sort
 
-# 4. Shuffling, Entropy, and Correlation
+Now I won't bother going too in-depth with Tim Sort; it's not really the main algorithm I chose anyway. I feel like it deserves a special mention, though. Out of all the algorithms here, Tim Sort proved the most effective. And despite the (commonplace) minimum run size recommendation of $32$, choosing the value $16$ actually produced better results according to the tests of the following project. Do note that this is probably due to the small number of records we're sorting (I'm pretty sure real-life applications would deal with at least a few million of these, whereas we're staying a somewhere below that range here).
 
-### 4.1. Shuffling
+One caveat with the implementation of Tim Sort used by this project: it's not adaptive. The run size doesn't change based on the number of records, although in practice it should resize to try and minimize the number of resulting merges utilized by the algorithm. 
+
+# 5. Shuffling, Entropy, and Correlation
+
+### 5.1. Shuffling
 
 There is a well-known shuffling algorithm that generates a permutation of the elements of a sequence in a *reliably-random* way. By this, we mean to say that every possible permutation is equally likely, and the shuffling process does not favor any single one. This is called the [Fisher-Yates algorithm](https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle).
 
@@ -111,7 +115,7 @@ In the implementation, things are notated a bit differently and we have $<$ inst
 
 When performing a shuffle on data, it's helpful to know just how much of a shuffle we were able to do. To help us measure this idea of "shuffling", we come up with two metrics, the first of which is entropy.
 
-### 4.2. Entropy
+### 5.2. Entropy
 
 Entropy is often associated with the idea of disorder. Fundamentally, the concept of "disorder" is not too far from the concept of "messing up" a deck of cards, although context necessitates that we refer to the second case as [information entropy](https://en.wikipedia.org/wiki/Entropy_(information_theory)#:~:text=Generally%2C%20information%20entropy%20is%20the,referred%20to%20as%20Shannon%20entropy.). Interestingly enough, both information theory and statistical mechanics have characterized their notions of entropy in much the same way. We focus on the formulation Claude Shannon provided for information theory (who impressively came up with the form [independent of any knowledge of statistical mechanics](https://mathoverflow.net/questions/403036/john-von-neumanns-remark-on-entropy)):
 
@@ -158,13 +162,13 @@ where $s(r_i)$ returns the index of the record *in the sorted array*. Thus, a hi
 
 Do note that in order for this approach to work, we adjust negative differences to fall within the range $[0, N-1]$ ($N$ is the number of records). We do this by adding $N$ whenever $x_i < 0$. Effectively, this just gives us the residue of $x_i \text{ mod } N$. If we were to leave this step out, our computation for entropy would likely have its terms cancel out, and we would end up with 0 when in fact the system displays a high degree of entropy.
 
-### 4.3. Correlation (or Rather, Determination)
+### 5.3. Correlation (or Rather, Determination)
 
 [Another useful idea](https://stats.stackexchange.com/questions/78591/correlation-between-two-decks-of-cards/) to help us assess the "shuffledness" of an array is correlation. Using the same function $s(r_i)$ from above, we can create a rough estimate of the disorder in our array by determining the strength of the correlation between $i$ and $s(r_i)$. A sorted array will always have $i=s(r_i)$ (that is, the values of the sorted indices of the records are equal to their current position in the array), and would produce a correlation of exactly $1$. An unsorted array, however, will likely have a very small correlation value (something close to 0). Unlike entropy, our scale goes in the opposite direction within the interval $[0, 1]$.
 
 However, there is something else we must account for: if the array was in reverse, it wouldn't be considered "well-shuffled" (it's far from sorted, but it's not really jumbled up) and correlation would give us a value of $-1$. This is fine because it isn't $0$ (which would indicate complete disorder), but it would be better to restrict all our values within the positive range of $[0, 1]$. To avoid dealing with negative numbers, we square the value we obtain for the correlation. This particular number is used a lot in inferential statistics and has a special name: [the coefficient of determination](https://en.wikipedia.org/wiki/Coefficient_of_determination). Although this number has a few different interpretations, we ignore most of these as they do not apply to our framework. However, we must acknowledge the relevance this metric has (henceforth referred to as $r^2$) in describing the disorder within a set of data.
 
-# 5. Comparison and Individual Analyses
+# 6. Comparison and Individual Analyses
 
 As mentioned a number of times above, a testing framework was also constructed to aid in the comparison and analyses of the different algorithms. The framework allows us to execute a number of different *runs*, each of which perform a set of specific *cycles*. In this case, a run refers to different shufflings of records for a given $(N, P)$, while a cycle refers to a set of attempts (for all algorithms) to sort a certain shuffle. Multiple cycles ensure that we account for the actual time it takes each algorithm to sort a given array (in case outliers of bad timing happen to be present); runs allow us to be confident that the times we're getting aren't for a particularly "good" or "bad" shuffle (the shuffle wasn't unlikely). If this still isn't clear, the pseudocode below should elucidate what I mean:
 
@@ -200,14 +204,14 @@ for(i in number of runs)
 
 Note that when we "save data somewhere else", we're saving it alongside the values of $N$ and $P$ that were used for those runs. The choice of $(N, P)$ definitely affects the times we will be seeing, and so it is imperative we keep track of them. Additionally, the choice for the number of cycles is often set to `cycles=5`, while runs have `runs=5`.
 
-### 5.1 Comparisons and Testing
+### 6.1 Comparisons and Testing
 
 <!-- Mention P and N here again -->
 
-### 5.2 Analyses of Each Algorithm
+### 6.2 Analyses of Each Algorithm
 
 
-# 6. Author
+# 7. Author
 
 ```
                                                     |\      _,,,---,,_
