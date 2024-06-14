@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-05-24 11:21:27
- * @ Modified time: 2024-06-15 01:17:56
+ * @ Modified time: 2024-06-15 02:20:46
  * @ Description:
  * 
  * The main file.
@@ -22,9 +22,10 @@
 #include <stdlib.h>
 
 int main(int argc, char *argv[]) {
+  int i, j;
 
+  // Store the parameters given through the CLI
   initArgs(argc, argv);
-  return 0;
 
   // Init the random number generator
   Random_init();
@@ -36,17 +37,16 @@ int main(int argc, char *argv[]) {
   Engine engine;
   Engine_init(&engine);
 
-  // ! remove
-  for(int i = 1024; i < 1000000; i *= 16) {
-    for(double j = 0.333; j <= 1; j += 0.333) {
-      Engine_run(&engine, i, j, 2, 2,
-        SORTER_HEAP |
-        SORTER_MERGE |
-        SORTER_SMOOTH |
-        SORTER_TIM
-        );
-    }
-  }
+  // Run the tester with the provided arguments
+  // (or the default ones if none were given)
+  for(i = 0; i < ARGS.NCount; i++)
+    for(j = 0; j < ARGS.PCount; j++)
+      Engine_run(&engine, 
+        ARGS.N[i], 
+        ARGS.P[j], 
+        ARGS.cycles, 
+        ARGS.runs, 
+        ARGS.algos);
 
   return 0;
 }

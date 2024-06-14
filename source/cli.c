@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-15 01:04:55
- * @ Modified time: 2024-06-15 02:05:19
+ * @ Modified time: 2024-06-15 02:20:25
  * @ Description:
  * 
  * This file deals with parsing the command line arguments fed into the program.
@@ -43,7 +43,7 @@ void _registerAlgos(char paramValue[]) {
     parameter[strlen(parameter)] = *iter;
 
     // At the end of the string
-    if(*iter == ',' || *iter == ' ' || !*(iter + 1)) {
+    if(*(iter + 1) == ',' || *(iter + 1) == ' ' || !*(iter + 1)) {
 
       // Add the algo to the ones to test
       if(!strcmp(parameter, "heap") || !strcmp(parameter, "heapsort"))
@@ -67,6 +67,9 @@ void _registerAlgos(char paramValue[]) {
       // Clear the parameter
       while(strlen(parameter))
         parameter[strlen(parameter) - 1] = 0;
+
+      // We aint ever reaching 256 chars right?
+      iter++;
     }
     
     iter++;
@@ -86,7 +89,7 @@ void _registerN(char paramValue[]) {
     parameter[strlen(parameter)] = *iter;
 
     // At the end of the string
-    if(*iter == ',' || *iter == ' ' || !*(iter + 1)) {
+    if(*(iter + 1) == ',' || *(iter + 1) == ' ' || !*(iter + 1)) {
 
       // Save the value of N
       ARGS.N[ARGS.NCount++] = atoi(parameter);
@@ -94,6 +97,9 @@ void _registerN(char paramValue[]) {
       // Clear the parameter
       while(strlen(parameter))
         parameter[strlen(parameter) - 1] = 0;
+
+      // We aint ever reaching 256 chars right?
+      iter++;
     }
     
     iter++;
@@ -113,7 +119,7 @@ void _registerP(char paramValue[]) {
     parameter[strlen(parameter)] = *iter;
 
     // At the end of the string
-    if(*iter == ',' || *iter == ' ' || !*(iter + 1)) {
+    if(*(iter + 1) == ',' || *(iter + 1) == ' ' || !*(iter + 1)) {
 
       // Save the value of N
       ARGS.P[ARGS.PCount++] = atof(parameter);
@@ -121,6 +127,9 @@ void _registerP(char paramValue[]) {
       // Clear the parameter
       while(strlen(parameter))
         parameter[strlen(parameter) - 1] = 0;
+
+      // We aint ever reaching 256 chars right?
+      iter++;    
     }
     
     iter++;
@@ -193,9 +202,9 @@ void initArgs(int argc, char *argv[]) {
   int i;
   char *iter;
 
-  char buffer[256] = { 0 };
-  char word[256] = { 0 };
-  char parameter[256] = { 0 };
+  char buffer[1024] = { 0 };
+  char word[1024] = { 0 };
+  char parameter[1024] = { 0 };
   int isReadingWord = 1;
 
   // Init the counts
@@ -235,7 +244,7 @@ void initArgs(int argc, char *argv[]) {
         parameter[strlen(parameter)] = tolower(*iter);
 
       // It's the end of the word
-      if(*iter == ' ' || !*(iter + 1)) {
+      if(*(iter + 1) == ' ' || !*(iter + 1)) {
 
         // Register the parameter
         _registerArg(word, parameter);
@@ -246,6 +255,9 @@ void initArgs(int argc, char *argv[]) {
         
         while(strlen(parameter))
           parameter[strlen(parameter) - 1] = '\0';
+
+        // We aint ever reaching 1024 chars right?
+        iter++;
       }
 
       iter++;
