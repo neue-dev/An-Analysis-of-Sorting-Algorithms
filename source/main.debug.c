@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 int main() {
-  int N = 64;
+  int N = 20;
   char file[500] = "./data/random100.txt";
   Record *records = calloc(10000, sizeof(Record));
   

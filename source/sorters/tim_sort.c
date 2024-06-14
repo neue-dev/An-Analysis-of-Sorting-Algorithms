@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-14 23:35:14
- * @ Modified time: 2024-06-15 01:01:17
+ * @ Modified time: 2024-06-15 02:50:24
  * @ Description:
  * 
  * An implementation of tim sort.
@@ -85,10 +85,6 @@ void _TimSort_merge(TimSort this, t_Record records, t_Record target, int n, int 
   right = right > n ? n : right;
   end = end > n ? n : end;
 
-  // Cuz like wtf left > n?
-  if(left > n)
-    return;
-
   // Store the boundary between the two subarrays
   middle = right;
 
@@ -155,7 +151,7 @@ void TimSort_main(TimSort this, t_Record records, int n) {
   for(i = this.runSize; i < n; i *= 2) {
 
     // Perform the merges
-    for(j = 0; j < (n - 1) / i; j += 2)
+    for(j = 0; j < (n + i) / i; j += 2)
       _TimSort_merge(this, records, sorted, n, i * j, i * (j + 1), i * (j + 2));
 
     // Copy the sorted array unto the original
