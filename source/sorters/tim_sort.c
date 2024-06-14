@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-14 23:35:14
- * @ Modified time: 2024-06-15 00:59:13
+ * @ Modified time: 2024-06-15 01:01:17
  * @ Description:
  * 
  * An implementation of tim sort.
@@ -46,7 +46,7 @@ void TimSort_init(TimSort *this, t_Comparator comparator, t_Swapper swapper, t_C
 
   // In the actual implementation, I think the run size is adaptive
   // In this case, to reduce implementation complexity, we set it to a fixed '16'
-  this->runSize = 8;
+  this->runSize = 16;
 }
 
 /**
