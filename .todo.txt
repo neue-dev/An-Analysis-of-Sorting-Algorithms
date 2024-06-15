@@ -1,2 +1,3 @@
 CHECK IF MERGE AND TIM SORT ARENT FUCKING UP THE ARRAYS (no 0s plsss + no dups)
 
+REMOVE main.debug.c and main.debug

@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-15 12:46:43
- * @ Modified time: 2024-06-15 13:31:15
+ * @ Modified time: 2024-06-15 13:45:54
  * @ Description:
  * 
  * This file helps us log our data unto a file in a formatted manner.
@@ -47,12 +47,13 @@ void Logger_saveRun(Engine *engine, int run) {
   // We open the file
   LOGGER.pFile = fopen(LOGGER.file, "a+");
   
-  // N, P, entropy, correlation
-  fprintf(LOGGER.pFile, "%d, %lf, %lf, %lf",
-    (int) engine->runs[0][run], // N
-    engine->runs[1][run],       // P
-    engine->runs[2][run],       // Entropy 
-    engine->runs[3][run]);      // Correlation
+  // N, P, entropy, correlation, cycles
+  fprintf(LOGGER.pFile, "%d, %lf, %lf, %lf, %d",
+    (int) engine->runs[0][run],   // N
+          engine->runs[1][run],   // P
+          engine->runs[2][run],   // Entropy 
+          engine->runs[3][run],   // Correlation
+    (int) engine->runs[4][run]);  // Cycles
   
   // The different sorter times
   // Note that these times are averages across cycles, hence %lf
