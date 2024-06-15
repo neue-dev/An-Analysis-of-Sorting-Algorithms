@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-15 01:04:55
- * @ Modified time: 2024-06-15 12:50:24
+ * @ Modified time: 2024-06-15 13:24:45
  * @ Description:
  * 
  * This file deals with parsing the command line arguments fed into the program.
@@ -276,7 +276,7 @@ void CLI_initArgs(int argc, char *argv[]) {
 
   // Set default value of N
   if(!ARGS.NCount)
-    ARGS.N[ARGS.NCount++] = 1;
+    ARGS.N[ARGS.NCount++] = 100;
 
   // Set default value of P
   if(!ARGS.PCount)

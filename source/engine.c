@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-11 00:20:03
- * @ Modified time: 2024-06-15 00:24:16
+ * @ Modified time: 2024-06-15 13:27:32
  * @ Description:
  * 
  * Handles the overall flow of the program.
@@ -85,6 +85,30 @@ void Engine_init(Engine *this) {
 
   // Initialize the tester
   Tester_init(tester, &Record_comparator, &Record_swapper, &Record_copier, &Record_sizer);
+}
+
+/**
+ * This is something we call after every set of runs.
+ * Ensure that we reset the value of run count.
+ * 
+ * @param   { Engine * }  this  The tester engine to initialize.
+*/
+void Engine_reset(Engine *this) {
+  int i, j;
+  
+  // Reset run count
+  this->runCount = 0;
+
+  // Populate the array with 0s
+  for(i = 0; i < MAX_RUNS; i++)
+    for(j = 0; j < MAX_ROWS; j++)
+      this->runs[j][i] = 0.0;
+
+  // Populate the array with 0s too
+  // We have to reset this here too
+  for(i = 0; i < MAX_CYCLES; i++)
+    for(j = 0; j < MAX_ROWS; j++)
+      this->cycles[j][i] = 0.0;
 }
 
 /**
@@ -325,10 +349,10 @@ void _Engine_doCyclesSummary(Engine *this, int N, double P, int sorters) {
   }
 
   // Save the other info to the runs
-  this->runs[0][this->runCount] = tester->entropy;
-  this->runs[1][this->runCount] = tester->rsquared;
-  this->runs[2][this->runCount] = N;
-  this->runs[3][this->runCount] = P;
+  this->runs[0][this->runCount] = N;
+  this->runs[1][this->runCount] = P;
+  this->runs[2][this->runCount] = tester->entropy;
+  this->runs[3][this->runCount] = tester->rsquared;
 
   // Increment the runs count
   this->runCount++;
@@ -337,7 +361,7 @@ void _Engine_doCyclesSummary(Engine *this, int N, double P, int sorters) {
 /**
  * Displays the summary of the current data in the run buffer.
 */
-void _Engine_printRunsSummary(Engine *this) {
+void _Engine_doRunsSummary(Engine *this) {
   
 }
 
@@ -350,7 +374,7 @@ void _Engine_printRunsSummary(Engine *this) {
  * @param   { int }             cycles    How many cycles to run for each algorithm.
  * @param   { int }             sorters   The sorters we want to consider.
 */
-void Engine_runOnce(Engine *this, int N, double P, int cycles, int sorters) {
+void Engine_doRun(Engine *this, int N, double P, int cycles, int sorters) {
 
   // Grab the tester
   Tester *tester = &this->tester;
@@ -385,7 +409,7 @@ void Engine_runOnce(Engine *this, int N, double P, int cycles, int sorters) {
  * @param   { int }             runs      How many runs to perform.
  * @param   { int }             sorters   The sorters we want to consider.
 */
-void Engine_run(Engine *this, int N, double P, int cycles, int runs, int sorters) {
+void Engine_doRuns(Engine *this, int N, double P, int cycles, int runs, int sorters) {
   int i;
 
   // Grab the tester
@@ -403,11 +427,7 @@ void Engine_run(Engine *this, int N, double P, int cycles, int runs, int sorters
     printf("\n[#] =========================\n\n");
 
     // Run once
-    Engine_runOnce(this, N, P, cycles, sorters);
-
-    // ! remove
-    long j = 500000000;
-    while(j--);
+    Engine_doRun(this, N, P, cycles, sorters);
   }
 }
 

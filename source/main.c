@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-05-24 11:21:27
- * @ Modified time: 2024-06-15 12:50:19
+ * @ Modified time: 2024-06-15 13:27:42
  * @ Description:
  * 
  * The main file.
@@ -16,6 +16,9 @@
 
 // Import the tester
 #include "./engine.c"
+
+// Import the logger
+#include "./logger.c"
 
 // Some useful libs
 #include <stdio.h>
@@ -33,20 +36,33 @@ int main(int argc, char *argv[]) {
   // Init our sorters so we can use them
   Record_initSorters();
 
+  // Init the Logger to save our data
+  Logger_init("output.csv");
+
   // Create the tester engine and init it
   Engine engine;
   Engine_init(&engine);
 
   // Run the tester with the provided arguments
   // (or the default ones if none were given)
-  for(i = 0; i < ARGS.NCount; i++)
-    for(j = 0; j < ARGS.PCount; j++)
-      Engine_run(&engine, 
+  for(i = 0; i < ARGS.NCount; i++) {
+    for(j = 0; j < ARGS.PCount; j++) {
+      
+      // Reset the engine memory
+      Engine_reset(&engine);
+
+      // Run the engine for the given params
+      Engine_doRuns(&engine, 
         ARGS.N[i], 
         ARGS.P[j], 
         ARGS.cycles, 
         ARGS.runs, 
         ARGS.algos);
+
+      // Log the data
+      Logger_saveRuns(&engine);
+    }
+  }
 
   return 0;
 }
