@@ -157,10 +157,10 @@ void _SmoothSort_siftDown(SmoothSort this, t_Record records, int n, int k, int s
   c2 = _SmoothSort_getChild2Offset(this, k) + start;
   
   // Compare with the two children and swap with the larger one
-  if(this.comparator(records, c1, largest) > 0)
+  if(this.comparator(records, records, c1, largest) > 0)
     largest = c1;
 
-  if(this.comparator(records, c2, largest) > 0)
+  if(this.comparator(records, records, c2, largest) > 0)
     largest = c2;
     
   // If no need to swap, return
@@ -257,9 +257,9 @@ void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, unsigne
     new = _SmoothSort_getRootOffset(this, porder) + root;
 
     // Do the swap
-    if(this.comparator(records, root, new) > 0 && 
-      this.comparator(records, root, c1) > 0 &&
-      this.comparator(records, root, c2) > 0) {
+    if(this.comparator(records, records, root, new) > 0 && 
+      this.comparator(records, records, root, c1) > 0 &&
+      this.comparator(records, records, root, c2) > 0) {
 
       // Swap the two roots
       this.swapper(records, root, new);

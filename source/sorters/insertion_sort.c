@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-09 01:31:42
- * @ Modified time: 2024-06-10 18:39:38
+ * @ Modified time: 2024-06-15 14:12:51
  * @ Description:
  * 
  * An implementation of insertion sort.
@@ -52,21 +52,38 @@ void InsertionSort_init(InsertionSort *this, t_Comparator comparator, t_Swapper 
 void InsertionSort_main(InsertionSort this, t_Record records, int n) {
   int i, j;
 
+  // Temp holding location
+  t_Record r = calloc(1, this.sizer());
+
   // Go through each of the elements
   for(i = 0; i < n - 1; i++) {
     j = i + 1;
 
+    // Copy the current element into temp
+    this.copier(r, records, 0, j);
+
     // Move the new location down the array until we hit the correct location
-    while(this.comparator(records, j - 1, j) > 0) {
+    while(this.comparator(records, r, j - 1, 0) > 0) {
 
       // Shift the element down      
-      this.swapper(records, j - 1, j);
+      // this.swapper(records, j - 1, j);
+      this.copier(records, records, j, j - 1);
 
       // If we've hit the end of the array, stop
       if(--j <= 0)
         break;
     }
+
+    // No need to swap
+    if(j == i + 1)
+      continue;
+
+    // Place the element into its place
+    this.copier(records, r, j, 0);
   }
+
+  // Free the temp
+  free(r);
 }
 
 #endif

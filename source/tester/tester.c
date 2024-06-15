@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 12:31:00
- * @ Modified time: 2024-06-11 01:03:56
+ * @ Modified time: 2024-06-15 14:11:46
  * @ Description:
  * 
  * The file contains all the testing utilities we will be using to benchmark our algorithms.
@@ -475,7 +475,7 @@ int Tester_checkSort(Tester *this) {
   for(i = 0; i < this->N - 1; i++) {
 
     // Get the result of the comparison
-    comparison = this->comparator(this->tosort, i, i + 1);
+    comparison = this->comparator(this->tosort, this->tosort, i, i + 1);
 
     // If the order has not been determined, set it
     if(!order)

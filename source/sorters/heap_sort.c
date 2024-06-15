@@ -64,11 +64,11 @@ void _HeapSort_heapify(HeapSort this, t_Record records, int n, int root) {
   // These two statements tell us which among the three (root, left child, right child)
   // is the largest element
   if(l < n)
-    if(this.comparator(records, l, largest) > 0)
+    if(this.comparator(records, records, l, largest) > 0)
       largest = l;
 
   if(r < n)
-    if(this.comparator(records, r, largest) > 0)
+    if(this.comparator(records, records, r, largest) > 0)
       largest = r;
 
   // If the largest element is not at the root, then we swap to fix the heap

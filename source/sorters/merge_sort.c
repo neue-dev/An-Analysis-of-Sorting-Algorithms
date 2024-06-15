@@ -92,7 +92,7 @@ void _MergeSort_merge(MergeSort this, t_Record records, t_Record target, int lef
     }
 
     // Compare the left and right starting elements
-    switch(this.comparator(records, left, right)) {
+    switch(this.comparator(records, records, left, right)) {
       
       case -1:  // The left comes first
         this.copier(target, records, i, left++);

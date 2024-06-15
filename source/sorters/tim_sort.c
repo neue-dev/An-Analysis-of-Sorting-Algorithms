@@ -104,7 +104,7 @@ void _TimSort_merge(TimSort this, t_Record records, t_Record target, int n, int 
     }
 
     // Compare the left and right starting elements
-    switch(this.comparator(records, left, right)) {
+    switch(this.comparator(records, records, left, right)) {
       
       case -1:  // The left comes first
         this.copier(target, records, i, left++);
@@ -138,7 +138,7 @@ void TimSort_main(TimSort this, t_Record records, int n) {
     j = i;
 
     // Insertion sort for that run
-    while(j % this.runSize && this.comparator(records, j - 1, j) > 0) {
+    while(j % this.runSize && this.comparator(records, records, j - 1, j) > 0) {
       if(j < 0)
         break;
       

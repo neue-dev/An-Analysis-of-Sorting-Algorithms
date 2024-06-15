@@ -19,7 +19,7 @@ int main() {
   for(int i = 0; i < N; i++)
     printf("%8d %s\n", records[i].idNumber, records[i].name);
 
-  Record_timSort(records, N);
+  Record_insertionSort(records, N);
 
   printf("after: \n");
   for(int i = 0; i < N; i++)

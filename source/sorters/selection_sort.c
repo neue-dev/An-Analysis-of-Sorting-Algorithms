@@ -60,7 +60,7 @@ void SelectionSort_main(SelectionSort this, t_Record records, int n) {
     
     // Look for the smallest array element
     for(j = i + 1; j < n; j++) {
-      if(this.comparator(records, minIndex, j) > 0)
+      if(this.comparator(records, records, minIndex, j) > 0)
         minIndex = j;
     }
 
