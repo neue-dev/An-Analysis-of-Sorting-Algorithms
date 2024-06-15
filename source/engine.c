@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-11 00:20:03
- * @ Modified time: 2024-06-15 13:46:23
+ * @ Modified time: 2024-06-15 15:50:13
  * @ Description:
  * 
  * Handles the overall flow of the program.
@@ -380,9 +380,6 @@ void Engine_doRun(Engine *this, int N, double P, int cycles, int sorters) {
 
   // Grab the tester
   Tester *tester = &this->tester;
-
-  // We init the sorters here again
-  Record_initSorters();
 
   // Max cycles
   if(cycles >= MAX_CYCLES)
