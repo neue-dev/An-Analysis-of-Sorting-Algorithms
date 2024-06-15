@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-05-24 11:21:27
- * @ Modified time: 2024-06-15 02:22:41
+ * @ Modified time: 2024-06-15 12:50:19
  * @ Description:
  * 
  * The main file.
@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
   int i, j;
 
   // Store the parameters given through the CLI
-  initArgs(argc, argv);
+  CLI_initArgs(argc, argv);
 
   // Init the random number generator
   Random_init();

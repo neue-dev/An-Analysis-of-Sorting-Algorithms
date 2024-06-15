@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-15 01:04:55
- * @ Modified time: 2024-06-15 02:20:25
+ * @ Modified time: 2024-06-15 12:50:24
  * @ Description:
  * 
  * This file deals with parsing the command line arguments fed into the program.
@@ -35,7 +35,7 @@ struct {
  * 
  * @param   { char[] }  paramValue  The value of the CLI input arg after '='.
 */
-void _registerAlgos(char paramValue[]) {
+void _CLI_registerAlgos(char paramValue[]) {
   char *iter = paramValue;
   char parameter[256];
 
@@ -81,7 +81,7 @@ void _registerAlgos(char paramValue[]) {
  * 
  * @param   { char[] }  paramValue  The value of the CLI input arg after '='.
 */
-void _registerN(char paramValue[]) {
+void _CLI_registerN(char paramValue[]) {
   char *iter = paramValue;
   char parameter[256];
 
@@ -111,7 +111,7 @@ void _registerN(char paramValue[]) {
  * 
  * @param   { char[] }  paramValue  The value of the CLI input arg after '='.
 */
-void _registerP(char paramValue[]) {
+void _CLI_registerP(char paramValue[]) {
   char *iter = paramValue;
   char parameter[256];
 
@@ -141,7 +141,7 @@ void _registerP(char paramValue[]) {
  * 
  * @param   { char[] }  paramValue  The value of the CLI input arg after '='.
 */
-void _registerCycles(char paramValue[]) {
+void _CLI_registerCycles(char paramValue[]) {
   ARGS.cycles = atoi(paramValue);
 }
 
@@ -150,7 +150,7 @@ void _registerCycles(char paramValue[]) {
  * 
  * @param   { char[] }  paramValue  The value of the CLI input arg after '='.
 */
-void _registerRuns(char paramValue[]) {
+void _CLI_registerRuns(char paramValue[]) {
   ARGS.runs = atoi(paramValue);
 }
 
@@ -161,7 +161,7 @@ void _registerRuns(char paramValue[]) {
  * @param   { char[] }  paramName   The name of the parameter.
  * @param   { char[] }  paramValue  The value of the parameter.
 */
-void _registerArg(char paramName[], char paramValue[]) {
+void _CLI_registerArg(char paramName[], char paramValue[]) {
   char *iter;
   char parameter[256];
 
@@ -171,25 +171,25 @@ void _registerArg(char paramName[], char paramValue[]) {
     !strcmp(paramName, "algs") ||
     !strcmp(paramName, "alg") || 
     !strcmp(paramName, "a"))
-      _registerAlgos(paramValue);
+      _CLI_registerAlgos(paramValue);
 
   // We're saving the N values
   if(!strcmp(paramName, "n"))
-    _registerN(paramValue);
+    _CLI_registerN(paramValue);
 
   // We're saving the P values
   if(!strcmp(paramName, "p"))
-    _registerP(paramValue);
+    _CLI_registerP(paramValue);
 
   // We're saving the number of cycles
   if(!strcmp(paramName, "cycles") || 
     !strcmp(paramName, "c"))
-    _registerCycles(paramValue);
+    _CLI_registerCycles(paramValue);
 
   // We're saving the number of runs
   if(!strcmp(paramName, "runs") || 
     !strcmp(paramName, "r"))
-    _registerRuns(paramValue);
+    _CLI_registerRuns(paramValue);
 }
 
 /**
@@ -198,7 +198,7 @@ void _registerArg(char paramName[], char paramValue[]) {
  * @param   { int }       argc  The number of strings passed.
  * @param   { char *[] }  argv  The strings passed to the program.
 */
-void initArgs(int argc, char *argv[]) {
+void CLI_initArgs(int argc, char *argv[]) {
   int i;
   char *iter;
 
@@ -247,7 +247,7 @@ void initArgs(int argc, char *argv[]) {
       if(*(iter + 1) == ' ' || !*(iter + 1)) {
 
         // Register the parameter
-        _registerArg(word, parameter);
+        _CLI_registerArg(word, parameter);
 
         // Clear the name and the parameter
         while(strlen(word))

@@ -80,7 +80,7 @@ But how does it work, exactly? That's where things get exciting.
 
 # 4. Tim Sort
 
-Now I won't bother going in-depth with Tim Sort; it's not really the main algorithm I chose anyway. Nevertheless, I feel like it deserves a special mention. Out of all the algorithms here, Tim Sort proved the most effective. And despite the (commonplace) minimum run size recommendation of $32$, choosing the value $16$ actually produced better results according to the tests conducted by the following project. Do note that this is probably due to the small number of records we're sorting (I'm pretty sure real-life applications would deal with at least a few million of these, whereas we're staying a somewhere below that range here; in those cases a larger minimum run size might make more sense).
+Now I won't bother going in-depth with Tim Sort; it's not really the main algorithm I chose anyway. Nevertheless, I feel like it deserves a special mention. Out of all the algorithms here, Tim Sort proved the most effective. And despite the (commonplace) minimum run size recommendation of $32$, choosing the value $16$ actually produced better results according to the tests conducted by the following project. Do note that this is probably due to the small number of records we're sorting (I'm pretty sure real-life applications would deal with at least a few million of these, whereas we're staying somewhere below that range here; in those cases a larger minimum run size might make more sense).
 
 One caveat with the implementation of Tim Sort used by this project: it's not adaptive. The run size doesn't change based on the number of records, although in practice it should adapt to try and minimize the number of resulting merges utilized by the algorithm. 
 
