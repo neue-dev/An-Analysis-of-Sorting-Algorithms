@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 int main() {
-  int N = 20;
+  int N = 15;
   char file[500] = "./data/random100.txt";
   Record *records = calloc(10000, sizeof(Record));
   
@@ -19,7 +19,7 @@ int main() {
   for(int i = 0; i < N; i++)
     printf("%8d %s\n", records[i].idNumber, records[i].name);
 
-  Record_insertionSort(records, N);
+  Record_heapSort(records, N);
 
   printf("after: \n");
   for(int i = 0; i < N; i++)

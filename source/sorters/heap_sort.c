@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-09 01:31:58
- * @ Modified time: 2024-06-10 18:41:19
+ * @ Modified time: 2024-06-15 14:56:14
  * @ Description:
  * 
  * An implementation of heap sort.
@@ -49,11 +49,12 @@ void HeapSort_init(HeapSort *this, t_Comparator comparator, t_Swapper swapper, t
  * 
  * @param   { HeapSort }      this        The heap sort "object" we're using.
  * @param   { t_Record }      records     The array of records, a subset of which we will heapify.
+ * @param   { t_Record }      rRoot       A copy of the root element we're shifting down.
  * @param   { int }           n           The total number of records.
  * @param   { int }           root        The index of the root node to start with.
 */
-void _HeapSort_heapify(HeapSort this, t_Record records, int n, int root) {
-  
+void _HeapSort_heapify(HeapSort this, t_Record records, int n, t_Record rRoot, int root) {
+
   // The index that tracks the largest element
   int largest = root;
 
@@ -61,26 +62,44 @@ void _HeapSort_heapify(HeapSort this, t_Record records, int n, int root) {
   int l = root * 2 + 1;
   int r = root * 2 + 2;
 
-  // These two statements tell us which among the three (root, left child, right child)
-  // is the largest element
-  if(l < n)
-    if(this.comparator(records, records, l, largest) > 0)
+  // r is the only possible larger one
+  if(l >= n && r < n)
+    if(this.comparator(records, rRoot, r, 0) > 0)
+      largest = r;
+
+  // l is the only possible larger one
+  if(r >= n && l < n)
+    if(this.comparator(records, rRoot, l, 0) > 0)
       largest = l;
 
-  if(r < n)
-    if(this.comparator(records, records, r, largest) > 0)
+  // If both may be larger, choose which one
+  if(l < n && r < n) {
+
+    // Get the larger one
+    if(this.comparator(records, records, l, r) < 0)
       largest = r;
+    else
+      largest = l;
+  }
+
+  // Both elements are less than the root so just use the root
+  if(this.comparator(records, rRoot, largest, 0) < 0)
+    largest = root;
 
   // If the largest element is not at the root, then we swap to fix the heap
   if(largest != root) {
 
     // Swap the two elements
-    this.swapper(records, root, largest);
+    this.copier(records, records, root, largest);
     
     // We heapify the subtree that we modified because of the swap
     // We only need to heapify that subtree because we're performing this operation starting from the leaves of the array
     // Hence, the other subtree should still be a valid max-heap because it was already heapified prior to this iteration
-    _HeapSort_heapify(this, records, n, largest);
+    _HeapSort_heapify(this, records, n, rRoot, largest);
+  
+  // Finally, put the copied root into its slot
+  } else {
+    this.copier(records, rRoot, root, 0);
   }
 }
 
@@ -94,10 +113,22 @@ void _HeapSort_heapify(HeapSort this, t_Record records, int n, int root) {
 void _HeapSort_toHeap(HeapSort this, t_Record records, int n) {
   int i;
 
+  // Temp holding var
+  t_Record r = calloc(1, this.sizer());
+
   // Unconventional for loop lol
   // I just don't like writing (n - 1)
-  for(i = n; --i >= 0;)
-    _HeapSort_heapify(this, records, n, i);
+  for(i = n; --i >= 0;) {
+
+    // Copy the current root
+    this.copier(r, records, 0, i);
+
+    // Heapify the current tree
+    _HeapSort_heapify(this, records, n, r, i);
+  }
+
+  // Free the memory
+  free(r);
 }
 
 /**
@@ -115,6 +146,9 @@ void _HeapSort_toHeap(HeapSort this, t_Record records, int n) {
 void HeapSort_main(HeapSort this, t_Record records, int n) {
   int i;
 
+  // Temp holding var
+  t_Record r = calloc(1, this.sizer());
+
   // Convert the array into a valid max-heap first
   _HeapSort_toHeap(this, records, n);
   
@@ -125,10 +159,16 @@ void HeapSort_main(HeapSort this, t_Record records, int n) {
     // Swap first element with last
     this.swapper(records, 0, i);
 
+    // Grab a copy of the root
+    this.copier(r, records, 0, 0);
+
     // Do the sift down on n - 1
     if(i - 1)
-      _HeapSort_heapify(this, records, i, 0);
+      _HeapSort_heapify(this, records, i, r, 0);
   }
+
+  // Free memory
+  free(r);
 }
 
 #endif
