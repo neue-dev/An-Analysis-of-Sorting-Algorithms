@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-09 01:32:10
- * @ Modified time: 2024-06-12 11:24:38
+ * @ Modified time: 2024-06-15 15:47:05
  * @ Description:
  * 
  * An implementation of smoort sort.
@@ -137,17 +137,22 @@ int _SmoothSort_getChild2Offset(SmoothSort this, int k) {
  * @param   { SmoothSort }  this      The smooth sort data object.
  * @param   { t_Record }    records   The array containing the data we want to modify.
  * @param   { int }         n         The number of records we have.
+ * @param   { t_Record }    rRoot     The current root record.
  * @param   { int }         k         The order of the current Leonardo heap.
  * @param   { int }         start     The index that marks the leftmost member of the heap in the array.
  * @param   { int }         root      The index of the root of the current heap (also the end of the 
  *                                      array slice we're considering)
 */
-void _SmoothSort_siftDown(SmoothSort this, t_Record records, int n, int k, int start, int root) {
+void _SmoothSort_siftDown(SmoothSort this, t_Record records, int n, t_Record rRoot, int k, int start, int root) {
   int c1, c2, largest;
 
   // There's no children to sift with anymore
-  if(k < 2)
+  // Copy the temp unto its location
+  if(k < 2) {
+    this.copier(records, rRoot, root, 0);
+    
     return;
+  }
 
   // Stores which of the nodes (root, c1, or c2) is the largest
   largest = root;
@@ -156,19 +161,33 @@ void _SmoothSort_siftDown(SmoothSort this, t_Record records, int n, int k, int s
   c1 = _SmoothSort_getChild1Offset(this, k) + start;
   c2 = _SmoothSort_getChild2Offset(this, k) + start;
   
-  // Compare with the two children and swap with the larger one
-  if(this.comparator(records, records, c1, largest) > 0)
+  // Get the larger of the two children
+  if(this.comparator(records, records, c2, c1) > 0)
+    largest = c2;
+  else
     largest = c1;
 
-  if(this.comparator(records, records, c2, largest) > 0)
-    largest = c2;
+  // If both children are less than the root
+  if(this.comparator(records, rRoot, largest, 0) < 0)
+    largest = root;
+
+  // ! remove
+  // // Compare with the two children and swap with the larger one
+  // if(this.comparator(records, records, c1, largest) > 0)
+  //   largest = c1;
+
+  // if(this.comparator(records, records, c2, largest) > 0)
+  //   largest = c2;
     
-  // If no need to swap, return
-  if(largest == root)
+  // If no need to swap, return after performing the last sift
+  if(largest == root) {
+    this.copier(records, rRoot, largest, 0);
+
     return;
+  }
 
   // Otherwise, do the swap
-  this.swapper(records, root, largest);
+  this.copier(records, records, root, largest);
 
   // Then call the function again, based on which child was swapped
   if(c1 != c2) {
@@ -176,12 +195,12 @@ void _SmoothSort_siftDown(SmoothSort this, t_Record records, int n, int k, int s
     // If swapped with first child, left subtree still starts at 'start'
     // But this time it has order k - 1 and root at c1
     if(largest == c1) 
-      _SmoothSort_siftDown(this, records, n, k - 1, start, c1);
+      _SmoothSort_siftDown(this, records, n, rRoot, k - 1, start, c1);
 
     // If swapped with second child, the right subtree starts after the left subtree
     // Thus, we have the offset; also, the order is now k - 2
     if(largest == c2)
-      _SmoothSort_siftDown(this, records, n, k - 2, start + _SmoothSort_leonardoGet(this, k - 1), c2);
+      _SmoothSort_siftDown(this, records, n, rRoot, k - 2, start + _SmoothSort_leonardoGet(this, k - 1), c2);
   }
 }
 
@@ -208,6 +227,9 @@ void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, unsigne
   // k will be stored in order
   // The variable "order" represents the current order of the Leonardo heap l is pointing to
   int k = 0;
+
+  // Temp variables, one for sifting the other for insertion sorting the roots
+  t_Record r = calloc(1, this.sizer());
   
   // Init this first
   porder = -1;
@@ -218,8 +240,11 @@ void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, unsigne
   if(!(lseq - (lseq & -lseq))) {
     exp = (int) (log(lseq) / log(2));
 
+    // Grab the root
+    this.copier(r, records, 0, i);
+
     // Call the sifter
-    _SmoothSort_siftDown(this, records, n, exp, -1, i);
+    _SmoothSort_siftDown(this, records, n, r, exp, -1, i);
 
     return;
   }
@@ -265,22 +290,34 @@ void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, unsigne
       this.swapper(records, root, new);
 
       // If this is the last iteration, better fix the heap structure now
-      if(!lseq)
-        _SmoothSort_siftDown(this, records, n, order, i - l, root);
+      if(!lseq) {
+        
+        // Grab the root
+        this.copier(r, records, 0, root);
+
+        // Sift down the root
+        _SmoothSort_siftDown(this, records, n, r, order, i - l, root);
+      }
 
     // If no swap happened, then it means the roots are in ascending order already
     // We can proceed to heapifying the heap we last swapped with 
     // (we do this in another routine)
     } else {
+
+      // Grab the root
+      this.copier(r, records, 0, new);
       
       // Note that we're considering the slice from [root, new] since no swap occured
-      _SmoothSort_siftDown(this, records, n, porder, root, new);
+      _SmoothSort_siftDown(this, records, n, r, porder, root, new);
       return; 
     }
 
     // Finally, save the order into porder (previous order) for later retrieval
     porder = order;
   }
+
+  // Free the temp variable
+  free(r);
 }
 
 /**
@@ -386,6 +423,9 @@ void SmoothSort_main(SmoothSort this, t_Record records, int n) {
   // These just hold bits and other info for us
   int exp, offset;
 
+  // Temp variable
+  t_Record r = calloc(1, this.sizer());
+
   // We first build the forest of max-heaps with the Leonardo numbers
   for(i = 0; i < n; i++) {
     
@@ -398,8 +438,14 @@ void SmoothSort_main(SmoothSort this, t_Record records, int n) {
     offset = _SmoothSort_leonardoGet(this, exp);
 
     // Sift down the new roots if theyre not singletons
-    if(lfirst > 2)
-      _SmoothSort_siftDown(this, records, n, exp, i - offset, i);
+    if(lfirst > 2) {
+      
+      // Grab the root
+      this.copier(r, records, 0, i);
+
+      // Sift down
+      _SmoothSort_siftDown(this, records, n, r, exp, i - offset, i);
+    }
   }
 
   // Set some important stuff
@@ -449,6 +495,9 @@ void SmoothSort_main(SmoothSort this, t_Record records, int n) {
       _SmoothSort_insert(this, records, n, i - 1, lseq);
     }
   }
+
+  // Free the temp
+  free(r);
 }
 
 #endif

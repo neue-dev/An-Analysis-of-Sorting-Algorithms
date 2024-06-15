@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 int main() {
-  int N = 1000;
+  int N = 10;
   char file[500] = "./data/random25000.txt";
   Record *records = calloc(100000, sizeof(Record));
   Record *basis = calloc(100000, sizeof(Record));
@@ -21,7 +21,7 @@ int main() {
   for(int i = 0; i < N; i++)
     printf("%8d %s\n", records[i].idNumber, records[i].name);
 
-  Record_timSort(records, N);
+  Record_smoothSort(records, N);
 
   printf("after: \n");
   for(int i = 0; i < N; i++)
