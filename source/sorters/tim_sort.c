@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-14 23:35:14
- * @ Modified time: 2024-06-15 02:50:24
+ * @ Modified time: 2024-06-15 15:15:11
  * @ Description:
  * 
  * An implementation of tim sort.
@@ -130,6 +130,7 @@ void TimSort_main(TimSort this, t_Record records, int n) {
 
   // Allocate memory for the sorted array
   t_Record sorted = calloc(n, this.sizer());
+  t_Record r = calloc(1, this.sizer());
 
   // Fix the runs
   for(i = 0; i < n; i++) {
@@ -137,14 +138,20 @@ void TimSort_main(TimSort this, t_Record records, int n) {
     // Get the current index
     j = i;
 
+    // Copy the current record
+    this.copier(r, records, 0, j);
+
     // Insertion sort for that run
-    while(j % this.runSize && this.comparator(records, records, j - 1, j) > 0) {
+    while(j % this.runSize && this.comparator(records, r, j - 1, 0) > 0) {
       if(j < 0)
         break;
       
-      this.swapper(records, j - 1, j);
+      this.copier(records, records, j, j - 1);
       j--;
     }
+
+    // Copy the temp memory
+    this.copier(records, r, j, 0);
   }
 
   // Go through successive increasing lengths
@@ -160,6 +167,7 @@ void TimSort_main(TimSort this, t_Record records, int n) {
 
   // Free the allocated memory
   free(sorted);
+  free(r);
 }
 
 #endif

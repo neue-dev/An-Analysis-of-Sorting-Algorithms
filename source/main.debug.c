@@ -17,15 +17,15 @@ int main() {
   readFile(basis, file);
 
   // Print stuff
-  // printf("before: \n");
-  // for(int i = 0; i < N; i++)
-  //   printf("%8d %s\n", records[i].idNumber, records[i].name);
+  printf("before: \n");
+  for(int i = 0; i < N; i++)
+    printf("%8d %s\n", records[i].idNumber, records[i].name);
 
-  Record_heapSort(records, N);
+  Record_timSort(records, N);
 
-  // printf("after: \n");
-  // for(int i = 0; i < N; i++)
-  //   printf("%8d %s\n", records[i].idNumber, records[i].name);
+  printf("after: \n");
+  for(int i = 0; i < N; i++)
+    printf("%8d %s\n", records[i].idNumber, records[i].name);
 
   for(int i = 0; i < N; i++) {
     int j;

@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-09 01:31:42
- * @ Modified time: 2024-06-15 14:12:51
+ * @ Modified time: 2024-06-15 15:10:13
  * @ Description:
  * 
  * An implementation of insertion sort.
@@ -66,7 +66,6 @@ void InsertionSort_main(InsertionSort this, t_Record records, int n) {
     while(this.comparator(records, r, j - 1, 0) > 0) {
 
       // Shift the element down      
-      // this.swapper(records, j - 1, j);
       this.copier(records, records, j, j - 1);
 
       // If we've hit the end of the array, stop
