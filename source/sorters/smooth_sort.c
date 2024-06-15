@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-09 01:32:10
- * @ Modified time: 2024-06-15 15:47:05
+ * @ Modified time: 2024-06-16 02:04:54
  * @ Description:
  * 
  * An implementation of smoort sort.
@@ -230,6 +230,8 @@ void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, unsigne
 
   // Temp variables, one for sifting the other for insertion sorting the roots
   t_Record r = calloc(1, this.sizer());
+  t_Record ri = calloc(1, this.sizer());
+  int isRiSet = 0;
   
   // Init this first
   porder = -1;
@@ -280,20 +282,36 @@ void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, unsigne
     c1 = _SmoothSort_getChild1Offset(this, porder) + root;
     c2 = _SmoothSort_getChild2Offset(this, porder) + root;
     new = _SmoothSort_getRootOffset(this, porder) + root;
+    
+    // Copy the newly inserted element, if its vacant
+    if(!isRiSet) {
+      this.copier(ri, records, 0, new);
+      isRiSet = 1;
+    }
 
-    // Do the swap
-    if(this.comparator(records, records, root, new) > 0 && 
-      this.comparator(records, records, root, c1) > 0 &&
-      this.comparator(records, records, root, c2) > 0) {
+    // Do the shifting
+    // Note the funky logic here:
+    // If the child nodes indices are equal to the root node index, then that actually means there are no children
+    // So I add the extra condition (c1 == new) and (c2 == new) to ensure that when these are true the comparison on the left wont matter
+    // I had to do this because I optimized smooth sort to use copies instead of swaps
+    if(this.comparator(records, ri, root, 0) > 0 && 
+      (this.comparator(records, records, root, c1) > 0) + (c1 == new) &&
+      (this.comparator(records, records, root, c2) > 0) + (c2 == new)) {
 
-      // Swap the two roots
-      this.swapper(records, root, new);
+      // Copy the root to the current location
+      this.copier(records, records, new, root);
 
       // If this is the last iteration, better fix the heap structure now
       if(!lseq) {
+
+        // Paste the new guy unto the root
+        this.copier(records, ri, root, 0);
         
         // Grab the root
         this.copier(r, records, 0, root);
+
+        // Unset ri
+        isRiSet = 0;
 
         // Sift down the root
         _SmoothSort_siftDown(this, records, n, r, order, i - l, root);
@@ -304,9 +322,15 @@ void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, unsigne
     // (we do this in another routine)
     } else {
 
+      // Paste the new guy unto the root
+      this.copier(records, ri, new, 0);
+
       // Grab the root
       this.copier(r, records, 0, new);
       
+      // Unset ri
+      isRiSet = 0;
+
       // Note that we're considering the slice from [root, new] since no swap occured
       _SmoothSort_siftDown(this, records, n, r, porder, root, new);
       return; 
@@ -318,6 +342,7 @@ void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, unsigne
 
   // Free the temp variable
   free(r);
+  free(ri);
 }
 
 /**
