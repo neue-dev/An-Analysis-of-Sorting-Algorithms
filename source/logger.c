@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-15 12:46:43
- * @ Modified time: 2024-06-15 13:45:54
+ * @ Modified time: 2024-06-15 16:25:56
  * @ Description:
  * 
  * This file helps us log our data unto a file in a formatted manner.
@@ -25,14 +25,32 @@ struct {
  * @param   { char[] }  file  The base name of the out file.
 */
 void Logger_init(char file[]) {
+  int i;
+
+  // Copy the filename
   strcpy(LOGGER.file, file);
 
   // Check if the file exists
   LOGGER.pFile = fopen(file, "r+");
 
-  // If the file does not exist, create it
-  if(LOGGER.pFile == NULL)
-    fopen(file, "w+");
+  // If the file does not exist, create it and give it column names
+  if(LOGGER.pFile == NULL) {
+    FILE *newFile = fopen(file, "w+");
+
+    // Columns for the params
+    fprintf(newFile, "%s, %s, %s, %s, %s",
+      "N", "P", "entropy", "rsquared", "cycles");
+
+    // Columns for the sorter names
+    for(i = 0; i < SORTER_COUNT; i++)
+      fprintf(newFile, ", %s", _Engine_getName(NULL, 1 << (_SORTER + i)));
+    
+    // Newline
+    fprintf(newFile, "\n");
+
+    // Close the opened handle
+    fclose(newFile);
+  }
 }
 
 /**

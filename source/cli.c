@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-15 01:04:55
- * @ Modified time: 2024-06-15 13:24:45
+ * @ Modified time: 2024-06-15 16:16:06
  * @ Description:
  * 
  * This file deals with parsing the command line arguments fed into the program.
@@ -28,6 +28,9 @@ struct {
   // How many N and P values we have
   int NCount;
   int PCount;
+
+  // The output file name
+  char out[256];
 } ARGS;
 
 /**
@@ -155,6 +158,15 @@ void _CLI_registerRuns(char paramValue[]) {
 }
 
 /**
+ * Register the number filename to use.
+ * 
+ * @param   { char[] }  paramValue  The name of the output file.
+*/
+void _CLI_registerOut(char paramValue[]) {
+  strcpy(ARGS.out, paramValue);
+}
+
+/**
  * Registers the parameter into the struct.
  * Parses the value based on the name of the parameter.
  * 
@@ -190,6 +202,12 @@ void _CLI_registerArg(char paramName[], char paramValue[]) {
   if(!strcmp(paramName, "runs") || 
     !strcmp(paramName, "r"))
     _CLI_registerRuns(paramValue);
+
+  // We're saving the output file name
+  if(!strcmp(paramName, "output") || 
+    !strcmp(paramName, "out") ||
+    !strcmp(paramName, "o"))
+    _CLI_registerOut(paramValue);
 }
 
 /**
@@ -213,6 +231,7 @@ void CLI_initArgs(int argc, char *argv[]) {
   ARGS.cycles = 1;
   ARGS.runs = 1;
   ARGS.algos = 0;
+  strcpy(ARGS.out, "output.csv");
 
   // Go through each of the CLI args
   for(i = 1; i < argc; i++) {

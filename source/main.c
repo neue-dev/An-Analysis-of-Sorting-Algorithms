@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-05-24 11:21:27
- * @ Modified time: 2024-06-15 13:27:42
+ * @ Modified time: 2024-06-15 16:16:23
  * @ Description:
  * 
  * The main file.
@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
   Record_initSorters();
 
   // Init the Logger to save our data
-  Logger_init("output.csv");
+  Logger_init(ARGS.out);
 
   // Create the tester engine and init it
   Engine engine;
