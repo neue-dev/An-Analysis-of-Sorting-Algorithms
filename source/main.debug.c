@@ -21,7 +21,7 @@ int main() {
   for(int i = 0; i < N; i++)
     printf("%8d %s\n", records[i].idNumber, records[i].name);
 
-  Record_smoothSort(records, N);
+  Record_heapSort(records, N);
 
   printf("after: \n");
   for(int i = 0; i < N; i++)
