@@ -64,7 +64,12 @@ But what benefit does a tree have over an array of elements? Because of the stru
 
 ### 2.2 The Heap Sort Algorithm
 
-<!-- !To be continued -->
+As a brief outline of the actual heap sort algorithm (which I believe we must recall for the sake of understanding smooth sort): // ! dictate how the algorithm works
+
+```python
+# add pseudocode for the heap sort algorithm
+```
+
 
 # 3. Smooth Sort
 
