@@ -23,11 +23,12 @@ Depending on what exactly you want to run, the program accepts a number of diffe
 
 * `algos`, the algorithms to run, default is `insertion,selection,heap,merge,smooth`.
 * `N`, the number of records to sort, default is `100,1000,10000`.
-* `P`, the shuffling amount (explained below), default is `0,0.5,1.0`.
-* `cycles`, the number of cycles per run (explained below).
-* `runs`, the number of runs per $(N, P)$, (also explained below).
+* `P`, the shuffling amount (explained later), default is `0,0.5,1.0`.
+* `cycles`, the number of cycles per run (explained later), default is `1`.
+* `runs`, the number of runs per $(N, P)$ (also explained later in this document), default is `1`.
+* `out`, the name of the file to write the results to, default is `output.csv`
 
-So for example you could run the executable from above with the command `main algos=smooth,heap,merge N=500,5000,50000 P=0.005,0.05,0.5,1.0`. You can leave out *any or all* of the arguments above, and the program will run with the default values assigned to the unspecified arguments. Also, ***strictly no spaces*** when inputting comma-separated arguments.
+So for example you could run the executable with the command `main algos=smooth,heap,merge N=500,5000,50000 P=0.005,0.05,0.5,1.0 cycles=5 runs=2`. This performs two runs for each pair of $(N,P)$, with each run having $5$ cycles (if what $(N,P)$ means is unclear, do not fret as this will be explained further later on; for immediate information on these concepts, including the definitions of runs and cycles, jump to the section on ***Comparisons and Individual Analyses***). You can leave out *any or all* of the arguments above, and the program will run with the default values assigned to the unspecified arguments. Also, ***strictly no spaces*** when inputting comma-separated arguments.
 
 <!-- Detail how running the main program with different parameters can give different results -->
 
@@ -40,6 +41,7 @@ Because of the way the program is structured, it is possible to import `sortinga
 3. `Record_heapSort(Record *records, int n)`
 4. `Record_mergeSort(Record *records, int n)`
 5. `Record_smoothSort(Record *records, int n)`
+6. `Record_timSort(Record *records, int n)`
 
 Note how all the functions preserve the same signature to facilitate testing. Functions that use recursion (such as merge sort) have been abstracted into their own files to avoid succumbing to spaghetti code.
 
@@ -168,7 +170,7 @@ Do note that in order for this approach to work, we adjust negative differences 
 
 However, there is something else we must account for: if the array was in reverse, it wouldn't be considered "well-shuffled" (it's far from sorted, but it's not really jumbled up) and correlation would give us a value of $-1$. This is fine because it isn't $0$ (which would indicate complete disorder), but it would be better to restrict all our values within the positive range of $[0, 1]$. To avoid dealing with negative numbers, we square the value we obtain for the correlation. This particular number is used a lot in inferential statistics and has a special name: [the coefficient of determination](https://en.wikipedia.org/wiki/Coefficient_of_determination). Although this number has a few different interpretations, we ignore most of these as they do not apply to our framework. However, we must acknowledge the relevance this metric has (henceforth referred to as $r^2$) in describing the disorder within a set of data.
 
-# 6. Comparison and Individual Analyses
+# 6. Comparisons and Individual Analyses
 
 As mentioned a number of times above, a testing framework was also constructed to aid in the comparison and analyses of the different algorithms. The framework allows us to execute a number of different *runs*, each of which perform a set of specific *cycles*. In this case, a run refers to different shufflings of records for a given $(N, P)$, while a cycle refers to a set of attempts (for all algorithms) to sort a certain shuffle. Multiple cycles ensure that we account for the actual time it takes each algorithm to sort a given array (in case outliers of bad timing happen to be present); runs allow us to be confident that the times we're getting aren't for a particularly "good" or "bad" shuffle (the shuffle wasn't unlikely). If this still isn't clear, the pseudocode below should elucidate what I mean:
 
