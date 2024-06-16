@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-05-24 11:21:27
- * @ Modified time: 2024-06-15 16:16:23
+ * @ Modified time: 2024-06-16 10:53:28
  * @ Description:
  * 
  * The main file.
@@ -63,6 +63,9 @@ int main(int argc, char *argv[]) {
       Logger_saveRuns(&engine);
     }
   }
+
+  // Clean up the state and memory
+  Engine_exit(&engine);
 
   return 0;
 }
