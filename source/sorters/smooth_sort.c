@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-09 01:32:10
- * @ Modified time: 2024-06-16 02:04:54
+ * @ Modified time: 2024-06-16 10:47:03
  * @ Description:
  * 
  * An implementation of smoort sort.
@@ -304,17 +304,17 @@ void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, unsigne
       // If this is the last iteration, better fix the heap structure now
       if(!lseq) {
 
-        // Paste the new guy unto the root
-        this.copier(records, ri, root, 0);
+        // // Paste the new guy unto the root
+        // this.copier(records, ri, root, 0);
         
-        // Grab the root
-        this.copier(r, records, 0, root);
+        // // Grab the root
+        // this.copier(r, records, 0, root);
 
         // Unset ri
         isRiSet = 0;
 
         // Sift down the root
-        _SmoothSort_siftDown(this, records, n, r, order, i - l, root);
+        _SmoothSort_siftDown(this, records, n, ri, order, i - l, root);
       }
 
     // If no swap happened, then it means the roots are in ascending order already
@@ -322,17 +322,17 @@ void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, unsigne
     // (we do this in another routine)
     } else {
 
-      // Paste the new guy unto the root
-      this.copier(records, ri, new, 0);
+      // // Paste the new guy unto the root
+      // this.copier(records, ri, new, 0);
 
-      // Grab the root
-      this.copier(r, records, 0, new);
+      // // Grab the root
+      // this.copier(r, records, 0, new);
       
       // Unset ri
       isRiSet = 0;
 
       // Note that we're considering the slice from [root, new] since no swap occured
-      _SmoothSort_siftDown(this, records, n, r, porder, root, new);
+      _SmoothSort_siftDown(this, records, n, ri, porder, root, new);
       return; 
     }
 
