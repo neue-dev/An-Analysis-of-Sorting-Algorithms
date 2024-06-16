@@ -9,7 +9,7 @@ This repository currently only features a few select sorting algorithms. They ar
 4. Heap Sort
 5. Smooth Sort
 
-In hindsight smooth sort was the most difficult to implement, but it also brought me most enjoyment. Because the implementations of the other algorithms are already widely-known, I put emphasis on explaining the mechanism of Smooth Sort below and leave out the others (except for Heap Sort... It'll become clear why I decided to explain this too).
+In hindsight smooth sort was the most difficult to implement, but it also brought me the most enjoyment. Because the implementations of the other algorithms are already widely-known, I put emphasis on explaining the mechanism of smooth sort below and leave out the others (except for Heap Sort... It'll become clear why I decided to explain this too).
 
 Additionally, I'll outline the methods I used to benchmark the sorting algorithms. After much research, I decided to generate my own data sets (still using the `struct Record` provided by the starter code) to test the different implementations. I landed on a few ways to measure "entropy" (how shuffled an array is) to help me understand how the sorting algorithms would behave under different circumstances.
 
@@ -82,9 +82,9 @@ But how does it work, exactly? That's where things get exciting.
 
 # 4. Tim Sort
 
-Now I won't bother going in-depth with Tim Sort; it's not really the main algorithm I chose anyway. Nevertheless, I feel like it deserves a special mention. Out of all the algorithms here, Tim Sort proved the most effective. And despite the (commonplace) minimum run size recommendation of $32$, choosing the value $16$ actually produced better results according to the tests conducted by the following project. Do note that this is probably due to the small number of records we're sorting (I'm pretty sure real-life applications would deal with at least a few million of these, whereas we're staying somewhere below that range here; in those cases a larger minimum run size might make more sense).
+Now I won't bother going in-depth with tim sort; it's not really the main algorithm I chose anyway. Nevertheless, I feel like it deserves a special mention. The original publication outlining tim sort actually takes inspiration [from another academic paper](https://dl.acm.org/doi/10.5555/313559.313859) which led me down a rabbit hole of information theory. This eventually helped me realize my ideas on how to benchmark the sorting algorithms.
 
-One caveat with the implementation of Tim Sort used by this project: it's not adaptive. The run size doesn't change based on the number of records, although in practice it should adapt to try and minimize the number of resulting merges utilized by the algorithm. 
+Some caveats with the implementation of tim sort used by this project: it's not adaptive, and it's not completely faithful to the original. For one, the run size doesn't change based on the number of records, although in practice it should adapt to try and minimize the number of resulting merges utilized by the algorithm. Aside from this, the algorithm also performs merges only after defining the runs, as opposed to performing them when merge criteria are satisfied. Nevertheless, despite these oversimplifications, I still refer to this implementation as tim sort, since a lot of the implementations found online follow this pattern (despite its apparent irreverence to the original version).
 
 # 5. Shuffling, Entropy, and Correlation
 
