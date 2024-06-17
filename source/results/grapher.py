@@ -12,7 +12,86 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # The names of the sorting algorithms we have
-SORTERS = [ 'heap sort', 'insertion sort', 'merge sort', 'selection sort', 'smooth sort', 'tim sort' ]
+SORTERS = [ 'insertion sort', 'selection sort', 'heap sort', 'merge sort', 'smooth sort', 'tim sort' ]
+COLORS = { 
+  'insertion sort': '#f41214', 
+  'selection sort': '#780000', 
+  'heap sort': '#89c2d9', 
+  'merge sort': '#468faf', 
+  'smooth sort': '#014f86', 
+  'tim sort': '#012a4a' 
+}
+BLACK = '#101010'
+WHITE = '#efe8d7'
+FONT = 'Helvetica'
+
+# Global settings for plt
+plt.rcParams['font.family'] = 'Ubuntu'
+
+def plt_new_plot(title, width=960, height=540):
+  '''
+  Helper function to create a new plot of out taste.
+  '''
+  dpi = 96
+  figure = plt.figure(figsize=(width / dpi, height / dpi), dpi=dpi)
+  figure.patch.set_facecolor(WHITE)
+  plt.title(title).set_color(BLACK)
+
+def plt_do_plot(X, Y):
+  '''
+  Plots the data we have for each sorter against the given X axis.
+  Note that Y doesn't need to have all sorters, in case we want a filtered graph.
+  '''
+  for sorter in SORTERS:
+    if sorter in Y:
+      line, = plt.plot(X, Y[sorter], label=sorter, linewidth=3.0)
+      line.set_color(COLORS[sorter])
+
+
+def plt_style_plot():
+  '''
+  Styles the plot with our preferred way of design.
+  '''
+
+  # Create a legend with no box
+  legend = plt.legend()  
+  legend.get_frame().set_alpha(0)
+  
+  for text in legend.get_texts():
+    text.set_color(BLACK)
+
+  for line in legend.legendHandles:
+    line.set_linewidth(2.0)
+
+  # Style the axes
+  # Also, remove the top and right border
+  axes = plt.gca()
+  
+  axes.set_facecolor(WHITE)
+  axes.tick_params(axis='x', colors=BLACK)
+  axes.tick_params(axis='y', colors=BLACK)
+  
+  axes.spines['bottom'].set_color(BLACK) 
+  axes.spines['left'].set_color(BLACK) 
+  axes.spines['top'].set_visible(False) 
+  axes.spines['right'].set_visible(False)
+
+
+def plt_log_axes():
+  '''
+  Sets the axes of the plot to log scales.
+  '''
+  plt.xscale('log')
+  plt.yscale('log')
+
+def plt_save_plot(filename):
+  '''
+  Saves the plot with the given name.
+  It also closes the plot so we can make a new one.
+  '''
+  plt.savefig(filename);
+  plt.clf();
+
 
 def df_cleanup(df):
   '''
@@ -84,26 +163,17 @@ def df_create_n_graph(df):
 
     # After generating the series data, we plot what we have
     # The first plot is a linear plot
-    for sorter in SORTERS:
-      plt.plot(X, Y[sorter], label=sorter)
-
-    # Configure the plot then save
-    plt.title('Sort Time (ms) vs. N for P=' + str(P))
-    plt.legend()
-    plt.savefig('./graphs/t-vs-N,for-P=' + str(P) + '.png')
-    plt.clf()
+    plt_new_plot('Sort Time (ms) vs. N for P=' + str(P), 600, 600)
+    plt_do_plot(X, Y)
+    plt_style_plot()
+    plt_save_plot('./graphs/t-vs-N,for-P=' + str(P) + '.png')
 
     # The second plot is a log vs log plot
-    for sorter in SORTERS:
-      plt.plot(X, Y[sorter], label=sorter)
-
-    # Configure the plot then save
-    plt.title('ln(Sort Time) vs. ln(N) for P=' + str(P))
-    plt.xscale('log')
-    plt.yscale('log')
-    plt.legend()
-    plt.savefig('./graphs/lnt-vs-lnN,for-P=' + str(P) + '.png')
-    plt.clf()
+    plt_new_plot('ln(Sort Time) vs. ln(N) for P=' + str(P), 600, 600)
+    plt_do_plot(X, Y)
+    plt_log_axes()
+    plt_style_plot()
+    plt_save_plot('./graphs/lnt-vs-lnN,for-P=' + str(P) + '.png')
 
 def df_create_p_graph(df):
   pass
@@ -115,8 +185,6 @@ DF_N2_P_TEST = df_cleanup(pd.read_csv('./n2-p-test.csv'))
 DF_NLOGN_N_TEST = df_cleanup(pd.read_csv('./nlogn-n-test.csv'))
 DF_NLOGN_P_TEST = df_cleanup(pd.read_csv('./nlogn-p-test.csv'))
 
-print(df_filter_runs_np(DF_ALL, 10000, 0.5))
-print(df_get_np(DF_ALL))
 
 df_create_n_graph(DF_ALL)
 
