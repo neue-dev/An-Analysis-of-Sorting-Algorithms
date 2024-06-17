@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-15 12:46:43
- * @ Modified time: 2024-06-15 16:25:56
+ * @ Modified time: 2024-06-17 21:51:15
  * @ Description:
  * 
  * This file helps us log our data unto a file in a formatted manner.
@@ -38,12 +38,12 @@ void Logger_init(char file[]) {
     FILE *newFile = fopen(file, "w+");
 
     // Columns for the params
-    fprintf(newFile, "%s, %s, %s, %s, %s",
+    fprintf(newFile, "%s,%s,%s,%s,%s",
       "N", "P", "entropy", "rsquared", "cycles");
 
     // Columns for the sorter names
     for(i = 0; i < SORTER_COUNT; i++)
-      fprintf(newFile, ", %s", _Engine_getName(NULL, 1 << (_SORTER + i)));
+      fprintf(newFile, ",%s", _Engine_getName(NULL, 1 << (_SORTER + i)));
     
     // Newline
     fprintf(newFile, "\n");

@@ -8,6 +8,7 @@ This repository currently only features a few select sorting algorithms. They ar
 3. Merge Sort
 4. Heap Sort
 5. Smooth Sort
+6. Tim Sort
 
 In hindsight smooth sort was the most difficult to implement, but it also brought me the most enjoyment. Because the implementations of the other algorithms are already widely-known, I put emphasis on explaining the mechanism of smooth sort below and leave out the others (except for Heap Sort... It'll become clear why I decided to explain this too).
 
@@ -28,7 +29,7 @@ Depending on what exactly you want to run, the program accepts a number of diffe
 * `runs`, the number of runs per $(N, P)$ (also explained later in this document), default is `1`.
 * `out`, the name of the file to write the results to, default is `output.csv`
 
-So for example you could run the executable with the command `main algos=smooth,heap,merge N=500,5000,50000 P=0.005,0.05,0.5,1.0 cycles=5 runs=2`. This performs two runs for each pair of $(N,P)$, with each run having $5$ cycles (if what $(N,P)$ means is unclear, do not fret as this will be explained further later on; for immediate information on these concepts, including the definitions of runs and cycles, jump to the section on ***Comparisons and Individual Analyses***). You can leave out *any or all* of the arguments above, and the program will run with the default values assigned to the unspecified arguments. Also, ***strictly no spaces*** when inputting comma-separated arguments.
+So for example you could run the executable with the command `main algos=smooth,heap,merge N=500,5000,50000 P=0.005,0.05,0.5,1.0 cycles=5 runs=2`. This performs two runs for each pair of $(N,P)$, with each run having $5$ cycles (if what $(N,P)$ means is unclear, do not fret as this will be explained further later on; for immediate information on these concepts, including the definitions of runs and cycles, jump to the section on ***Comparisons and Individual Analyses***). You can leave out *any or all* of the arguments above, and the program will run with the default values assigned to the unspecified arguments. Also, **strictly no spaces** when inputting comma-separated arguments.
 
 <!-- Detail how running the main program with different parameters can give different results -->
 

@@ -1,4 +1,4 @@
-N, P, entropy, rsquared, cycles, heap sort, insertion sort, merge sort, selection sort, smooth sort, tim sort
+N,P,entropy,rsquared,cycles,heap sort,insertion sort,merge sort,selection sort,smooth sort,tim sort
 1000, 0.000000, 0.000000, 1.000000, 10, 0.900000, 0.000000, 1.200000, 0.000000, 0.800000, 0.500000
 1000, 0.000000, 0.000000, 1.000000, 10, 1.000000, 0.000000, 1.100000, 0.000000, 0.900000, 0.900000
 1000, 0.000000, 0.000000, 1.000000, 10, 0.900000, 0.000000, 1.100000, 0.000000, 0.800000, 0.700000
