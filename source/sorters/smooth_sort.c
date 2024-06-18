@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-09 01:32:10
- * @ Modified time: 2024-06-16 10:52:01
+ * @ Modified time: 2024-06-18 15:38:11
  * @ Description:
  * 
  * An implementation of smoort sort.
@@ -170,14 +170,6 @@ void _SmoothSort_siftDown(SmoothSort this, t_Record records, int n, t_Record rRo
   // If both children are less than the root
   if(this.comparator(records, rRoot, largest, 0) < 0)
     largest = root;
-
-  // ! remove
-  // // Compare with the two children and swap with the larger one
-  // if(this.comparator(records, records, c1, largest) > 0)
-  //   largest = c1;
-
-  // if(this.comparator(records, records, c2, largest) > 0)
-  //   largest = c2;
     
   // If no need to swap, return after performing the last sift
   if(largest == root) {
@@ -239,7 +231,7 @@ void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, unsigne
   // The condition just checks if lseq only has a single rightmost bit
   // The return here is just to exit the function prematurely; it doesn't return anything
   if(!(lseq - (lseq & -lseq))) {
-    exp = (int) (log(lseq) / log(2));
+    exp = (int) log2(lseq);
 
     // Grab the root
     this.copier(r, records, 0, i);
@@ -449,11 +441,11 @@ void SmoothSort_main(SmoothSort this, t_Record records, int n) {
     lfirst = lseq & -lseq;
 
     // Get the smallest Leonardo heap size
-    exp = (int) (log(lfirst) / log(2));
+    exp = (int) log2(lfirst);
     offset = _SmoothSort_leonardoGet(this, exp);
 
     // Sift down the new roots if theyre not singletons
-    if(lfirst > 2) {
+    if(lfirst > 3) {
       
       // Grab the root
       this.copier(r, records, 0, i);
@@ -499,7 +491,7 @@ void SmoothSort_main(SmoothSort this, t_Record records, int n) {
     if(lfirst > 3) {
 
       // Get the smallest Leonardo heap size
-      exp = (int) (log(lfirst >> 2) / log(2));
+      exp = (int) log2(lfirst >> 2);
       offset = _SmoothSort_leonardoGet(this, exp);
 
       // We call it once for the left tree's root...
