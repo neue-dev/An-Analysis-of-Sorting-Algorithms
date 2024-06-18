@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 12:31:00
- * @ Modified time: 2024-06-18 13:03:54
+ * @ Modified time: 2024-06-18 15:41:08
  * @ Description:
  * 
  * The file contains all the testing utilities we will be using to benchmark our algorithms.
@@ -102,7 +102,8 @@ typedef struct Tester {
   double P;                         // The probability of a swap occurring during shuffling
 
   double entropy;                   // The currently computed Shannon entropy
-  double rsquared;                  // The currently computed coefficient of determination.
+  double r;                         // The currently computed correlation
+  double rsquared;                  // The currently computed coefficient of determination
   int *histogram;                   // We need this for computing the entropy; to be explained more below
 
   // An array to temporarily store the wrapped records
@@ -145,6 +146,7 @@ void Tester_init(Tester *this, t_Comparator comparator, t_Swapper swapper, t_Cop
 
   // Initially sets the entropy and r squared to 0
   this->entropy = 0;
+  this->r = 0;
   this->rsquared = 0;
 
   // Set defaults to N and P
@@ -284,7 +286,8 @@ void _Tester_computeEntropy(Tester *this) {
 
 /**
  * Measures the R squared of a given shuffle of the data to its sorted order.
- * This function is automatically calld by the tester after sorting.
+ * It also measures the R value of a given shuffle.
+ * This function is automatically called by the tester after sorting.
  * 
  * Technically, variance of X and variance of Y are the same in the function body below,
  * but I still compute both separately in case we want to change how the index is assigned to
@@ -335,7 +338,8 @@ void _Tester_computeRSquared(Tester *this) {
     varY += (rw->index - uY) * (rw->index - uY);
   }
 
-  // Compute R^2
+  // Compute R^2 and R
+  this->r = covXY / powf(varX * varY, 0.5);
   this->rsquared = covXY * covXY / (varX * varY);
 }
 
@@ -343,6 +347,7 @@ void _Tester_computeRSquared(Tester *this) {
  * Shuffles the array using the Fisher-Yates shuffle.
  * It's simpler than it sounds, trust me.
  * This function also automatically computes the entropy and r squared value associated with the shuffle.
+ * Note that for negative values of P, we start with a reversed list the proceed with shuffling.
  * 
  * @param   { Tester * }  this  The tester data object.
 */
@@ -350,8 +355,14 @@ void Tester_recordsShuffle(Tester *this) {
   int i;
   int swap;
 
-  // Configure the 
+  // Configure the records
   _Tester_recordsConfig(this);
+
+  // Revesre the list if P is negative
+  if(this->P < 0)
+    for(i = 0; i < this->N / 2; i++)
+      if(i != this->N - 1 - i && this->N - 1 - i >= 0)
+        _Wrapper_swap(this->shuffleWrappers, i, this->N - 1 - i);
 
   // Start from the back going forwards
   for(i = this->N; --i >= 0;) {
@@ -361,7 +372,7 @@ void Tester_recordsShuffle(Tester *this) {
 
     // Just do the swap if it doesn't swap with itself
     // We're swapping the wrappers here
-    if(swap != i && Random_probability(this->P))
+    if(swap != i && Random_probability(abs(this->P)))
       _Wrapper_swap(this->shuffleWrappers, i, swap); 
   }
 
@@ -454,8 +465,8 @@ void Tester_setP(Tester *this, double P) {
   if(this->P > 1)
     this->P = 1.0;
 
-  if(this->P < 0)
-    this->P = 0.0;
+  if(this->P < -1)
+    this->P = -1.0;
 }
 
 /**

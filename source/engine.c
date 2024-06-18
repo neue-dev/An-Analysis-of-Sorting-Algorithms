@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-11 00:20:03
- * @ Modified time: 2024-06-15 15:50:13
+ * @ Modified time: 2024-06-18 14:52:33
  * @ Description:
  * 
  * Handles the overall flow of the program.
@@ -20,12 +20,13 @@
 // The first four rows will contain information about the data set to be sorted
 // The next n rows will contain the times it took each sorting algorithm to sort the data set
 #define _PARAM 0
-#define PARAM_N (1 << _PARAM  + 0)
+#define PARAM_N (1 << _PARAM + 0)
 #define PARAM_P (1 << _PARAM + 1)
 #define PARAM_ENTROPY (1 << _PARAM + 2)
-#define PARAM_RSQUARED (1 << _PARAM + 3)
-#define PARAM_CYCLES (1 << _PARAM + 4)
-#define PARAM_COUNT 5
+#define PARAM_R (1 << _PARAM + 3)
+#define PARAM_RSQUARED (1 << _PARAM + 4)
+#define PARAM_CYCLES (1 << _PARAM + 5)
+#define PARAM_COUNT 6
 
 #define _SORTER PARAM_COUNT
 #define SORTER_HEAP (1 << (_SORTER + 0))
@@ -158,8 +159,8 @@ void _Engine_setRecords(Engine *this) {
   // Print the computed entropy and rsquared
   Tester_recordsFill(tester, &Record_fill);
   Tester_recordsShuffle(tester);
-  printf("[#] Data has been shuffled.\n -  Entropy=%.4lf;\n -  R^2=%.4lf;\n -  Is sorted=%s.\n\n", 
-    tester->entropy, tester->rsquared, Tester_checkSort(tester) ? "yes" : "no");
+  printf("[#] Data has been shuffled.\n -  Entropy=%.4lf;\n -  R=%.4lf;\n -  R^2=%.4lf;\n -  Is sorted=%s.\n\n", 
+    tester->entropy, tester->r, tester->rsquared, Tester_checkSort(tester) ? "yes" : "no");
 }
 
 /**
@@ -353,8 +354,9 @@ void _Engine_doCyclesSummary(Engine *this, int N, double P, int sorters) {
   this->runs[0][this->runCount] = N;
   this->runs[1][this->runCount] = P;
   this->runs[2][this->runCount] = tester->entropy;
-  this->runs[3][this->runCount] = tester->rsquared;
-  this->runs[4][this->runCount] = this->cycleCount;
+  this->runs[3][this->runCount] = tester->r;
+  this->runs[4][this->runCount] = tester->rsquared;
+  this->runs[5][this->runCount] = this->cycleCount;
 
   // Increment the runs count
   this->runCount++;
