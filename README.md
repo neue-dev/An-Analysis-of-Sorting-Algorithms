@@ -180,6 +180,24 @@ However, there is something else we must account for: if the array was in revers
 
 # 6. Comparisons and Individual Analyses
 
+This section discusses the two different methods used to compare and analyze the different algorithms. The first uses the provided datasets for the project; there are seven of these, and all algorithms we're allowed to run on them. The second involves a testing framework specifically coded for this project. Do note, however, that flexibility was considered in designing this system, and the framework may be used to benchmark other sorting algorithms (even ones that don't use the `struct Record`) so long as they follow the interfaces required by the framework.
+
+### 6.1 Testing with the Starter Datasets
+
+This test was relatively straightforward. To ensure the reliability of the measured durations, each algorithm was run ten times on all of the provided datasets. The results were then recorded unto a text file (encoded by the executable by piping its text output) and are summarized by the table below. Note that all the values depicted here represent the average duration taken by the algorithm across the ten different attempts of sorting each dataset (and thus contain an extra significant figure).
+
+| Dataset / Algorithm   | Insertion Sort        | Selection Sort        | Heap Sort          | Merge Sort         | Smooth Sort        | Tim Sort           |
+| --------------------- | --------------------- | --------------------- | ------------------ | ------------------ | ------------------ | ------------------ |
+| `random100.txt`       | $0.3 \text{ ms}$      | $0.3 \text{ ms}$      | $0.2 \text{ ms}$   | $0.2 \text{ ms}$   | $0.4 \text{ ms}$   | $0.2 \text{ ms}$   |
+| `random25000.txt`     | $8249.3 \text{ ms}$   | $3395.1 \text{ ms}$   | $40.6 \text{ ms}$  | $63.9 \text{ ms}$  | $99.5 \text{ ms}$  | $49.3 \text{ ms}$  |
+| `random50000.txt`     | $37339.8 \text{ ms}$  | $17930.9 \text{ ms}$  | $90.6 \text{ ms}$  | $141.4 \text{ ms}$ | $238.0 \text{ ms}$ | $114.4 \text{ ms}$ |
+| `random75000.txt`     | $90797.0 \text{ ms}$  | $48789.1 \text{ ms}$  | $160.7 \text{ ms}$ | $265.9 \text{ ms}$ | $404.1 \text{ ms}$ | $235.2 \text{ ms}$ |
+| `random100000.txt`    | $167628.7 \text{ ms}$ | $91376.1 \text{ ms}$  | $229.0 \text{ ms}$ | $357.1 \text{ ms}$ | $513.8 \text{ ms}$ | $313.3 \text{ ms}$ |
+| `almostsorted.txt`    | $32694.2 \text{ ms}$  | $91235.9 \text{ ms}$  | $173.6 \text{ ms}$ | $331.4 \text{ ms}$ | $187.8 \text{ ms}$ | $285.0 \text{ ms}$ |
+| `totallyreversed.txt` | $335970.4 \text{ ms}$ | $103090.6 \text{ ms}$ | $148.7 \text{ ms}$ | $338.6 \text{ ms}$ | $366.4 \text{ ms}$ | $298.1 \text{ ms}$ |
+
+### 6.2 The Custom Testing Framework: Methodology
+
 As mentioned a number of times above, a testing framework was also constructed to aid in the comparison and analyses of the different algorithms. The framework allows us to execute a number of different *runs*, each of which perform a set of specific *cycles*. In this case, a run refers to different shufflings of records for a given $(N, P)$, while a cycle refers to a set of attempts (for all algorithms) to sort a certain shuffle. Multiple cycles ensure that we account for the actual time it takes each algorithm to sort a given array (in case outliers of bad timing happen to be present); runs allow us to be confident that the times we're getting aren't for a particularly "good" or "bad" shuffle (the shuffle wasn't unlikely). If this still isn't clear, the pseudocode below should elucidate what I mean:
 
 ```python
@@ -212,11 +230,11 @@ for(i in number of runs)
 
 Note that when we "save data somewhere else", we're saving it alongside the values of $N$ and $P$ that were used for those runs. The choice of $(N, P)$ definitely affects the times we will be seeing, and so it is imperative we keep track of them. Additionally, the choice for the number of cycles is often set to `cycles=5`, while runs have `runs=5`.
 
-### 6.1 Comparisons and Testing
+### 6.3 The Custom Testing Framework: Results and Analysis
 
 <!-- Mention P and N here again -->
 
-### 6.2 Analyses of Each Algorithm
+### 6.4 The Custom Testing Framework: Individual Algorithms
 
 
 # 7. Author
