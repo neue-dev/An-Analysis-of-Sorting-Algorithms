@@ -31,6 +31,8 @@ Depending on what exactly you want to run, the program accepts a number of diffe
 
 So for example you could run the executable with the command `main algos=smooth,heap,merge N=500,5000,50000 P=0.005,0.05,0.5,1.0 cycles=5 runs=2`. This performs two runs for each pair of $(N,P)$, with each run having $5$ cycles (if what $(N,P)$ means is unclear, do not fret as this will be explained further later on; for immediate information on these concepts, including the definitions of runs and cycles, jump to the section on ***Comparisons and Individual Analyses***). You can leave out *any or all* of the arguments above, and the program will run with the default values assigned to the unspecified arguments. Also, **strictly no spaces** when inputting comma-separated arguments.
 
+However, if you want to run the algorithms with the default datasets provided by the starter code, you can also specify the `debug` argument; instead of calling `./main`, you run `./main debug`. The resulting process will execute each of the algorithms ten different times for all of the starter datasets. The debug process also checks the sorted arrays and verifies that they are $(1)$ in the correct order and (2) not missing any entries (the second check was necessary for debugging algorithms that copied elements to temporary variables and pasted them elsewhere later; missing entries could result from flawed logic and bad coding). In the case of this project, the output of this file was redirected into a text file for later encoding. It is good to note that both the aforementioned checks were passed by all algorithms for all the given datasets.
+
 <!-- Detail how running the main program with different parameters can give different results -->
 
 ### 1.2 Doing Custom Tests

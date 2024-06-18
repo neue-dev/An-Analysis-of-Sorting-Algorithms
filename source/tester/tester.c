@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 12:31:00
- * @ Modified time: 2024-06-15 14:11:46
+ * @ Modified time: 2024-06-18 13:03:54
  * @ Description:
  * 
  * The file contains all the testing utilities we will be using to benchmark our algorithms.
@@ -467,7 +467,7 @@ void Tester_setP(Tester *this, double P) {
  * @return  { int }             A boolean that indicates whether or not the list is sorted.
 */
 int Tester_checkSort(Tester *this) {
-  int i;
+  int i, low, mid, high;
   int comparison = 0;
   int order = 0;
 
@@ -489,6 +489,32 @@ int Tester_checkSort(Tester *this) {
     // If they are not equal, however, they must be the same as the determined order
     // Otherwise, we have an instance of a flip in the list--it reverses sort order midway
     if(order != comparison)
+      return 0;
+  }
+
+  // Check for missing entries from the shuffle array
+  for(i = 0; i < this->N; i++) {
+    
+    low = 0;
+    high = this->N;
+
+    // Perform a binary search for the given element
+    while(low <= high && high >= 0 && low < this->N) {
+      mid = (low + high) / 2;
+      
+      // We'e found the element
+      if(!this->comparator(this->shuffle, this->tosort, i, mid))
+        break;
+
+      // Keep checking
+      else if(this->comparator(this->shuffle, this->tosort, i, mid) < 0)
+        high = mid - 1;
+      else if(this->comparator(this->shuffle, this->tosort, i, mid) > 0)
+        low = mid + 1;
+    }
+
+    // The element was not found
+    if(low > high)
       return 0;
   }
 
