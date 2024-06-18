@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 12:31:00
- * @ Modified time: 2024-06-18 15:41:08
+ * @ Modified time: 2024-06-18 16:08:46
  * @ Description:
  * 
  * The file contains all the testing utilities we will be using to benchmark our algorithms.
@@ -372,7 +372,7 @@ void Tester_recordsShuffle(Tester *this) {
 
     // Just do the swap if it doesn't swap with itself
     // We're swapping the wrappers here
-    if(swap != i && Random_probability(abs(this->P)))
+    if(swap != i && Random_probability(fabs(this->P)))
       _Wrapper_swap(this->shuffleWrappers, i, swap); 
   }
 
