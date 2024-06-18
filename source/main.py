@@ -1,0 +1,188 @@
+import os
+
+# Batch testing
+# Note that this comes in handy because my OS automatically kills the process if it goes on too long
+# By being able to automate the script within a script, the OS thinks a different process is run each time
+
+# General test for all algos
+os.system('./main N=100,250,500,750,1000,2500,5000,7500,10000 P=-0.00001,-0.1,-0.25,-0.5,-0.75,-0.8,-1.0 cycles=10 runs=10 out="results/all-n-100-10k-and-p-0-1.csv"');
+os.system('./main N=100,250,500,750,1000,2500,5000,7500,10000 P=0.00001,0.1,0.25,0.5,0.75,0.8,1.0 cycles=10 runs=10 out="results/all-n-100-10k-and-p-0-1.csv"');
+
+# N test for n^2 algorithms
+os.system('./main N=100 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=insertion,selection out="results/n2-n-test.csv"');
+os.system('./main N=200 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=insertion,selection out="results/n2-n-test.csv"');
+os.system('./main N=300 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=insertion,selection out="results/n2-n-test.csv"');
+os.system('./main N=400 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=insertion,selection out="results/n2-n-test.csv"');
+os.system('./main N=500 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=insertion,selection out="results/n2-n-test.csv"');
+os.system('./main N=600 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=insertion,selection out="results/n2-n-test.csv"');
+os.system('./main N=700 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=insertion,selection out="results/n2-n-test.csv"');
+os.system('./main N=800 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=insertion,selection out="results/n2-n-test.csv"');
+os.system('./main N=900 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=insertion,selection out="results/n2-n-test.csv"');
+os.system('./main N=1000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=insertion,selection out="results/n2-n-test.csv"');
+os.system('./main N=2000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=insertion,selection out="results/n2-n-test.csv"');
+os.system('./main N=3000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=insertion,selection out="results/n2-n-test.csv"');
+os.system('./main N=4000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=insertion,selection out="results/n2-n-test.csv"');
+os.system('./main N=5000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=insertion,selection out="results/n2-n-test.csv"');
+os.system('./main N=6000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=insertion,selection out="results/n2-n-test.csv"');
+os.system('./main N=7000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=insertion,selection out="results/n2-n-test.csv"');
+os.system('./main N=8000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=insertion,selection out="results/n2-n-test.csv"');
+os.system('./main N=9000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=insertion,selection out="results/n2-n-test.csv"');
+os.system('./main N=10000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=insertion,selection out="results/n2-n-test.csv"');
+
+# P test for n^2 algorithms
+os.system('./main N=100,500,1000,5000,10000 P=-0.00001 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=-0.01 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=-0.02 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=-0.03 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=-0.04 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=-0.05 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=-0.06 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=-0.07 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=-0.08 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=-0.09 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=-0.1 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=-0.2 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=-0.3 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=-0.4 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=-0.5 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=-0.6 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=-0.7 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=-0.8 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=-0.9 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=-1.0 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=0.00001 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=0.01 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=0.02 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=0.03 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=0.04 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=0.05 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=0.06 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=0.07 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=0.08 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=0.09 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=0.1 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=0.2 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=0.3 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=0.4 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=0.5 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=0.6 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=0.7 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=0.8 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=0.9 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+os.system('./main N=100,500,1000,5000,10000 P=1.0 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+
+# N test for nlogn algorithms
+os.system('./main N=1000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=2000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=3000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=4000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=5000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=6000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=7000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=8000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=9000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=10000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=20000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=30000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=40000 P=-1.0,-0.667,-0.333,-0.00001,0.00001,0.333,0.667,1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=50000 P=-1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=50000 P=-0.667 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=50000 P=-0.333 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=50000 P=-0.00001 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=50000 P=0.00001 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=50000 P=0.333 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=50000 P=0.667 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=50000 P=1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=60000 P=-1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=60000 P=-0.667 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=60000 P=-0.333 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=60000 P=-0.00001 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=60000 P=0.00001 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=60000 P=0.333 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=60000 P=0.667 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=60000 P=1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=70000 P=-1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=70000 P=-0.667 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=70000 P=-0.333 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=70000 P=-0.00001 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=70000 P=0.00001 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=70000 P=0.333 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=70000 P=0.667 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=70000 P=1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=80000 P=-1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=80000 P=-0.667 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=80000 P=-0.333 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=80000 P=-0.00001 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=80000 P=0.00001 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=80000 P=0.333 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=80000 P=0.667 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=80000 P=1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=90000 P=-1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=90000 P=-0.667 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=90000 P=-0.333 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=90000 P=-0.00001 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=90000 P=0.00001 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=90000 P=0.333 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=90000 P=0.667 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=90000 P=1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=100000 P=-1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=100000 P=-0.667 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=100000 P=-0.333 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=100000 P=-0.00001 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=100000 P=0.00001 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=100000 P=0.333 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=100000 P=0.667 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+os.system('./main N=100000 P=1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-n-test.csv"');
+
+# P test for nlogn algorithms
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=-0.00001 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=-0.01 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=-0.02 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=-0.03 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=-0.04 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=-0.05 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=-0.06 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=-0.07 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=-0.08 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=-0.09 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=-0.1 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=-0.2 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=-0.3 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=-0.4 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=-0.5 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=-0.6 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=-0.7 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=-0.8 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=-0.9 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=-1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=0.00001 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=0.01 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=0.02 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=0.03 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=0.04 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=0.05 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=0.06 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=0.07 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=0.08 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=0.09 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=0.1 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=0.2 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=0.3 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=0.4 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=0.5 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=0.6 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=0.7 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=0.8 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=0.9 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+os.system('./main N=1000,2500,5000,10000,15000,20000,25000 P=1.0 cycles=10 runs=10 algos=heap,merge,smooth,tim out="results/nlogn-p-test.csv"');
+
+# ! old
+# os.system('./main N=100,500,1000,5000,10000 P=0,0.05,0.1,0.2,0.25,0.333,0.5,0.667,0.75,0.8,0.9,1.0 cycles=10 runs=10 algos=insertion,selection out="results/n2-p-test.csv"');
+# os.system('./main N=1000,2500,5000,7500,10000,25000 P=0,0.25,0.5,0.75,1.0 cycles=10 runs=10 algos=heap,smooth,merge,tim out="results/nlogn-n-test-1.csv"');
+# os.system('./main N=50000,75000,100000,125000,150000,175000,200000 P=0,0.25,0.5,0.75,1.0 cycles=10 runs=10 algos=heap,smooth,merge,tim out="results/nlogn-n-test-2.csv"');
+# os.system('./main N=250000,500000,750000,1000000 P=0,0.25,0.5,0.75,1.0 cycles=10 runs=10 algos=heap,smooth,merge,tim out="results/nlogn-n-test-3.csv"');
+# os.system('./main N=1250000,1500000 P=0,0.25,0.5,0.75,1.0 cycles=10 runs=10 algos=heap,smooth,merge,tim out="results/nlogn-n-test-4.csv"');
+# os.system('./main N=1000,5000,10000,50000,100000 P=0,0.05,0.1,0.2,0.25 cycles=10 runs=10 algos=heap,smooth,merge,tim out="results/nlogn-p-test-1.csv"');
+# os.system('./main N=1000,5000,10000,50000,100000 P=0.333,0.4,0.5,0.6 cycles=10 runs=10 algos=heap,smooth,merge,tim out="results/nlogn-p-test-2.csv"');
+# os.system('./main N=1000,5000,10000,50000,100000 P=0.667,0.75,0.8 cycles=10 runs=10 algos=heap,smooth,merge,tim out="results/nlogn-p-test-3.csv"');
+# os.system('./main N=1000,5000,10000,50000,100000 P=0.9,1.0 cycles=10 runs=10 algos=heap,smooth,merge,tim out="results/nlogn-p-test-4.csv"');
