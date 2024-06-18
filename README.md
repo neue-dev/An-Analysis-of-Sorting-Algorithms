@@ -180,21 +180,25 @@ However, there is something else we must account for: if the array was in revers
 
 # 6. Comparisons and Individual Analyses
 
-This section discusses the two different methods used to compare and analyze the different algorithms. The first uses the provided datasets for the project; there are seven of these, and all algorithms we're allowed to run on them. The second involves a testing framework specifically coded for this project. Do note, however, that flexibility was considered in designing this system, and the framework may be used to benchmark other sorting algorithms (even ones that don't use the `struct Record`) so long as they follow the interfaces required by the framework.
+This section discusses the two different methods used to compare and analyze the different algorithms. The first uses the provided datasets for the project; there are seven of these, and all algorithms we're allowed to run on them. The second involves a testing framework specifically coded for this project. Do note, however, that flexibility was considered in designing this system, and the framework may be used to benchmark other sorting algorithms (even ones that don't use the `Record` data structure) so long as they follow the interfaces required by the framework.
 
 ### 6.1 Testing with the Starter Datasets
 
 This test was relatively straightforward. To ensure the reliability of the measured durations, each algorithm was run ten times on all of the provided datasets. The results were then recorded unto a text file (encoded by the executable by piping its text output) and are summarized by the table below. Note that all the values depicted here represent the average duration taken by the algorithm across the ten different attempts of sorting each dataset (and thus contain an extra significant figure).
 
-| Dataset / Algorithm   | Insertion Sort        | Selection Sort        | Heap Sort          | Merge Sort         | Smooth Sort        | Tim Sort           |
-| --------------------- | --------------------- | --------------------- | ------------------ | ------------------ | ------------------ | ------------------ |
-| `random100.txt`       | $0.3 \text{ ms}$      | $0.3 \text{ ms}$      | $0.2 \text{ ms}$   | $0.2 \text{ ms}$   | $0.4 \text{ ms}$   | $0.2 \text{ ms}$   |
-| `random25000.txt`     | $8249.3 \text{ ms}$   | $3395.1 \text{ ms}$   | $40.6 \text{ ms}$  | $63.9 \text{ ms}$  | $99.5 \text{ ms}$  | $49.3 \text{ ms}$  |
-| `random50000.txt`     | $37339.8 \text{ ms}$  | $17930.9 \text{ ms}$  | $90.6 \text{ ms}$  | $141.4 \text{ ms}$ | $238.0 \text{ ms}$ | $114.4 \text{ ms}$ |
-| `random75000.txt`     | $90797.0 \text{ ms}$  | $48789.1 \text{ ms}$  | $160.7 \text{ ms}$ | $265.9 \text{ ms}$ | $404.1 \text{ ms}$ | $235.2 \text{ ms}$ |
-| `random100000.txt`    | $167628.7 \text{ ms}$ | $91376.1 \text{ ms}$  | $229.0 \text{ ms}$ | $357.1 \text{ ms}$ | $513.8 \text{ ms}$ | $313.3 \text{ ms}$ |
-| `almostsorted.txt`    | $32694.2 \text{ ms}$  | $91235.9 \text{ ms}$  | $173.6 \text{ ms}$ | $331.4 \text{ ms}$ | $187.8 \text{ ms}$ | $285.0 \text{ ms}$ |
-| `totallyreversed.txt` | $335970.4 \text{ ms}$ | $103090.6 \text{ ms}$ | $148.7 \text{ ms}$ | $338.6 \text{ ms}$ | $366.4 \text{ ms}$ | $298.1 \text{ ms}$ |
+| Dataset / Algorithm   | Insertion Sort | Selection Sort | Heap Sort  | Merge Sort | Smooth Sort | Tim Sort   |
+| --------------------- | -------------- | -------------- | ---------- | ---------- | ----------- | ---------- |
+| `random100.txt`       | $0.3$ ms       | $0.3$ ms       | $0.2$ ms   | $0.2$ ms   | $0.4$ ms    | $0.2$ ms   |
+| `random25000.txt`     | $8249.3$ ms    | $3395.1$ ms    | $40.6$ ms  | $63.9$ ms  | $99.5$ ms   | $49.3$ ms  |
+| `random50000.txt`     | $37339.8$ ms   | $17930.9$ ms   | $90.6$ ms  | $141.4$ ms | $238.0$ ms  | $114.4$ ms |
+| `random75000.txt`     | $90797.0$ ms   | $48789.1$ ms   | $160.7$ ms | $265.9$ ms | $404.1$ ms  | $235.2$ ms |
+| `random100000.txt`    | $167628.7$ ms  | $91376.1$ ms   | $229.0$ ms | $357.1$ ms | $513.8$ ms  | $313.3$ ms |
+| `almostsorted.txt`    | $32694.2$ ms   | $91235.9$ ms   | $173.6$ ms | $331.4$ ms | $187.8$ ms  | $285.0$ ms |
+| `totallyreversed.txt` | $335970.4$ ms  | $103090.6$ ms  | $148.7$ ms | $338.6$ ms | $366.4$ ms  | $298.1$ ms |
+
+As expected, both $\mathcal{O}(n^2)$ algorithms had runtimes that increased significantly with respect to the problem size. In the worst case scenario (sorting a list in reverse), insertion sort took around $5 \frac{1}{2}$ mins, while selection sort took a little over $1 \frac{1}{2}$ mins. While selection sort is supposed to run at about the same time for a given problem size (regardless of the shuffle) because it always performs the same number of comparisons for a given $N$, the slight increase in execution time observed for `totallyreversed.txt` is likely due to the increased *number of swaps* performed by selection sort.
+
+For the $\mathcal{O}(n \log n)$ algorithms, we make some interesting observations. While merge sort behaves as expected and always runs in approximately $\mathcal{O}(n \log n)$ regardless of the provided shuffle, heap sort performs considerably better on data that's almost sorted and data that's structured in reverse. Based on our discusion of entropy above, we know that both of these datasets should have low measures of disorder (a reversed array isnt shuffled that well, it's just in the opposite order), and as we will see in the analyses of the succeeding section, heap sort performs considerably better for datasets with low entropy. Almost the same can be said for smooth sort, although it does have a preference for the correct ordering of data.
 
 ### 6.2 The Custom Testing Framework: Methodology
 
@@ -236,8 +240,15 @@ Note that when we "save data somewhere else", we're saving it alongside the valu
 
 ### 6.4 The Custom Testing Framework: Individual Algorithms
 
+# 7. Recommendations and Afterthoughts
 
-# 7. Author
+There were some things I realized during the project which I wish I had realized much sooner. If I had, then maybe I would've pulled those things off before submitting this project. Nevertheless, I leave them here as recommendations due to a lack of time.
+
+### 7.1 Correlation, NOT Determination
+
+Towards the latter half of the testing phase, I realized how much more valuable it would be to measure the *coefficient of correlation* and not the coefficient of determination. While the initial idea was to use the latter metric because I thought measuring 'shuffledness' was sufficient, I later realized that knowing the 'bias' of a dataset (whether it tends to be in the *right order* or in *reverse*) would just be as insightful, since some of the algorithms obviously perform differently based on this. In this case, correlation would definitely give us more insights to work with.
+
+# 8. Author
 
 ```
                                                     |\      _,,,---,,_
