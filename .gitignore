@@ -1,4 +1,5 @@
 .VSCodeCounter/
+.vscode/
 
 main
 main.debug
