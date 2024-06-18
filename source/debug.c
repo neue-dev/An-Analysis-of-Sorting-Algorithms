@@ -28,7 +28,7 @@ void _Debug_copyShuffle(Record *records, Record *shuffle, int N) {
  * @return  { boolean }             Whether or not the sort was correct.
 */
 int _Debug_checkSort(Record *records, Record *shuffle, int N) {
-  int i, j;
+  int i, low, mid, high;
   int comparison = 0;
   int order = 0;
 
@@ -53,18 +53,29 @@ int _Debug_checkSort(Record *records, Record *shuffle, int N) {
       return 0;
   }
 
-  // Check for missing entries
+  // Check for missing entries from the shuffle array
   for(i = 0; i < N; i++) {
-    for(j = 0; j < N; j++) {
+    
+    low = 0;
+    high = N;
 
-      // The entry isnt missing
-      if(shuffle[i].idNumber == records[j].idNumber && 
-        !strcmp(shuffle[i].name, records[j].name))
+    // Perform a binary search for the given element
+    while(low <= high && high >= 0 && low < N) {
+      mid = (low + high) / 2;
+      
+      // We'e found the element
+      if(!Record_comparator(shuffle, records, i, mid))
         break;
+
+      // Keep checking
+      else if(Record_comparator(shuffle, records, i, mid) < 0)
+        high = mid - 1;
+      else if(Record_comparator(shuffle, records, i, mid) > 0)
+        low = mid + 1;
     }
 
-    // There was a missing entry
-    if(j == N)
+    // The element was not found
+    if(low > high)
       return 0;
   }
 
