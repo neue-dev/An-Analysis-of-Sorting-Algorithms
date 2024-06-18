@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-05-24 11:21:27
- * @ Modified time: 2024-06-15 00:08:01
+ * @ Modified time: 2024-06-18 13:20:10
  * @ Description:
  * 
  * The file contains a wrapper for each of the implementations of the sorting algorithms.
@@ -24,6 +24,9 @@
 #include "../sorters/heap_sort.c"
 #include "../sorters/smooth_sort.c"
 #include "../sorters/tim_sort.c"
+
+// So we don't have to deal with bugs
+int isInitted = 0;
 
 // Our different sorters
 InsertionSort _Record_IS;
@@ -60,7 +63,20 @@ void Record_initSorters() {
 
   // Warp up smooth sort
   SmoothSort_main(_Record_SS, record, 1);
+
+  // It's done
+  isInitted = 1;
 }
+
+/**
+ * Warn the user that they haven't initted the sorters.
+*/
+void _Record_warn() {
+  printf("\n\n!!! ERROR: Record_initSorters() was not called yet!\n");
+  printf("!!! ERROR: Please call it before running any tests of your own.\n");
+  printf("!!! ERROR: Refer to the README for more information on this.\n\n");
+}
+
 
 /**
  * Insertion sort.
@@ -69,7 +85,8 @@ void Record_initSorters() {
  * @param   { int }       n         The number of records to sort.
 */
 void Record_insertionSort(Record *records, int n) {
-  InsertionSort_main(_Record_IS, records, n);
+  if(!isInitted) _Record_warn();
+  else InsertionSort_main(_Record_IS, records, n);
 }
 
 /**
@@ -79,7 +96,8 @@ void Record_insertionSort(Record *records, int n) {
  * @param   { int }       n         The number of records to sort.
 */
 void Record_selectionSort(Record *records, int n) {
-  SelectionSort_main(_Record_LS, records, n);
+  if(!isInitted) _Record_warn();
+  else SelectionSort_main(_Record_LS, records, n);
 }
 
 /**
@@ -89,7 +107,8 @@ void Record_selectionSort(Record *records, int n) {
  * @param   { int }       n         The number of records to sort.
 */
 void Record_mergeSort(Record *records, int n) {
-  MergeSort_main(_Record_MS, records, n);
+  if(!isInitted) _Record_warn();
+  else MergeSort_main(_Record_MS, records, n);
 }
 
 /**
@@ -99,7 +118,8 @@ void Record_mergeSort(Record *records, int n) {
  * @param   { int }       n         The number of records to sort.
 */
 void Record_heapSort(Record *records, int n) {
-  HeapSort_main(_Record_HS, records, n);
+  if(!isInitted) _Record_warn();
+  else HeapSort_main(_Record_HS, records, n);
 }
 
 /**
@@ -109,7 +129,8 @@ void Record_heapSort(Record *records, int n) {
  * @param   { int }       n         The number of records to sort.
 */
 void Record_smoothSort(Record *records, int n) {
-  SmoothSort_main(_Record_SS, records, n);
+  if(!isInitted) _Record_warn();
+  else SmoothSort_main(_Record_SS, records, n);
 }
 
 /**
@@ -119,7 +140,8 @@ void Record_smoothSort(Record *records, int n) {
  * @param   { int }       n         The number of records to sort.
 */
 void Record_timSort(Record *records, int n) {
-  TimSort_main(_Record_TS, records, n);
+  if(!isInitted) _Record_warn();
+  else TimSort_main(_Record_TS, records, n);
 }
 
 #endif
