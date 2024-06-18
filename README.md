@@ -10,7 +10,7 @@ This repository currently only features a few select sorting algorithms. They ar
 5. Smooth Sort
 6. Tim Sort
 
-In hindsight smooth sort was the most difficult to implement, but it also brought me the most enjoyment. Because the implementations of the other algorithms are already widely-known, I put emphasis on explaining the mechanism of smooth sort below and leave out the others (except for Heap Sort... It'll become clear why I decided to explain this too).
+In hindsight, smooth sort was the most difficult to implement, but it also brought me the most insights and enjoyment. Because the implementations of the other algorithms are already widely-known, I put emphasis on explaining the mechanism of smooth sort below and leave out the others (except for Heap Sort... It'll become clear why I decided to explain this too).
 
 Additionally, I'll outline the methods I used to benchmark the sorting algorithms. After much research, I decided to generate my own data sets (still using the `struct Record` provided by the starter code) to test the different implementations. I landed on a few ways to measure "entropy" (how shuffled an array is) to help me understand how the sorting algorithms would behave under different circumstances.
 
@@ -18,7 +18,7 @@ Likewise, to verify the amount by which the different algorithms would scale (in
 
 ### 1.1 Running the Program
 
-Compiling the program is relatively straightforward. Just use `gcc` and run `gcc main.c -o main`, after which you can run the built `main` executable. **For linux users**, I do leave another important note as the math library is not linked by default: if you are using a Linux device, run `gcc main.c -o main -lm` instead.
+Compiling the program is relatively straightforward. Just use `gcc` and type the command `gcc main.c -o main`. The resulting built executable `main` can then be run. **For linux users**, I do leave another small but important note as the math library is not linked by default: if you are using a Linux device, run `gcc main.c -o main -lm` instead.
 
 Depending on what exactly you want to run, the program accepts a number of different command-line arguments. They are listed below.
 
@@ -189,25 +189,23 @@ set value of P
 # Testing algorithm for a given N and P
 for(i in number of runs)
     shuffle = new shuffle of records according to N and P
-    times = 2d array to store execution times
+    times = 2d array to store execution times, init to all 0s
 
     # Perform the required number of cycles
     for(j in number of cycles)
 
         # Do the sort for each algorithm
-        for(each algorithm)
+        for(algo in algorithms)
             tosort = copy order of shuffled records
             
             start = get start time
-            algorithm.sort(tosort)
+            algo.sort(tosort)
             end = get end time
 
-            times.save(algorithm, end - start)
-
-    # After all the cycles, compute the averages of the times
-    for(each algorithm)
-        compute_ave(times.get(algorithm))
-        save data somewhere else
+            times[algorithm][run] = end - start
+        
+    # Get the average of all cycles for this run
+    times[algorithm][run] /= number of cycles
 ```
 
 Note that when we "save data somewhere else", we're saving it alongside the values of $N$ and $P$ that were used for those runs. The choice of $(N, P)$ definitely affects the times we will be seeing, and so it is imperative we keep track of them. Additionally, the choice for the number of cycles is often set to `cycles=5`, while runs have `runs=5`.

@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-05-24 11:21:27
- * @ Modified time: 2024-06-16 10:53:28
+ * @ Modified time: 2024-06-18 00:43:32
  * @ Description:
  * 
  * The main file.
@@ -20,6 +20,9 @@
 // Import the logger
 #include "./logger.c"
 
+// Import the debug file
+#include "./debug.c"
+
 // Some useful libs
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,45 +30,53 @@
 int main(int argc, char *argv[]) {
   int i, j;
 
-  // Store the parameters given through the CLI
-  CLI_initArgs(argc, argv);
+  // We're not running the debug routine
+  if(argc == 1 || strcmp(argv[1], "debug")) {
 
-  // Init the random number generator
-  Random_init();
+    // Store the parameters given through the CLI
+    CLI_initArgs(argc, argv);
 
-  // Init our sorters so we can use them
-  Record_initSorters();
+    // Init the random number generator
+    Random_init();
 
-  // Init the Logger to save our data
-  Logger_init(ARGS.out);
+    // Init our sorters so we can use them
+    Record_initSorters();
 
-  // Create the tester engine and init it
-  Engine engine;
-  Engine_init(&engine);
+    // Init the Logger to save our data
+    Logger_init(ARGS.out);
 
-  // Run the tester with the provided arguments
-  // (or the default ones if none were given)
-  for(i = 0; i < ARGS.NCount; i++) {
-    for(j = 0; j < ARGS.PCount; j++) {
-      
-      // Reset the engine memory
-      Engine_reset(&engine);
+    // Create the tester engine and init it
+    Engine engine;
+    Engine_init(&engine);
 
-      // Run the engine for the given params
-      Engine_doRuns(&engine, 
-        ARGS.N[i], 
-        ARGS.P[j], 
-        ARGS.cycles, 
-        ARGS.runs, 
-        ARGS.algos);
+    // Run the tester with the provided arguments
+    // (or the default ones if none were given)
+    for(i = 0; i < ARGS.NCount; i++) {
+      for(j = 0; j < ARGS.PCount; j++) {
+        
+        // Reset the engine memory
+        Engine_reset(&engine);
 
-      // Log the data
-      Logger_saveRuns(&engine);
+        // Run the engine for the given params
+        Engine_doRuns(&engine, 
+          ARGS.N[i], 
+          ARGS.P[j], 
+          ARGS.cycles, 
+          ARGS.runs, 
+          ARGS.algos);
+
+        // Log the data
+        Logger_saveRuns(&engine);
+      }
     }
-  }
 
-  // Clean up the state and memory
-  Engine_exit(&engine);
+    // Clean up the state and memory
+    Engine_exit(&engine);
+
+  // Run the debug routine
+  } else {
+    Debug_main();
+  }
 
   return 0;
 }
