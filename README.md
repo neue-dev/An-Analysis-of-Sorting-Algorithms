@@ -1,5 +1,6 @@
-# 1. An Analysis of Sorting Algorithms
-#### *by Mo David*
+![an analysis of sorting algorithms](./README/title.png)
+
+# 1. Overview
 
 This repository currently only features a few select sorting algorithms. They are:
 
@@ -257,7 +258,11 @@ As expected, both $\mathcal{O}(n^2)$ algorithms had runtimes that increased sign
 
 For the $\mathcal{O}(n \log n)$ algorithms, we make some interesting observations. While merge sort behaves as expected and always runs in approximately $\mathcal{O}(n \log n)$ regardless of the provided shuffle, heap sort performs considerably better on data that's almost sorted and data that's structured in reverse. Based on our discusion of entropy above, we know that both of these datasets should have low measures of disorder (a reversed array isnt shuffled that well, it's just in the opposite order), and as we will see in the analyses of the succeeding section, heap sort performs considerably better for datasets with low entropy. Almost the same can be said for smooth sort, although it does have a preference for the correct ordering of data.
 
-### 6.3 The Custom Testing Framework: Methodology
+### 6.3 The Custom Testing Framework: The Sort Checker
+
+Initially the testing framework only checked "sortedness" by checking the order of the elements in the array. If the array had its elements in a nondecreasing (or nonincreasing) arrangement, then the function would say the array was sorted. However, after debugging the more complicated algorithms, I encountered problems that made me realize this check was insufficient.
+
+### 6.4 The Custom Testing Framework: Doing the Runs and Cycles
 
 As mentioned a number of times above, a testing framework was also constructed to aid in the comparison and analyses of the different algorithms. The framework allows us to execute a number of different *runs*, each of which perform a set of specific *cycles*. In this case, a run refers to different shufflings of records for a given $(N, P)$, while a cycle refers to a set of attempts (for all algorithms) to sort a certain shuffle. Multiple cycles ensure that we account for the actual time it takes each algorithm to sort a given array (in case outliers of bad timing happen to be present); runs allow us to be confident that the times we're getting aren't for a particularly "good" or "bad" shuffle (the shuffle wasn't unlikely). If this still isn't clear, the pseudocode below should elucidate what I mean:
 
@@ -291,11 +296,11 @@ for i in number of runs:
 
 Note that when we "save data somewhere else", we're saving it alongside the values of $N$ and $P$ that were used for those runs. The choice of $(N, P)$ definitely affects the times we will be seeing, and so it is imperative we keep track of them. Additionally, the choice for the number of cycles is often set to `cycles=5`, while runs have `runs=5`.
 
-### 6.4 The Custom Testing Framework: Results and Analysis
+### 6.5 The Custom Testing Framework: Results and Analysis
 
 <!-- Mention P and N here again -->
 
-### 6.5 The Custom Testing Framework: Spotlighting Individual Algorithms
+### 6.6 The Custom Testing Framework: Spotlighting Individual Algorithms
 
 # 7. Recommendations, Afterthoughts, and Anecdotes
 
@@ -309,7 +314,7 @@ When I was implementing smooth sort, I found myself needing a way to compute the
 
 This was working all fine and well (which I guess one should expect since the formula is mathematically correct) until at some point I decided to run my program on Windows. Up until then I'd been working within a Linux environment, and I wasn't expecting to have to deal with platform differences because I wasn't touching anything that low-level. But for some reason, despite the same code running on both my devices, smooth sort failed to sort my arrays on Windows when it successfully did on Linux. Although I now know that the reason for this was the logarithm formula I used above, it took me an hour or two to debug the whole mess and isolate the problem. It's honestly a miracle I found the problem that fast, because my smooth sort implementation had so many components I could've just as well spent an entire day figuring that one out.
 
-It turns out that doing `log(8) / log(2)` on Windows gave... $2$! What? Why? I honestly don't know, but this was also true for other powers of two. The `log(x) / log(2)` would work fine for just about any value of $x$ **EXCEPT** for powers of two. And that really messed with smooth sort. Linux didn't have this problem, though, and it's likely it has something to do with the float-precision of the numbers being used. Regardless, I immediately found a solution to my problem (which in hindsight should've been the implemetation since the start): `log2()`. If only I'd known about the function at the beginning, the problem would've never occurred... but is it my fault? Perhaps, perhaps not. It's either bad documentation on the part of the C Library or bad documentation comprehension on my part.
+It turns out that doing `(int) log(8) / log(2)` on Windows gave... $2$! What? Why? I honestly don't know, but this was also true for other powers of two. The `log(x) / log(2)` would work fine for just about any value of $x$ **EXCEPT** for powers of two. And that really messed with smooth sort. Linux didn't have this problem, though, and it's likely it has something to do with the float-precision of the numbers being used. Regardless, I immediately found a solution to my problem (which in hindsight should've been the implemetation since the start): `log2()`. If only I'd known about the function at the beginning, the problem would've never occurred... but is it my fault? Perhaps, perhaps not. It's either bad documentation on the part of the C Library or bad documentation comprehension on my part.
 
 ### 7.2 Shifting, not Swapping
 
