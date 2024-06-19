@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-11 00:20:03
- * @ Modified time: 2024-06-20 01:02:39
+ * @ Modified time: 2024-06-20 01:09:11
  * @ Description:
  * 
  * Handles the overall flow of the program.
@@ -239,8 +239,6 @@ void _Engine_doSort(Engine *this, int sorter) {
 
     default: break;
   }
-
-  printf("%ld", _Engine_getFreqCount(this, sorter));
 }
 
 /**
