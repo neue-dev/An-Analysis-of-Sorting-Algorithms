@@ -55,6 +55,10 @@ Note how all the functions preserve the same signature to facilitate testing. Fu
 > 1. When importing `sortingalgorithms.c` and using any of the `Record_...Sort()` functions, <b style="color: rgba(255, 55, 55, 1);">DO NOT FORGET TO RUN</b> `Record_initSorters()` at the start of the main function (with no parameters). This function has to be run once before any of the sorting algorithms can work.
 > 2. <b style="color: rgba(255, 55, 55, 1);">DO NOT MOVE</b> any of the files around to prevent breaking any of the imports.
 
+### 1.3 A Note on Python Helper Files
+
+Some might notice that the project contains a few Python files. These can be ignored and were simply used to automate the running of the C program. It allowed the possibility to perform batch tests without having to type the commands one after the other. Additionally, another Python script was also utilized to generate some of the visuals of this report (particularly those that graph data; the other illustrations were created in [Figma](https://figma.com/)).
+
 # 2. Heap Sort
 
 Heap sort has been described as ["selection sort using the right data structure"](https://link.springer.com/chapter/10.1007/978-3-030-54256-6_4). While that was not something that made sense to me a year ago, it was something that clicked during this project.
@@ -117,7 +121,7 @@ L(i) &= L(i - 1) + L(i - 2) + 1 \\
 \end{align}
 $$
 
-To the acute reader, this might seem rather similar to the Fibonacci sequence, aside from the $+1$ embedded into each iteration. Indeed, the two sequences are actually related by a simple formula, and this relationship is essential to proving the $\mathcal{O}(n \log n)$ behaviour of smooth sort, but as neat as this may be, it is beyond the scope of this report (although you may ask me in person, if you wish).
+To the acute reader, this might seem rather similar to the Fibonacci sequence, aside from the $+1$ embedded into each iteration. Indeed, the two sequences are actually related by a simple formula, and this relationship is essential to proving the $\mathcal{O}(n \log n)$ behaviour of smooth sort, but as neat as this may be, it is beyond the scope of this report (although you may ask me in person if you wish).
 
 Now consider for a moment trees with $L(i)$ nodes. If we structure the trees such that the left subtree contains $L(i - 1)$ nodes and the right subtree contains $L(i - 2)$ nodes, then the trees have the amazing property of being recursively defined by the Leonardo sequence. Equivalently, given any two trees with $L(i - 1)$ and $L(i - 2)$ nodes respectively, a new tree with $L(i)$ nodes can be constructed from the other two by adding a new root node (thus the $+1$ above). Because every node has at most two children, these trees are binary trees. From hereon, adopting the terminology used by [this article](https://www.keithschwarz.com/smoothsort/), we will refer to these trees as *Leonardo trees*, and such a tree with $L(k)$ nodes is a Leonardo tree of *order* $k$.
 
@@ -289,11 +293,13 @@ Note that when we "save data somewhere else", we're saving it alongside the valu
 
 ### 6.4 The Custom Testing Framework: Individual Algorithms
 
-# 7. Recommendations and Afterthoughts
+# 7. Recommendations, Afterthoughts, and Anecdotes
 
 There were some things I realized during the project which I wish I had realized much sooner. If I had, then maybe I would've pulled those things off before submitting this project. Nevertheless, I leave them here as recommendations due to a lack of time.
 
-### 7.1 Correlation, NOT Determination
+### 7.1 Smooth Sort Bug: C Behaves Differently on Different Platforms
+
+### 7.2 Correlation, NOT Determination
 
 Towards the latter half of the testing phase, I realized how much more valuable it would be to measure the *coefficient of correlation* and not the coefficient of determination. While the initial idea was to use the latter metric because I thought measuring 'shuffledness' was sufficient, I later realized that knowing the 'bias' of a dataset (whether it tends to be in the *right order* or in *reverse*) would just be as insightful, since some of the algorithms obviously perform differently based on this. In this case, correlation would definitely give us more insights to work with.
 
