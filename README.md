@@ -1,6 +1,7 @@
 ![an analysis of sorting algorithms](./README/title.png)
 
-# 1. Overview
+![overview](./README/headers/header-overview.png)
+---
 
 This repository currently only features a few select sorting algorithms. They are:
 
@@ -60,7 +61,8 @@ Note how all the functions preserve the same signature to facilitate testing. Fu
 
 Some might notice that the project contains a few Python files. These can be ignored and were simply used to automate the running of the C program. It allowed the possibility to perform batch tests without having to type the commands one after the other. Additionally, another Python script was also utilized to generate some of the visuals of this report (particularly those that graph data; the other illustrations were created in [Figma](https://figma.com/)).
 
-# 2. Heap Sort
+![heap sort](./README/headers/header-heap-sort.png)
+---
 
 Heap sort has been described as ["selection sort using the right data structure"](https://link.springer.com/chapter/10.1007/978-3-030-54256-6_4). While that was not something that made sense to me a year ago, it was something that clicked during this project.
 
@@ -102,7 +104,8 @@ One important thing to note was that a different optimization was used to speed 
 
 Anyway, on to the fun part...
 
-# 3. Smooth Sort
+![smooth sort](./README/headers/header-smooth-sort.png)
+---
 
 The reason I decided to explain heap sort prior to smooth sort is because the two algorithms rely on the same fundamental idea: visualizing an array in a manner that differs from its linear structure. However, smooth sort attempts to remedy a certain problem with heap sort: the largest element of the array is always at the root (the beginning) of the array, when ultimately it must end up at the opposite end. This means that regardless of the initial state of our array, $n \cdot \log n$ operations must necessarily happen. Heap sort does not care whether or not our data is sorted to some degree.
 
@@ -126,7 +129,7 @@ To the acute reader, this might seem rather similar to the Fibonacci sequence, a
 
 Now consider for a moment trees with $L(i)$ nodes. If we structure the trees such that the left subtree contains $L(i - 1)$ nodes and the right subtree contains $L(i - 2)$ nodes, then the trees have the amazing property of being recursively defined by the Leonardo sequence. Equivalently, given any two trees with $L(i - 1)$ and $L(i - 2)$ nodes respectively, a new tree with $L(i)$ nodes can be constructed from the other two by adding a new root node (thus the $+1$ above). Because every node has at most two children, these trees are binary trees. From hereon, adopting the terminology used by [this article](https://www.keithschwarz.com/smoothsort/), we will refer to these trees as *Leonardo trees*, and such a tree with $L(k)$ nodes is a Leonardo tree of *order* $k$.
 
-![leonardo-trees](./README/leonardo-trees.png)
+![leonardo-trees](./README/figures/leonardo-trees.png)
 
 Smooth sort uses Leonardo trees to visualize the array.
 
@@ -136,19 +139,23 @@ Generating the forest of Leonardo trees for smooth sort is more straightforward 
 
 We begin by starting at the left of the array and proceeding rightwards until the last element is reached. During each iteration, the current element is added as the root of the rightmost tree in the forest, and the corresponding tree is heapified to ensure it is a valid max-heap. We can see the progression of the process below, where the newly added node is highlighted for each iteration. Whenever this newly added node has child nodes, we call a `siftDown()` function to maintain the max-heap property of the tree (note that like heap sort, the `siftDown()` we use for smooth sort doesn't rely on swaps but shifts).
 
-![Smoothsort first stage.](./README/smooth-sort-heapification.png)
+![Smoothsort first stage.](./README/figures/smooth-sort-heapification.png)
 
 The exact rules for deciding whether or not to append the next element as a root node or as a singleton are simple: if the two rightmost Leonardo trees in the forest have adjacent orders, then we merge those two (alongside the new root) to create a Leonardo tree of the next order. Otherwise, we add a singleton node. The actual code uses the bits of an `unsigned int` to keep track of the orders of the Leonardo trees currently in the forest: a $1$ on the $k\text{th}$ least-significant bit (LSB) of the variable signifies that a Leonardo tree of order $k$ is present. Do note that because of this method, we are restricted to sorting arrays that hold a number of elements no more than the sum of the first $32$ Leonardo numbers (that's a few million records; if we want to circumvent this, we can just use an `unsigned long`). 
 
 ### 3.3 Sorting Using the Heapified Trees
 
-# 4. Tim Sort
+![other algorithms](./README/headers/header-other-algorithms.png)
+---
+
+### 4.1 Tim Sort
 
 Now I won't bother going in-depth with tim sort; it's not really the main algorithm I chose anyway. Nevertheless, I feel like it deserves a special mention. The original publication outlining tim sort actually takes inspiration [from another academic paper](https://dl.acm.org/doi/10.5555/313559.313859) which led me down a rabbit hole of information theory. This eventually helped me realize my ideas on how to benchmark the sorting algorithms.
 
 Some caveats with the implementation of tim sort used by this project: it's not adaptive, and it's not completely faithful to the original. For one, the run size doesn't change based on the number of records, although in practice it should adapt to try and minimize the number of resulting merges utilized by the algorithm. Aside from this, the algorithm also performs merges only after defining the runs, as opposed to performing them when merge criteria are satisfied. Nevertheless, contrary to these oversimplifications, I still refer to this version of the algorithm as tim sort, since a lot of the implementations found online follow this pattern (despite their apparent irreverence to the original).
 
-# 5. Shuffling, Entropy, and Correlation
+![shuffling, entropy, and correlation](./README/headers/header-shuffling-entropy-correlation.png)
+---
 
 ### 5.1. Shuffling
 
@@ -234,7 +241,8 @@ However, when measuring shuffledness alone, the measure of correlation tends to 
 
 Nevertheless, both the coefficient of correlation and determination will be used to assess the performances of the different algorithms. The latter will supplement our measurements of entropy, while the former will give us insights into how the algorithms react to data that has a bias for being sorted in the correct order or the reverse order.  
 
-# 6. Comparisons and Individual Analyses
+![comparisons and individual analyses](./README/headers/header-comparisons-analyses.png)
+---
 
 This section discusses the two different methods used to compare and analyze the different algorithms. The first uses the provided datasets for the project; there are seven of these, and all algorithms we're allowed to run on them. The second involves a testing framework specifically coded for this project. Do note, however, that flexibility was considered in designing this system, and the framework may be used to benchmark other sorting algorithms (even ones that don't use the `Record` data structure) so long as they follow the interfaces required by the framework.
 
@@ -302,7 +310,8 @@ Note that when we "save data somewhere else", we're saving it alongside the valu
 
 ### 6.6 The Custom Testing Framework: Spotlighting Individual Algorithms
 
-# 7. Recommendations, Afterthoughts, and Anecdotes
+![recommendations, afterthoughts, and anecdotes](./README/headers/header-recommendations-afterthoughts-anecdotes.png)
+---
 
 Here are a few reflections I've had the privilege of noting down following the completion of the project.
 
@@ -330,7 +339,8 @@ Due to the delay of this realization, I had to restart all the tests I had done 
 
 I'd spent about ten days on the entire project at that point when suddenly, the day before the submission, I reread the specifications and realized I needed to do the frequency counts for each algorithm (I had no idea that was required). I was about to lose it when I realized I'd created structs for each of the sorting algorithms, so that storing state for each of them (such as frequency count) would be no biggie. The function signature would remain the same, and only an extra struct member would need to be created. While it did take about half an hour to set up (and I had to redo all the tests again), the fact that it took *only half an hour* to set up was a relief. I felt kinda happy realizing the way I code these days gives my programs a leeway for flexibility.
 
-# 8. Author
+![author](./README/headers/header-author.png)
+---
 
 ```
                                                     |\      _,,,---,,_
