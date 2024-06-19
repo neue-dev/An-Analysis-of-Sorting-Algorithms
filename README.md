@@ -91,7 +91,7 @@ for i = (array.length - 1) to i = 0:
     siftDown(array[0]);
 ```
 
-It is also possible to optimize heap sort by starting the heapifying process at `i = pow(2, (int) log2(array.length)) - 1` (this is just the smallest power of 2 less than the array length); this is possible because the leaf nodes do not have children and it would be pointless to call the function `siftDown()` for them. Nevertheless, even though the current implementation does without this optimization, *heap sort is actually the fastest among all the sorting algorithms* (according to the tests below). For more information about the analysis and results, refer to the section on ***Comparisons and Individual Analyses***.
+It is also possible to optimize heap sort by starting the heapifying process at `i = pow(2, (int) log2(array.length)) - 1` (this is just the smallest power of 2 less than the array length); this is possible because the leaf nodes do not have children and it would be pointless to call the function `siftDown()` on them. Nevertheless, even though the current implementation does without this optimization, **heap sort is generally the fastest among all the six sorting algorithms** that were chosen (at least according to the implementations within this project). For more information about the analyses and results, refer to the section on ***Comparisons and Individual Analyses***.
 
 One important thing to note was that a different optimization was used to speed up heap sort. Originally, I managed to implement the algorithm exclusively using *swaps*. When sifting elements down the tree, a swap would occur at every level when it was possible. This meant copying two different records unto two different locations. However, upon saving the root in a temp variable and only "shifting" child nodes up instead of performing swaps (much like insertion sort shifts adjacent elements rather than swapping to the end), heap sort ran about twice as fast as it did in the initial runs (although sadly I do not have data for the initial implementation of heap sort I did). This makes sense given the fact that the act of copying data was cut in half.
 
@@ -99,15 +99,33 @@ Anyway, on to the fun part...
 
 # 3. Smooth Sort
 
-The reason I decided to explain heap sort prior to smooth sort is because the two algorithms rely on the same fundamental ideas: visualizing an array in a manner that neglects its linear structure. However, smooth sort attempts to remedy a certain problem with heap sort: the largest element of the array is always at the root (the beginning) of the array, when ultimately it must end up at the opposite end. This means that regardless of the initial state of our array, $n \cdot \log n$ operations must necessarily happen. Heap sort does not care whether or not our data is sorted to some degree.
+The reason I decided to explain heap sort prior to smooth sort is because the two algorithms rely on the same fundamental idea: visualizing an array in a manner that differs from its linear structure. However, smooth sort attempts to remedy a certain problem with heap sort: the largest element of the array is always at the root (the beginning) of the array, when ultimately it must end up at the opposite end. This means that regardless of the initial state of our array, $n \cdot \log n$ operations must necessarily happen. Heap sort does not care whether or not our data is sorted to some degree.
 
-Smooth sort, on the other hand, takes an unorthodox approach. For one thing, it doesn't create a single tree but rather a *forest of max-heaps*. For another, it builds these trees such that their root nodes are on the right. This entails way less computations for lists that are close to being sorted. It also means that smooth sort, in the best case, is $\mathcal{O}(n)$! Note that as amazing as this sounds, we will see towards the latter half of this paper whether or not the merit this brings makes it worth using smooth sort.
+Smooth sort, on the other hand, takes an unorthodox approach. For one, it doesn't create a single tree but rather a *forest of max-heaps*. For another, it builds these trees such that their root nodes are on the right. This entails way less computations for lists that are close to being sorted. It also means that smooth sort, in the best case, is $\mathcal{O}(n)$! Note that as amazing as this sounds, we will see towards the latter half of this paper (again, in the section ***Comparisons and Individual Analyses***) whether or not the merit this brings is of any practical value.
 
-But how does it work, exactly? That's where things get exciting.
+But how does it work, exactly?
 
 ### 3.1 Leonardo Numbers and Leonardo Heaps
 
+Before we discuss the underlying structure of the max-heaps created by smooth sort, I wish to bring forth the idea of [the Leonardo numbers](https://en.wikipedia.org/wiki/Leonardo_number). The Leonardo numbers are just an integer sequence defined by the recurrence:
+
+$$
+\begin{align}
+L(0) &= 1 \\
+L(1) &= 1 \\
+L(i) &= L(i - 1) + L(i - 2) + 1 \\
+\end{align}
+$$
+
+To the acute reader, this might seem rather similar to the Fibonacci sequence, aside from the $+1$ embedded into each iteration. Indeed, the two sequences are actually related by a simple formula, and this relationship is essential to proving the $\mathcal{O}(n \log n)$ behaviour of smooth sort, but as neat as this may be, it is beyond the scope of this report (although you may ask me in person, if you wish).
+
+Now consider for a moment trees with $L(i)$ nodes. If we structure the trees such that the left subtree contains $L(i - 1)$ nodes and the right subtree contains $L(i - 2)$ nodes, then the trees have the amazing property of being recursively defined by the Leonardo sequence. Equivalently, given any two trees with $L(i - 1)$ and $L(i - 2)$ nodes respectively, a new tree with $L(i)$ nodes can be constructed from the other two by adding a new root node (thus the $+1$ above). Because every node has at most two children, the tree is a binary tree. From hereon, adopting the terminology used by [this article](https://www.keithschwarz.com/smoothsort/), we will refer to these trees as *Leonardo trees*, and such a tree with $L(k)$ nodes is a Leonardo tree of *order* $k$.
+
+Smooth sort uses Leonardo trees to visualize the array.
+
 ### 3.2 Generating the Forest
+
+I visual aid would greatly supplement the outline of the process I'm about to give, and is provided below.
 
 ### 3.3 The Smooth Sort Algorithm
 
