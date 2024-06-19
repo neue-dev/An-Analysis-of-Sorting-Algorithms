@@ -44,7 +44,7 @@ def plt_do_plot_line(X, Y, sorters):
   '''
   for sorter in sorters:
     if sorter in Y:
-      line, = plt.plot(X, Y[sorter], label=sorter, linewidth=3.0)
+      line, = plt.plot(X, Y[sorter], '-.o', label=sorter, linewidth=3.0)
       line.set_color(COLORS[sorter])
 
 def plt_do_plot_scatter(X, Y, sorters):
