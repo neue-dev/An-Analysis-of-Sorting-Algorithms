@@ -22,12 +22,12 @@ Compiling the program is relatively straightforward. Just use `gcc` and type the
 
 Depending on what exactly you want to run, the program accepts a number of different command-line arguments. They are listed below.
 
-* `algos`, the algorithms to run, default is `insertion,selection,heap,merge,smooth`.
-* `N`, the number of records to sort, default is `100,1000,10000`.
-* `P`, the shuffling amount (explained later), default is `0,0.5,1.0`.
+* `algos`, the algorithms to run, default is `insertion,selection,heap,merge,smooth,tim`.
+* `N`, the number of records to sort, default is `100`.
+* `P`, the shuffling amount (explained later), default is `1.0`.
 * `cycles`, the number of cycles per run (explained later), default is `1`.
 * `runs`, the number of runs per $(N, P)$ (also explained later in this document), default is `1`.
-* `out`, the name of the file to write the results to, default is `output.csv`
+* `out`, the name of the file to write the results to, default is `output.csv`; of course, you may specify directories within the path.
 
 So for example you could run the executable with the command `main algos=smooth,heap,merge N=500,5000,50000 P=0.005,0.05,0.5,1.0 cycles=5 runs=2`. This performs two runs for each pair of $(N,P)$, with each run having $5$ cycles (if what $(N,P)$ means is unclear, do not fret as this will be explained further later on; for immediate information on these concepts, including the definitions of runs and cycles, jump to the section on ***Comparisons and Individual Analyses***). You can leave out *any or all* of the arguments above, and the program will run with the default values assigned to the unspecified arguments. Also, **strictly no spaces** when inputting comma-separated arguments.
 
@@ -59,20 +59,43 @@ Note how all the functions preserve the same signature to facilitate testing. Fu
 
 Heap sort has been described as ["selection sort using the right data structure"](https://link.springer.com/chapter/10.1007/978-3-030-54256-6_4). While that was not something that made sense to me a year ago, it was something that clicked during this project.
 
-Heap sort treats the array differently: instead of viewing it as a sequential list of elements, heap sort visualizes it in the form of a tree, with the associations between parent nodes and child nodes outlined in a simple and defined manner. Every $i^\text{th}$ element in the array is the child of the $\lfloor \frac{n - 1}{2} \rfloor^\text{th}$ entry and a parent of elements $2i + 1$ and $2i + 2$. By defining the tree in this way, adjacent nodes can be found easily at the expense of just a multiplication or two.
+Heap sort treats the array differently: instead of viewing it as a sequential list of elements, heap sort visualizes it in the form of a tree, with the associations between parent nodes and child nodes outlined in a simple manner. Every $i^\text{th}$ element in the array is the child of the $\lfloor \frac{n - 1}{2} \rfloor^\text{th}$ entry and a parent of elements $2i + 1$ and $2i + 2$. By defining the tree in this way, adjacent nodes can be found easily at the expense of just a multiplication or two.
 
 ### 2.1 Why Do We Use A Tree?
 
-But what benefit does a tree have over an array of elements? Because of the structure of a heap, we are guaranteed to know that every element is greater than all its descendants. This invariant allows us to shift an element to its right place within the structure without having to compare it with every single element in the array; the motion associated with performing this action is vertical along the tree, and thus only depends on the height of the tree. This is wonderful because the height of a binary tree is always around $log_2(n)$ of the number of nodes $n$! Overall, visualizing the array in this manner allows us to execute a sort with minimal comparisons.
+But what benefit does a tree have over a sequential view of an array of elements? Because of the structure of a the tree (which is actually a max-heap), we are guaranteed to know that every element is greater than all its descendants. This invariant allows us to shift an element to its right place within the structure without having to compare it to every single element in the array; the motion associated with performing this action is vertical along the tree, and thus only depends on the height of the tree. This is wonderful because the height of a binary tree is always around $log_2(n)$ of the number of nodes $n$! Overall, visualizing the array in this manner allows us to execute a sort with minimal comparisons.
 
 ### 2.2 The Heap Sort Algorithm
 
-As a brief outline of the actual heap sort algorithm (which I believe we must recall for the sake of understanding smooth sort): // ! dictate how the algorithm works
+As a brief outline of the actual heap sort algorithm (which I believe we must recall for the sake of understanding smooth sort), I present the following pseudocode:
 
 ```python
-# add pseudocode for the heap sort algorithm
+# The first step involves converting the array into a valid max-heap
+# This operation takes nlogn steps.
+for i = (array.length - 1) to i = 0:
+
+    # Consider the subtree rooted at i, and sift the root down
+    # Because we're starting with the leaves of the tree, this guarantees a valid max-heap at the end
+    siftDown(array[i])
+
+# The second step is the actual sorting
+# We consider slices of the original array in decreasing length
+for i = (array.length - 1) to i = 0:
+
+    # Swap the largest element and bring it to the end of the current subarray
+    swap(0, i);
+
+    # Sift the new root of the max-heap
+    # Since the max-heap was originally valid, we only need to sift the root to fix it
+    # Because the root was the only thing swapped
+    siftDown(array[0]);
 ```
 
+It is also possible to optimize heap sort by starting the heapifying process at `i = pow(2, (int) log2(array.length)) - 1` (this is just the smallest power of 2 less than the array length); this is possible because the leaf nodes do not have children and it would be pointless to call the function `siftDown()` for them. Nevertheless, even though the current implementation does without this optimization, *heap sort is actually the fastest among all the sorting algorithms* (according to the tests below). For more information about the analysis and results, refer to the section on ***Comparisons and Individual Analyses***.
+
+One important thing to note was that a different optimization was used to speed up heap sort. Originally, I managed to implement the algorithm exclusively using *swaps*. When sifting elements down the tree, a swap would occur at every level when it was possible. This meant copying two different records unto two different locations. However, upon saving the root in a temp variable and only "shifting" child nodes up instead of performing swaps (much like insertion sort shifts adjacent elements rather than swapping to the end), heap sort ran about twice as fast as it did in the initial runs (although sadly I do not have data for the initial implementation of heap sort I did). This makes sense given the fact that the act of copying data was cut in half.
+
+Anyway, on to the fun part...
 
 # 3. Smooth Sort
 
@@ -118,7 +141,7 @@ for k = (array.length - 1) to k = 0:
     t = random float from 0 to 1
 
     if t <= P and t > 0:
-      swap array[k] with array[k']
+        swap array[k] with array[k']
 ```
 
 In the implementation, things are notated a bit differently and we have $<$ instead of $<=$, but that's okay because the computations in the actual code account for that subtlety.
@@ -211,15 +234,15 @@ set value of N
 set value of P
 
 # Testing algorithm for a given N and P
-for(i in number of runs)
+for i in number of runs:
     shuffle = new shuffle of records according to N and P
     times = 2d array to store execution times, init to all 0s
 
     # Perform the required number of cycles
-    for(j in number of cycles)
+    for j in number of cycles:
 
         # Do the sort for each algorithm
-        for(algo in algorithms)
+        for algo in algorithms:
             tosort = copy order of shuffled records
             
             start = get start time
