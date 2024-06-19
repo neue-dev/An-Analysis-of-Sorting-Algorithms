@@ -1,4 +1,7 @@
 .VSCodeCounter/
+.vscode/
 
 main
 main.debug
+
+graphs/

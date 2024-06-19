@@ -1,5 +1,1 @@
-CHECK IF MERGE AND TIM SORT ARENT FUCKING UP THE ARRAYS (no 0s plsss + no dups)
-
-REMOVE main.debug.c and main.debug
-
-create an option for debugging that runs the sorting algorithms on the provided starter data sets
+separate all python files into a 'pyscripts' folder
