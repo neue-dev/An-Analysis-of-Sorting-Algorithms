@@ -299,13 +299,19 @@ Note that when we "save data somewhere else", we're saving it alongside the valu
 
 # 7. Recommendations, Afterthoughts, and Anecdotes
 
-There were some things I realized during the project which I wish I had realized much sooner. If I had, then maybe I would've pulled those things off before submitting this project. Nevertheless, I leave them here as recommendations due to a lack of time.
+Here are a few reflections I've had the privilege of noting down following the completion of the project.
 
 ### 7.1 Smooth Sort Bug: C Behaves Differently on Different Platforms
 
-### 7.2 Correlation, NOT Determination
+### 7.2 Shifting, not Swapping
+
+Initially, heap sort actually wasn't the fastest algorithm; there was no clear winner, but tim sort and merge sort seemed to dominate for the most part. That was until I realized all the algorithms that used swaps could be optimized. If I copied insertion sort and stored the current element in a temp variable, I could theoreitcally cut the execution times of the algorithms in half (as they would have to copy half the amount of data per shift vs. per swap). This actually ended up being true and sped up heap sort so much that it overtook every other algorithm after that. Do note that I did the same optimization for smooth sort, but it was already kind of slow to begin with, so even though it ran twice as fast, it was still slower than its $\mathcal{O}(n \log n)$ brethren (for the most part). Again, I suspect the excessive amount of function calls to be part of the reason why this is so (for smooth sort, I isolated so many subroutines into their own functions for convenience, but I think that might have ended up hurting performance).
+
+### 7.3 Correlation, NOT JUST Determination
 
 Towards the latter half of the testing phase, I realized how much more valuable it would be to measure the *coefficient of correlation* and not the coefficient of determination. While the initial idea was to use the latter metric because I thought measuring 'shuffledness' was sufficient, I later realized that knowing the 'bias' of a dataset (whether it tends to be in the *right order* or in *reverse*) would just be as insightful, since some of the algorithms obviously perform differently based on this. In this case, correlation would definitely give us more insights to work with.
+
+Due to the delay of this realization, I had to restart all the tests I had done at that point. All in all, counting mishaps and dry-runs, I probably left my laptop on for a total of at least 48 hours running tests on the algorithms. In case you're curious, my humble potato has an `Intel i3-6006u` processor, so it was definitely up for the task. 
 
 # 8. Author
 
