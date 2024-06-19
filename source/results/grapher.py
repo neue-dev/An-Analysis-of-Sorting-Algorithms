@@ -316,14 +316,52 @@ def df_create_determination_scatterplot(df, name, sorters):
     # plt_log_y()
     plt_style_plot()
     plt_save_plot('./graphs/' + name + '-t-vs-determination,for-N=' + str(N) + '.png')
+
+def df_create_correlation_scatterplot(df, name, sorters):
+  '''
+  This graphs the runtime of each algorithm with respect to the entropy of the shuffled array.
+  We do this per value of N, because the entropy also kinda depends on N.
+  '''
+
+  # The N values to check
+  N_array = df_get_np(df)['N_array']
+  
+  for N in N_array:
+
+    # Grab the sub df
+    sub_df = df_filter_runs_n(df, N)
+
+    # The stuff to plot
+    X = []
+    Y = {}
+
+    # Define the lists for each of the sorters
+    for sorter in sorters:
+      Y[sorter] = []
+
+    # Iterate through the rows
+    for index, row in sub_df.iterrows():
+      
+      # Append the current rsquared
+      X.append(row['r'])
+
+      # Append the times of the sorters
+      for sorter in sorters:
+        Y[sorter].append(row[sorter])
+
+    plt_new_plot('Sort Time vs. R for N=' + str(N), 600, 600)
+    plt_do_plot_scatter(X, Y, sorters)
+    # plt_log_y()
+    plt_style_plot()
+    plt_save_plot('./graphs/' + name + '-t-vs-correlation,for-N=' + str(N) + '.png')
       
 
 # This is where we store all our dataframes
-DF_ALL = df_cleanup(pd.read_csv('./old.all-n-100-10k-and-p-0-1.csv'))
-DF_N2_N_TEST = df_cleanup(pd.read_csv('./old.n2-n-test.csv'))
-DF_N2_P_TEST = df_cleanup(pd.read_csv('./old.n2-p-test.csv'))
-DF_NLOGN_N_TEST = df_cleanup(pd.read_csv('./old.nlogn-n-test.csv'))
-DF_NLOGN_P_TEST = df_cleanup(pd.read_csv('./old.nlogn-p-test.csv'))
+DF_ALL = df_cleanup(pd.read_csv('./all-n-100-10k-and-p-0-1.csv'))
+DF_N2_N_TEST = df_cleanup(pd.read_csv('./n2-n-test.csv'))
+DF_N2_P_TEST = df_cleanup(pd.read_csv('./n2-p-test.csv'))
+DF_NLOGN_N_TEST = df_cleanup(pd.read_csv('./nlogn-n-test.csv'))
+DF_NLOGN_P_TEST = df_cleanup(pd.read_csv('./nlogn-p-test.csv'))
 
 
 df_create_n_lineplot(DF_ALL, 'n-graphs/all', SORTERS)
@@ -334,18 +372,26 @@ df_create_p_lineplot(DF_ALL, 'p-graphs/all', SORTERS)
 df_create_p_lineplot(DF_N2_P_TEST, 'p-graphs/n2', SORTERS[:2])
 df_create_p_lineplot(DF_NLOGN_P_TEST, 'p-graphs/nlogn', SORTERS[2:])
 
-# df_create_entropy_scatterplot(DF_ALL, 'entropy-graphs/all', SORTERS);
-# df_create_entropy_scatterplot(DF_N2_P_TEST, 'entropy-graphs/insertion', SORTERS[0:1]);
-# df_create_entropy_scatterplot(DF_N2_P_TEST, 'entropy-graphs/selection', SORTERS[1:2]);
-# df_create_entropy_scatterplot(DF_NLOGN_P_TEST, 'entropy-graphs/heap', SORTERS[2:3]);
-# df_create_entropy_scatterplot(DF_NLOGN_P_TEST, 'entropy-graphs/merge', SORTERS[3:4]);
-# df_create_entropy_scatterplot(DF_NLOGN_P_TEST, 'entropy-graphs/smooth', SORTERS[4:5]);
-# df_create_entropy_scatterplot(DF_NLOGN_P_TEST, 'entropy-graphs/tim', SORTERS[5:6]);
+df_create_entropy_scatterplot(DF_ALL, 'entropy-graphs/all', SORTERS);
+df_create_entropy_scatterplot(DF_N2_P_TEST, 'entropy-graphs/insertion', SORTERS[0:1]);
+df_create_entropy_scatterplot(DF_N2_P_TEST, 'entropy-graphs/selection', SORTERS[1:2]);
+df_create_entropy_scatterplot(DF_NLOGN_P_TEST, 'entropy-graphs/heap', SORTERS[2:3]);
+df_create_entropy_scatterplot(DF_NLOGN_P_TEST, 'entropy-graphs/merge', SORTERS[3:4]);
+df_create_entropy_scatterplot(DF_NLOGN_P_TEST, 'entropy-graphs/smooth', SORTERS[4:5]);
+df_create_entropy_scatterplot(DF_NLOGN_P_TEST, 'entropy-graphs/tim', SORTERS[5:6]);
 
-# df_create_determination_scatterplot(DF_ALL, 'determination-graphs/all', SORTERS);
-# df_create_determination_scatterplot(DF_N2_P_TEST, 'determination-graphs/insertion', SORTERS[0:1]);
-# df_create_determination_scatterplot(DF_N2_P_TEST, 'determination-graphs/selection', SORTERS[1:2]);
-# df_create_determination_scatterplot(DF_NLOGN_P_TEST, 'determination-graphs/heap', SORTERS[2:3]);
-# df_create_determination_scatterplot(DF_NLOGN_P_TEST, 'determination-graphs/merge', SORTERS[3:4]);
-# df_create_determination_scatterplot(DF_NLOGN_P_TEST, 'determination-graphs/smooth', SORTERS[4:5]);
-# df_create_determination_scatterplot(DF_NLOGN_P_TEST, 'determination-graphs/tim', SORTERS[5:6]);
+df_create_determination_scatterplot(DF_ALL, 'determination-graphs/all', SORTERS);
+df_create_determination_scatterplot(DF_N2_P_TEST, 'determination-graphs/insertion', SORTERS[0:1]);
+df_create_determination_scatterplot(DF_N2_P_TEST, 'determination-graphs/selection', SORTERS[1:2]);
+df_create_determination_scatterplot(DF_NLOGN_P_TEST, 'determination-graphs/heap', SORTERS[2:3]);
+df_create_determination_scatterplot(DF_NLOGN_P_TEST, 'determination-graphs/merge', SORTERS[3:4]);
+df_create_determination_scatterplot(DF_NLOGN_P_TEST, 'determination-graphs/smooth', SORTERS[4:5]);
+df_create_determination_scatterplot(DF_NLOGN_P_TEST, 'determination-graphs/tim', SORTERS[5:6]);
+
+df_create_correlation_scatterplot(DF_ALL, 'correlation-graphs/all', SORTERS);
+df_create_correlation_scatterplot(DF_N2_P_TEST, 'correlation-graphs/insertion', SORTERS[0:1]);
+df_create_correlation_scatterplot(DF_N2_P_TEST, 'correlation-graphs/selection', SORTERS[1:2]);
+df_create_correlation_scatterplot(DF_NLOGN_P_TEST, 'correlation-graphs/heap', SORTERS[2:3]);
+df_create_correlation_scatterplot(DF_NLOGN_P_TEST, 'correlation-graphs/merge', SORTERS[3:4]);
+df_create_correlation_scatterplot(DF_NLOGN_P_TEST, 'correlation-graphs/smooth', SORTERS[4:5]);
+df_create_correlation_scatterplot(DF_NLOGN_P_TEST, 'correlation-graphs/tim', SORTERS[5:6]);
