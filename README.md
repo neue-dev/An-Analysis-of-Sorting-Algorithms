@@ -237,7 +237,9 @@ Nevertheless, both the coefficient of correlation and determination will be used
 
 This section discusses the two different methods used to compare and analyze the different algorithms. The first uses the provided datasets for the project; there are seven of these, and all algorithms we're allowed to run on them. The second involves a testing framework specifically coded for this project. Do note, however, that flexibility was considered in designing this system, and the framework may be used to benchmark other sorting algorithms (even ones that don't use the `Record` data structure) so long as they follow the interfaces required by the framework.
 
-### 6.1 Testing with the Starter Datasets
+### 6.1 Frequency Count of the Algorithms
+
+### 6.2 Testing with the Starter Datasets
 
 This test was relatively straightforward. To ensure the reliability of the measured durations, each algorithm was run ten times on all of the provided datasets. The results were then recorded unto a text file (encoded by the executable by piping its text output) and are summarized by the table below. Note that all the values depicted here represent the average duration taken by the algorithm across the ten different attempts of sorting each dataset (and thus contain an extra significant figure).
 
@@ -255,7 +257,7 @@ As expected, both $\mathcal{O}(n^2)$ algorithms had runtimes that increased sign
 
 For the $\mathcal{O}(n \log n)$ algorithms, we make some interesting observations. While merge sort behaves as expected and always runs in approximately $\mathcal{O}(n \log n)$ regardless of the provided shuffle, heap sort performs considerably better on data that's almost sorted and data that's structured in reverse. Based on our discusion of entropy above, we know that both of these datasets should have low measures of disorder (a reversed array isnt shuffled that well, it's just in the opposite order), and as we will see in the analyses of the succeeding section, heap sort performs considerably better for datasets with low entropy. Almost the same can be said for smooth sort, although it does have a preference for the correct ordering of data.
 
-### 6.2 The Custom Testing Framework: Methodology
+### 6.3 The Custom Testing Framework: Methodology
 
 As mentioned a number of times above, a testing framework was also constructed to aid in the comparison and analyses of the different algorithms. The framework allows us to execute a number of different *runs*, each of which perform a set of specific *cycles*. In this case, a run refers to different shufflings of records for a given $(N, P)$, while a cycle refers to a set of attempts (for all algorithms) to sort a certain shuffle. Multiple cycles ensure that we account for the actual time it takes each algorithm to sort a given array (in case outliers of bad timing happen to be present); runs allow us to be confident that the times we're getting aren't for a particularly "good" or "bad" shuffle (the shuffle wasn't unlikely). If this still isn't clear, the pseudocode below should elucidate what I mean:
 
@@ -289,11 +291,11 @@ for i in number of runs:
 
 Note that when we "save data somewhere else", we're saving it alongside the values of $N$ and $P$ that were used for those runs. The choice of $(N, P)$ definitely affects the times we will be seeing, and so it is imperative we keep track of them. Additionally, the choice for the number of cycles is often set to `cycles=5`, while runs have `runs=5`.
 
-### 6.3 The Custom Testing Framework: Results and Analysis
+### 6.4 The Custom Testing Framework: Results and Analysis
 
 <!-- Mention P and N here again -->
 
-### 6.4 The Custom Testing Framework: Individual Algorithms
+### 6.5 The Custom Testing Framework: Spotlighting Individual Algorithms
 
 # 7. Recommendations, Afterthoughts, and Anecdotes
 
