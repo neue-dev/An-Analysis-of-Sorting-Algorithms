@@ -121,13 +121,19 @@ To the acute reader, this might seem rather similar to the Fibonacci sequence, a
 
 Now consider for a moment trees with $L(i)$ nodes. If we structure the trees such that the left subtree contains $L(i - 1)$ nodes and the right subtree contains $L(i - 2)$ nodes, then the trees have the amazing property of being recursively defined by the Leonardo sequence. Equivalently, given any two trees with $L(i - 1)$ and $L(i - 2)$ nodes respectively, a new tree with $L(i)$ nodes can be constructed from the other two by adding a new root node (thus the $+1$ above). Because every node has at most two children, the tree is a binary tree. From hereon, adopting the terminology used by [this article](https://www.keithschwarz.com/smoothsort/), we will refer to these trees as *Leonardo trees*, and such a tree with $L(k)$ nodes is a Leonardo tree of *order* $k$.
 
+![leonardo-trees](./README/leonardo-trees.png)
+
 Smooth sort uses Leonardo trees to visualize the array.
 
 ### 3.2 Generating the Forest
 
-I visual aid would greatly supplement the outline of the process I'm about to give, and is provided below.
+Generating the forest of Leonardo trees for smooth sort is more straightforward than it sounds. The illustration below will likely do better to explain the process, but I will try to outline it regardless. The process relies on the fact that any number can be expressed as the sum of a subset of the Leonardo numbers. This fact can be proven through mathematical induction, though again, we refuse to wander beyond the scope of this report.
 
-### 3.3 The Smooth Sort Algorithm
+We begin by starting at the left of the array and proceeding rightwards until the last element is reached. During each iteration, the current element is added as the root of the rightmost tree in the forest, and the corresponding tree is heapified to ensure it is a valid max-heap. 
+
+![Smoothsort first stage.](./README/smooth-sort-heapification.png)
+
+### 3.3 Sorting Using the Heapified Trees
 
 # 4. Tim Sort
 
