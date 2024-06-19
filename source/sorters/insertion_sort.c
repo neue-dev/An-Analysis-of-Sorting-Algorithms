@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-09 01:31:42
- * @ Modified time: 2024-06-15 15:10:13
+ * @ Modified time: 2024-06-20 00:37:01
  * @ Description:
  * 
  * An implementation of insertion sort.
@@ -24,6 +24,8 @@ typedef struct InsertionSort {
   t_Copier copier;
   t_Sizer sizer;
 
+  long frequencyCount;
+
 } InsertionSort;
 
 /**
@@ -40,6 +42,8 @@ void InsertionSort_init(InsertionSort *this, t_Comparator comparator, t_Swapper 
   this->swapper = swapper;
   this->copier = copier;  
   this->sizer = sizer;
+
+  this->frequencyCount = 0;
 }
 
 /**
@@ -49,24 +53,33 @@ void InsertionSort_init(InsertionSort *this, t_Comparator comparator, t_Swapper 
  * @param   { t_Record }          records   An array of records.
  * @param   { int }               n         The size of the array.
 */
-void InsertionSort_main(InsertionSort this, t_Record records, int n) {
+void InsertionSort_main(InsertionSort *this, t_Record records, int n) {
   int i, j;
 
   // Temp holding location
-  t_Record r = calloc(1, this.sizer());
+  t_Record r = calloc(1, this->sizer());
+
+  // Reset the frequency count
+  this->frequencyCount = 0;
 
   // Go through each of the elements
   for(i = 0; i < n - 1; i++) {
     j = i + 1;
 
+    // Increment the frequency count
+    this->frequencyCount++;
+
     // Copy the current element into temp
-    this.copier(r, records, 0, j);
+    this->copier(r, records, 0, j);
 
     // Move the new location down the array until we hit the correct location
-    while(this.comparator(records, r, j - 1, 0) > 0) {
+    while(this->comparator(records, r, j - 1, 0) > 0) {
+
+      // Increment the frequency count
+      this->frequencyCount++;
 
       // Shift the element down      
-      this.copier(records, records, j, j - 1);
+      this->copier(records, records, j, j - 1);
 
       // If we've hit the end of the array, stop
       if(--j <= 0)
@@ -78,7 +91,7 @@ void InsertionSort_main(InsertionSort this, t_Record records, int n) {
       continue;
 
     // Place the element into its place
-    this.copier(records, r, j, 0);
+    this->copier(records, r, j, 0);
   }
 
   // Free the temp

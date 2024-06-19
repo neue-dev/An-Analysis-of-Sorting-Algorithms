@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-09 01:32:10
- * @ Modified time: 2024-06-18 15:38:11
+ * @ Modified time: 2024-06-20 00:58:05
  * @ Description:
  * 
  * An implementation of smoort sort.
@@ -23,6 +23,8 @@ typedef struct SmoothSort {
   t_Swapper swapper;
   t_Copier copier;
   t_Sizer sizer;
+
+  long frequencyCount;
   
   // 'Private' variables
   int _leonardoList[43];
@@ -54,6 +56,8 @@ void SmoothSort_init(SmoothSort *this, t_Comparator comparator, t_Swapper swappe
   this->copier = copier;
   this->sizer = sizer;
 
+  this->frequencyCount = 0;
+
   // Init the state of the first two Leonardo numbers
   this->_leonardoList[0] = 1;
   this->_leonardoList[1] = 1;
@@ -76,14 +80,14 @@ void SmoothSort_init(SmoothSort *this, t_Comparator comparator, t_Swapper swappe
  * @param   { int }         k     The index of the Leonardo number we want.
  * @return  { int }               The kth Leonardo number.
 */
-int _SmoothSort_leonardoGet(SmoothSort this, int k) {
+int _SmoothSort_leonardoGet(SmoothSort *this, int k) {
 
   // Return the last Leonardo number if k is too big
-  if(k >= this._leonardoCount)
-    return this._leonardoList[this._leonardoCount - 1];
+  if(k >= this->_leonardoCount)
+    return this->_leonardoList[this->_leonardoCount - 1];
   
   // Return the value
-  return this._leonardoList[k];
+  return this->_leonardoList[k];
 }
 
 /**
@@ -94,7 +98,7 @@ int _SmoothSort_leonardoGet(SmoothSort this, int k) {
  * @param   { int }         k     The order of the current Leonardo heap.
  * @return  { int }               The index of the root.
 */
-int _SmoothSort_getRootOffset(SmoothSort this, int k) {
+int _SmoothSort_getRootOffset(SmoothSort *this, int k) {
   return _SmoothSort_leonardoGet(this, k);
 }
 
@@ -107,7 +111,7 @@ int _SmoothSort_getRootOffset(SmoothSort this, int k) {
  * @param   { int }         k     The order of the current Leonardo tree.
  * @return  { int }               The index of the root's first child.
 */
-int _SmoothSort_getChild1Offset(SmoothSort this, int k) {
+int _SmoothSort_getChild1Offset(SmoothSort *this, int k) {
   if(k < 2)
     return _SmoothSort_getRootOffset(this, k);
   return _SmoothSort_leonardoGet(this, k - 1);
@@ -122,7 +126,7 @@ int _SmoothSort_getChild1Offset(SmoothSort this, int k) {
  * @param   { int }         k     The order of the current Leonardo tree.
  * @return  { int }               The index of the root's second child.
 */
-int _SmoothSort_getChild2Offset(SmoothSort this, int k) {
+int _SmoothSort_getChild2Offset(SmoothSort *this, int k) {
   if(k < 2)
     return _SmoothSort_getRootOffset(this, k);
   return _SmoothSort_leonardoGet(this, k) - 1;
@@ -143,14 +147,16 @@ int _SmoothSort_getChild2Offset(SmoothSort this, int k) {
  * @param   { int }         root      The index of the root of the current heap (also the end of the 
  *                                      array slice we're considering)
 */
-void _SmoothSort_siftDown(SmoothSort this, t_Record records, int n, t_Record rRoot, int k, int start, int root) {
+void _SmoothSort_siftDown(SmoothSort *this, t_Record records, int n, t_Record rRoot, int k, int start, int root) {
   int c1, c2, largest;
+
+  // Increment the frequency count
+  this->frequencyCount++;
 
   // There's no children to sift with anymore
   // Copy the temp unto its location
   if(k < 2) {
-    this.copier(records, rRoot, root, 0);
-    
+    this->copier(records, rRoot, root, 0);    
     return;
   }
 
@@ -162,24 +168,23 @@ void _SmoothSort_siftDown(SmoothSort this, t_Record records, int n, t_Record rRo
   c2 = _SmoothSort_getChild2Offset(this, k) + start;
   
   // Get the larger of the two children
-  if(this.comparator(records, records, c2, c1) > 0)
+  if(this->comparator(records, records, c2, c1) > 0)
     largest = c2;
   else
     largest = c1;
 
   // If both children are less than the root
-  if(this.comparator(records, rRoot, largest, 0) < 0)
+  if(this->comparator(records, rRoot, largest, 0) < 0)
     largest = root;
     
   // If no need to swap, return after performing the last sift
   if(largest == root) {
-    this.copier(records, rRoot, largest, 0);
-
+    this->copier(records, rRoot, largest, 0);
     return;
   }
 
   // Otherwise, do the swap
-  this.copier(records, records, root, largest);
+  this->copier(records, records, root, largest);
 
   // Then call the function again, based on which child was swapped
   if(c1 != c2) {
@@ -208,7 +213,7 @@ void _SmoothSort_siftDown(SmoothSort this, t_Record records, int n, t_Record rRo
  *                                        the [0, i - 1] slice.
  * @param   { unsigned int }  lseq      Information about which Leonardo numbers we're using.
 */
-void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, unsigned int lseq) {
+void _SmoothSort_insert(SmoothSort *this, t_Record records, int n, int i, unsigned int lseq) {
   int bit, exp, order, porder;    // Holding variables
   int c1, c2, root, new;          // Children and root variables, newly inserted element
 
@@ -221,8 +226,11 @@ void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, unsigne
   int k = 0;
 
   // Temp variables, one for sifting the other for insertion sorting the roots
-  t_Record r = calloc(1, this.sizer());
+  t_Record r = calloc(1, this->sizer());
   int isRSet = 0;
+
+  // Increment the frequency count
+  this->frequencyCount++;
   
   // Init this first
   porder = -1;
@@ -231,10 +239,12 @@ void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, unsigne
   // The condition just checks if lseq only has a single rightmost bit
   // The return here is just to exit the function prematurely; it doesn't return anything
   if(!(lseq - (lseq & -lseq))) {
+
+    // Compute the heap order
     exp = (int) log2(lseq);
 
     // Grab the root
-    this.copier(r, records, 0, i);
+    this->copier(r, records, 0, i);
 
     // Call the sifter
     _SmoothSort_siftDown(this, records, n, r, exp, -1, i);
@@ -254,6 +264,9 @@ void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, unsigne
     // Update lseq and k
     lseq >>= 1;
     k++;
+
+    // Increment the frequency count
+    this->frequencyCount++;
 
     // We don't have a Leonardo heap of that order
     if(!bit)
@@ -278,7 +291,9 @@ void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, unsigne
     
     // Copy the newly inserted element, if its vacant
     if(!isRSet) {
-      this.copier(r, records, 0, new);
+
+      // Copy the element into temp
+      this->copier(r, records, 0, new);
       isRSet = 1;
     }
 
@@ -287,12 +302,12 @@ void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, unsigne
     // If the child nodes indices are equal to the root node index, then that actually means there are no children
     // So I add the extra condition (c1 == new) and (c2 == new) to ensure that when these are true the comparison on the left wont matter
     // I had to do this because I optimized smooth sort to use copies instead of swaps
-    if(this.comparator(records, r, root, 0) > 0 && 
-      (this.comparator(records, records, root, c1) > 0) + (c1 == new) &&
-      (this.comparator(records, records, root, c2) > 0) + (c2 == new)) {
+    if(this->comparator(records, r, root, 0) > 0 && 
+      (this->comparator(records, records, root, c1) > 0) + (c1 == new) &&
+      (this->comparator(records, records, root, c2) > 0) + (c2 == new)) {
 
       // Copy the root to the current location
-      this.copier(records, records, new, root);
+      this->copier(records, records, new, root);
 
       // If this is the last iteration, better fix the heap structure now
       if(!lseq) {
@@ -330,6 +345,7 @@ void _SmoothSort_insert(SmoothSort this, t_Record records, int n, int i, unsigne
 /**
  * For a given integer n, if lseq represents the members of the Leonardo sequence that sum to n,
  * then this function computes the new lseq for n + 1.
+ * Note that we don't increment the frequency count inside the loop here because this is basically just a math operation.  
  * 
  * @param   { unsigned int }  lseq  The current bit vector that represents the used Leonardo numbers.
  * @return  { unsigned int }        The new bit vector for the Leonardo numbers that sum to n + 1.
@@ -365,6 +381,7 @@ unsigned int _SmoothSort_computeLseqIncrement(unsigned int lseq) {
 /**
  * For a given integer n, if lseq represents the members of the Leonardo sequence that sum to n,
  * then this function computes the new lseq for n - 1.
+ * Note that we don't increment the frequency count here because it's just a math operation.
  * 
  * @param   { unsigned int }  lseq  The current bit vector that represents the used Leonardo numbers.
  * @return  { unsigned int }        The new bit vector for the Leonardo numbers that sum to n - 1.
@@ -421,7 +438,7 @@ unsigned int _SmoothSort_computeLseqDecrement(unsigned int lseq) {
  * @param   { t_Record }    records   The array of records.
  * @param   { int }         n         The size of the array.
 */
-void SmoothSort_main(SmoothSort this, t_Record records, int n) {
+void SmoothSort_main(SmoothSort *this, t_Record records, int n) {
   int i;
 
   // We use the bits of the following unsigned int to indicate which Leonardo numbers are in use
@@ -431,10 +448,16 @@ void SmoothSort_main(SmoothSort this, t_Record records, int n) {
   int exp, offset;
 
   // Temp variable
-  t_Record r = calloc(1, this.sizer());
+  t_Record r = calloc(1, this->sizer());
+
+  // Reset the frequency count
+  this->frequencyCount = 0;
 
   // We first build the forest of max-heaps with the Leonardo numbers
   for(i = 0; i < n; i++) {
+
+    // Increment the frequency count
+    this->frequencyCount++;
     
     // Compute the new value of lseq for the current i
     lseq = _SmoothSort_computeLseqIncrement(lseq);
@@ -448,7 +471,7 @@ void SmoothSort_main(SmoothSort this, t_Record records, int n) {
     if(lfirst > 3) {
       
       // Grab the root
-      this.copier(r, records, 0, i);
+      this->copier(r, records, 0, i);
 
       // Sift down
       _SmoothSort_siftDown(this, records, n, r, exp, i - offset, i);
@@ -461,6 +484,11 @@ void SmoothSort_main(SmoothSort this, t_Record records, int n) {
   // We go through each of the heaps in reverse and sort the roots in ascending order
   // The iterator here is for traversing all the bits in a unsigned int
   for(i = sizeof(int) * 8 - 1; --i >= 0;) {
+
+    // Increment the frequency count
+    this->frequencyCount++;
+
+    // Get the smallest heap we currently have
     lfirst = (lseq >> i) % 2;
 
     // We don't have a heap of that size

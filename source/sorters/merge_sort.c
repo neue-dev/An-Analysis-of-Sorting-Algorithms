@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-09 01:31:50
- * @ Modified time: 2024-06-15 00:41:24
+ * @ Modified time: 2024-06-20 00:55:39
  * @ Description:
  * 
  * An implementation of merge sort.
@@ -24,6 +24,8 @@ typedef struct MergeSort {
   t_Copier copier;
   t_Sizer sizer;
 
+  long frequencyCount;
+
 } MergeSort;
 
 /**
@@ -40,6 +42,8 @@ void MergeSort_init(MergeSort *this, t_Comparator comparator, t_Swapper swapper,
   this->swapper = swapper;
   this->copier = copier;
   this->sizer = sizer;
+
+  this->frequencyCount = 0;
 } 
 
 /**
@@ -51,12 +55,21 @@ void MergeSort_init(MergeSort *this, t_Comparator comparator, t_Swapper swapper,
  * @param   { t_Record }    src       The merge-sorted records.
  * @param   { int }         n         The total number of records.
 */
-void _MergeSort_copySorted(MergeSort this, t_Record records, t_Record src, int n) {
+void _MergeSort_copySorted(MergeSort *this, t_Record records, t_Record src, int n) {
   int i;
+
+  // Increment the frequency count
+  this->frequencyCount++;
   
   // Copy the individual records
-  for(i = 0; i < n; i++) 
-    this.copier(records, src, i, i);
+  for(i = 0; i < n; i++) {
+    
+    // Increment the frequency count
+    this->frequencyCount++;
+
+    // Copy the elements of the array
+    this->copier(records, src, i, i);
+  }
 }
 
 /**
@@ -69,9 +82,12 @@ void _MergeSort_copySorted(MergeSort this, t_Record records, t_Record src, int n
  * @param   { int }         right     The start index of the right subarray.
  * @param   { int }         end       The largest index within both subarrays (the rightmost end of their union).
 */
-void _MergeSort_merge(MergeSort this, t_Record records, t_Record target, int left, int right, int end) {
+void _MergeSort_merge(MergeSort *this, t_Record records, t_Record target, int left, int right, int end) {
   int i;
   int middle;
+
+  // Increment the frequency count
+  this->frequencyCount++;
 
   // Store the boundary between the two subarrays
   middle = right;
@@ -79,28 +95,31 @@ void _MergeSort_merge(MergeSort this, t_Record records, t_Record target, int lef
   // Perform the merging
   for(i = left; i < end; i++) {
 
+    // Increment the frequency count
+    this->frequencyCount++;
+
     // The left boundary has hit the middle
     if(left >= middle) {
-      this.copier(target, records, i, right++);
+      this->copier(target, records, i, right++);
       continue;
     }
 
     // The right boundary has hit the end
     if(right >= end) { 
-      this.copier(target, records, i, left++);
+      this->copier(target, records, i, left++);
       continue;  
     }
 
     // Compare the left and right starting elements
-    switch(this.comparator(records, records, left, right)) {
+    switch(this->comparator(records, records, left, right)) {
       
       case -1:  // The left comes first
-        this.copier(target, records, i, left++);
+        this->copier(target, records, i, left++);
         break;
       
       case 0:   // Default behaviour when theyre the same
       case 1:   // The right comes first
-        this.copier(target, records, i, right++);
+        this->copier(target, records, i, right++);
         break; 
     }
   }
@@ -113,7 +132,7 @@ void _MergeSort_merge(MergeSort this, t_Record records, t_Record target, int lef
  * @param   { t_Record }    records   The array of records to sort.
  * @param   { int }         n         The number of records in the array.
 */
-void MergeSort_main(MergeSort this, t_Record records, int n) {
+void MergeSort_main(MergeSort *this, t_Record records, int n) {
   int i, j;
 
   // Left subarray start index,
@@ -122,13 +141,22 @@ void MergeSort_main(MergeSort this, t_Record records, int n) {
   int l, r, e;
 
   // Allocate memory for the sorted array
-  t_Record sorted = calloc(n, this.sizer());
+  t_Record sorted = calloc(n, this->sizer());
+
+  // Reset the frequency count
+  this->frequencyCount = 0;
 
   // For each length of subarray (starting from 1 element)
   for(i = 1; i < n; i *= 2) {
+
+    // Increment the frequency count
+    this->frequencyCount++;
     
     // For each pair of adjacent subarrays, we merge them together
     for(j = 0; j < n; j += i * 2) {
+
+      // Increment the frequency count
+      this->frequencyCount++;
 
       // Note that i represents the current width we're using
       l = j;

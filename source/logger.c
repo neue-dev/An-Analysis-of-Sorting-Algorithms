@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-15 12:46:43
- * @ Modified time: 2024-06-18 14:54:19
+ * @ Modified time: 2024-06-20 01:06:38
  * @ Description:
  * 
  * This file helps us log our data unto a file in a formatted manner.
@@ -42,8 +42,10 @@ void Logger_init(char file[]) {
       "N", "P", "entropy", "r", "rsquared", "cycles");
 
     // Columns for the sorter names
-    for(i = 0; i < SORTER_COUNT; i++)
-      fprintf(newFile, ",%s", _Engine_getName(NULL, 1 << (_SORTER + i)));
+    for(i = 0; i < SORTER_COUNT; i++) {
+      fprintf(newFile, ",%s time", _Engine_getName(NULL, 1 << (_SORTER + i)));
+      fprintf(newFile, ",%s freq", _Engine_getName(NULL, 1 << (_SORTER + i)));
+    }
     
     // Newline
     fprintf(newFile, "\n");
@@ -76,8 +78,10 @@ void Logger_saveRun(Engine *engine, int run) {
   
   // The different sorter times
   // Note that these times are averages across cycles, hence %lf
-  for(i = 0; i < SORTER_COUNT; i++)
-    fprintf(LOGGER.pFile, ", %lf", engine->runs[_SORTER + i][run]);
+  for(i = 0; i < SORTER_COUNT; i++) {
+    fprintf(LOGGER.pFile, ", %.2lf", engine->runs[_SORTER + i][run]);
+    fprintf(LOGGER.pFile, ", %.0lf", engine->runs[_SORTER + i + SORTER_COUNT][run]);
+  }
 
   // New line
   fprintf(LOGGER.pFile, "\n");

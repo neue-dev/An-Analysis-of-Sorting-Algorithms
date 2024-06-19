@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-09 01:31:58
- * @ Modified time: 2024-06-15 15:07:27
+ * @ Modified time: 2024-06-20 00:54:37
  * @ Description:
  * 
  * An implementation of heap sort.
@@ -23,6 +23,8 @@ typedef struct HeapSort {
   t_Swapper swapper;
   t_Copier copier;
   t_Sizer sizer;
+
+  long frequencyCount;
   
 } HeapSort;
 
@@ -40,6 +42,8 @@ void HeapSort_init(HeapSort *this, t_Comparator comparator, t_Swapper swapper, t
   this->swapper = swapper;
   this->copier = copier;
   this->sizer = sizer;
+
+  this->frequencyCount = 0;
 }
 
 /**
@@ -53,7 +57,7 @@ void HeapSort_init(HeapSort *this, t_Comparator comparator, t_Swapper swapper, t
  * @param   { int }           n           The total number of records.
  * @param   { int }           root        The index of the root node to start with.
 */
-void _HeapSort_heapify(HeapSort this, t_Record records, int n, t_Record rRoot, int root) {
+void _HeapSort_heapify(HeapSort *this, t_Record records, int n, t_Record rRoot, int root) {
 
   // The index that tracks the largest element
   int largest = root;
@@ -62,35 +66,38 @@ void _HeapSort_heapify(HeapSort this, t_Record records, int n, t_Record rRoot, i
   int l = root * 2 + 1;
   int r = root * 2 + 2;
 
+  // Increment the frequency count
+  this->frequencyCount++;
+
   // r is the only possible larger one
   if(l >= n && r < n)
-    if(this.comparator(records, rRoot, r, 0) > 0)
+    if(this->comparator(records, rRoot, r, 0) > 0)
       largest = r;
 
   // l is the only possible larger one
   if(r >= n && l < n)
-    if(this.comparator(records, rRoot, l, 0) > 0)
+    if(this->comparator(records, rRoot, l, 0) > 0)
       largest = l;
 
   // If both may be larger, choose which one
   if(l < n && r < n) {
 
     // Get the larger one
-    if(this.comparator(records, records, l, r) < 0)
+    if(this->comparator(records, records, l, r) < 0)
       largest = r;
     else
       largest = l;
   }
 
   // Both elements are less than the root so just use the root
-  if(this.comparator(records, rRoot, largest, 0) < 0)
+  if(this->comparator(records, rRoot, largest, 0) < 0)
     largest = root;
 
   // If the largest element is not at the root, then we swap to fix the heap
   if(largest != root) {
 
     // Swap the two elements
-    this.copier(records, records, root, largest);
+    this->copier(records, records, root, largest);
     
     // We heapify the subtree that we modified because of the swap
     // We only need to heapify that subtree because we're performing this operation starting from the leaves of the array
@@ -99,7 +106,9 @@ void _HeapSort_heapify(HeapSort this, t_Record records, int n, t_Record rRoot, i
   
   // Finally, put the copied root into its slot
   } else {
-    this.copier(records, rRoot, root, 0);
+
+    // Return the root to its slot
+    this->copier(records, rRoot, root, 0);
   }
 }
 
@@ -110,18 +119,24 @@ void _HeapSort_heapify(HeapSort this, t_Record records, int n, t_Record rRoot, i
  * @param   { t_Record }  records   The records to sort.
  * @param   { int }       n         The number of records to sort.
 */
-void _HeapSort_toHeap(HeapSort this, t_Record records, int n) {
+void _HeapSort_toHeap(HeapSort *this, t_Record records, int n) {
   int i;
 
   // Temp holding var
-  t_Record r = calloc(1, this.sizer());
+  t_Record r = calloc(1, this->sizer());
+
+  // Increment the frequency count
+  this->frequencyCount++;
 
   // Unconventional for loop lol
   // I just don't like writing (n - 1)
   for(i = n; --i >= 0;) {
 
+    // Increment the frequency count
+    this->frequencyCount++;
+
     // Copy the current root
-    this.copier(r, records, 0, i);
+    this->copier(r, records, 0, i);
 
     // Heapify the current tree
     _HeapSort_heapify(this, records, n, r, i);
@@ -143,11 +158,14 @@ void _HeapSort_toHeap(HeapSort this, t_Record records, int n) {
  * @param   { t_Record }  records   The array of records to sort.
  * @param   { int }       n         The number of records in the array.
 */
-void HeapSort_main(HeapSort this, t_Record records, int n) {
+void HeapSort_main(HeapSort *this, t_Record records, int n) {
   int i;
 
   // Temp holding var
-  t_Record r = calloc(1, this.sizer());
+  t_Record r = calloc(1, this->sizer());
+
+  // Reset the frequency count
+  this->frequencyCount = 0;
 
   // Convert the array into a valid max-heap first
   _HeapSort_toHeap(this, records, n);
@@ -156,11 +174,14 @@ void HeapSort_main(HeapSort this, t_Record records, int n) {
   // Following each swap, we fix the max-heap using a sift down operation
   for(i = n; --i >= 0;) {
 
+    // Increment the frequency count
+    this->frequencyCount++;
+
     // Swap first element with last
-    this.swapper(records, 0, i);
+    this->swapper(records, 0, i);
 
     // Grab a copy of the root
-    this.copier(r, records, 0, 0);
+    this->copier(r, records, 0, 0);
 
     // Do the sift down on n - 1
     if(i - 1)

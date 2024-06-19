@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-05-24 11:21:27
- * @ Modified time: 2024-06-18 13:20:10
+ * @ Modified time: 2024-06-20 00:37:25
  * @ Description:
  * 
  * The file contains a wrapper for each of the implementations of the sorting algorithms.
@@ -62,7 +62,7 @@ void Record_initSorters() {
     &_Record_TS, &Record_comparator, &Record_swapper, &Record_copier, &Record_sizer);
 
   // Warp up smooth sort
-  SmoothSort_main(_Record_SS, record, 1);
+  SmoothSort_main(&_Record_SS, record, 1);
 
   // It's done
   isInitted = 1;
@@ -86,7 +86,7 @@ void _Record_warn() {
 */
 void Record_insertionSort(Record *records, int n) {
   if(!isInitted) _Record_warn();
-  else InsertionSort_main(_Record_IS, records, n);
+  else InsertionSort_main(&_Record_IS, records, n);
 }
 
 /**
@@ -97,7 +97,7 @@ void Record_insertionSort(Record *records, int n) {
 */
 void Record_selectionSort(Record *records, int n) {
   if(!isInitted) _Record_warn();
-  else SelectionSort_main(_Record_LS, records, n);
+  else SelectionSort_main(&_Record_LS, records, n);
 }
 
 /**
@@ -108,7 +108,7 @@ void Record_selectionSort(Record *records, int n) {
 */
 void Record_mergeSort(Record *records, int n) {
   if(!isInitted) _Record_warn();
-  else MergeSort_main(_Record_MS, records, n);
+  else MergeSort_main(&_Record_MS, records, n);
 }
 
 /**
@@ -119,7 +119,7 @@ void Record_mergeSort(Record *records, int n) {
 */
 void Record_heapSort(Record *records, int n) {
   if(!isInitted) _Record_warn();
-  else HeapSort_main(_Record_HS, records, n);
+  else HeapSort_main(&_Record_HS, records, n);
 }
 
 /**
@@ -130,7 +130,7 @@ void Record_heapSort(Record *records, int n) {
 */
 void Record_smoothSort(Record *records, int n) {
   if(!isInitted) _Record_warn();
-  else SmoothSort_main(_Record_SS, records, n);
+  else SmoothSort_main(&_Record_SS, records, n);
 }
 
 /**
@@ -141,7 +141,7 @@ void Record_smoothSort(Record *records, int n) {
 */
 void Record_timSort(Record *records, int n) {
   if(!isInitted) _Record_warn();
-  else TimSort_main(_Record_TS, records, n);
+  else TimSort_main(&_Record_TS, records, n);
 }
 
 #endif

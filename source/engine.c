@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-11 00:20:03
- * @ Modified time: 2024-06-18 14:52:33
+ * @ Modified time: 2024-06-20 01:02:39
  * @ Description:
  * 
  * Handles the overall flow of the program.
@@ -37,7 +37,7 @@
 #define SORTER_TIM (1 << (_SORTER + 5))
 #define SORTER_COUNT 6
 
-#define MAX_ROWS 16
+#define MAX_ROWS 32
 #define MAX_RUNS 1024
 #define MAX_CYCLES 256
 
@@ -128,6 +128,42 @@ void Engine_exit(Engine *this) {
 }
 
 /**
+ * Returns the right names for each of the sorting algorithms.
+ * 
+ * @param   { Engine * }  this    The Engine object.
+ * @param   { int }       sorter  The int code for the sorter.
+*/
+char *_Engine_getName(Engine *this, int sorter) {
+  switch(sorter) {
+    case SORTER_HEAP:       return "heap sort";
+    case SORTER_INSERTION:  return "insertion sort";
+    case SORTER_MERGE:      return "merge sort";
+    case SORTER_SELECTION:  return "selection sort";
+    case SORTER_SMOOTH:     return "smooth sort";
+    case SORTER_TIM:        return "tim sort";
+    default:                return "?? sort";
+  }
+}
+
+/**
+ * Returns the frequency count used by the given sorter.
+ * 
+ * @param   { Engine * }  this    The Engine object.
+ * @param   { int }       sorter  The int code for the sorter.
+*/
+long _Engine_getFreqCount(Engine *this, int sorter) {
+  switch(sorter) {
+    case SORTER_HEAP:       return _Record_HS.frequencyCount;
+    case SORTER_INSERTION:  return _Record_IS.frequencyCount;
+    case SORTER_MERGE:      return _Record_MS.frequencyCount;
+    case SORTER_SELECTION:  return _Record_LS.frequencyCount;
+    case SORTER_SMOOTH:     return _Record_SS.frequencyCount;
+    case SORTER_TIM:        return _Record_TS.frequencyCount;
+    default:                return -1;
+  }
+}
+
+/**
  * Sets the parameters for the sorting benchmark run.
  * 
  * @param   { Engine * }        this      The tester engine to run.
@@ -203,24 +239,8 @@ void _Engine_doSort(Engine *this, int sorter) {
 
     default: break;
   }
-}
 
-/**
- * Returns the right names for each of the sorting algorithms.
- * 
- * @param   { Engine * }  this    The Engine object.
- * @param   { int }       sorter  The int code for the sorter.
-*/
-char *_Engine_getName(Engine *this, int sorter) {
-  switch(sorter) {
-    case SORTER_HEAP:       return "heap sort";
-    case SORTER_INSERTION:  return "insertion sort";
-    case SORTER_MERGE:      return "merge sort";
-    case SORTER_SELECTION:  return "selection sort";
-    case SORTER_SMOOTH:     return "smooth sort";
-    case SORTER_TIM:        return "tim sort";
-    default:                return "?? sort";
-  }
+  printf("%ld", _Engine_getFreqCount(this, sorter));
 }
 
 /**
@@ -274,8 +294,9 @@ void _Engine_doCycles(Engine *this, int cycles, int sorters) {
       // Check sort order
       sorted = Tester_checkSort(tester);
 
-      // Save the time taken
+      // Save the time taken and the freq count
       this->cycles[j][i] = t;
+      this->cycles[j + SORTER_COUNT][i] = _Engine_getFreqCount(this, sorter);
 
       // Output the time
       printf(" -  %s took %ldms, (%s) ...\n", 
@@ -299,7 +320,8 @@ void _Engine_doCycles(Engine *this, int cycles, int sorters) {
 */
 void _Engine_doCyclesSummary(Engine *this, int N, double P, int sorters) {
   int i, j;
-  int t, sorter;
+  int sorter;
+  double t, f;
 
   // Grab the tester
   // We only need it for the entropy and rsquared value here
@@ -307,28 +329,40 @@ void _Engine_doCyclesSummary(Engine *this, int N, double P, int sorters) {
 
   // Stores our stats
   double means[MAX_ROWS];
-  int bests[MAX_ROWS];
-  int worsts[MAX_ROWS];
+  double bests[MAX_ROWS];
+  double worsts[MAX_ROWS];
 
   // Compute the means and best runs
   for(i = 0; i < SORTER_COUNT; i++) {
+    
+    // Time
     means[i] = 0;
-    bests[i] = 1 << 30;
+    bests[i] = (double) (1ULL << 40);
     worsts[i] = 0;
+
+    // Freq counts
+    means[i + SORTER_COUNT] = 0;
+    bests[i + SORTER_COUNT] = (double) (1ULL << 40);
+    worsts[i + SORTER_COUNT] = 0;
 
     for(j = 0; j < this->cycleCount; j++) {
       t = this->cycles[i][j];
+      f = this->cycles[i + SORTER_COUNT][j];
 
       // Update the means
       means[i] += t;
+      means[i + SORTER_COUNT] += f;
 
       // Update extremes
       if(t < bests[i]) bests[i] = t;
       if(t > worsts[i]) worsts[i] = t;
+      if(f < bests[i + SORTER_COUNT]) bests[i + SORTER_COUNT] = f;
+      if(f > worsts[i + SORTER_COUNT]) worsts[i + SORTER_COUNT] = f;
     }
 
     // Update the means
     means[i] /= this->cycleCount;
+    means[i + SORTER_COUNT] /= this->cycleCount;
   }
 
   printf("\n[$] Cycles summary:\n");
@@ -343,11 +377,14 @@ void _Engine_doCyclesSummary(Engine *this, int N, double P, int sorters) {
       continue;
 
     // Print its info
-    printf(" - %s ave: %.2lf, best: %d, worst: %d.\n", 
+    printf(" - %s ave time: %.2lf, best time: %.0lf, worst time: %.0lf.\n", 
       _Engine_getName(this, sorter), means[i], bests[i], worsts[i]);
+    printf(" - %s ave freq: %.0lf, best freq: %.0lf, worst freq: %.0lf.\n", 
+      _Engine_getName(this, sorter), means[i + SORTER_COUNT], bests[i + SORTER_COUNT], worsts[i + SORTER_COUNT]);
     
     // Save the summary to the runs
     this->runs[_SORTER + i][this->runCount] = means[i];
+    this->runs[_SORTER + i + SORTER_COUNT][this->runCount] = means[i + SORTER_COUNT];
   }
 
   // Save the other info to the runs

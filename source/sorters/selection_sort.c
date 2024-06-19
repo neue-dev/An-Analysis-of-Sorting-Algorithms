@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-09 01:32:05
- * @ Modified time: 2024-06-10 18:39:12
+ * @ Modified time: 2024-06-20 00:52:34
  * @ Description:
  * 
  * Selection sort implementation.
@@ -23,6 +23,8 @@ typedef struct SelectionSort {
   t_Swapper swapper;
   t_Copier copier;
   t_Sizer sizer;
+
+  long frequencyCount;
   
 } SelectionSort;
 
@@ -40,6 +42,8 @@ void SelectionSort_init(SelectionSort *this, t_Comparator comparator, t_Swapper 
   this->swapper = swapper;
   this->copier = copier;
   this->sizer = sizer;
+
+  this->frequencyCount = 0;
 }
 
 /**
@@ -49,24 +53,40 @@ void SelectionSort_init(SelectionSort *this, t_Comparator comparator, t_Swapper 
  * @param   { t_Record }        records   The array of records.
  * @param   { int }             n         The size of the array.
 */
-void SelectionSort_main(SelectionSort this, t_Record records, int n) {
+void SelectionSort_main(SelectionSort *this, t_Record records, int n) {
   int i, j;
   int minIndex;
 
+  // Reset the frequency count
+  this->frequencyCount = 0;
+
   for(i = 0; i < n - 1; i++) {
     
+    // Increment the frequency count
+    this->frequencyCount++;
+
     // Set the initial value of the minima
     minIndex = i;
     
     // Look for the smallest array element
     for(j = i + 1; j < n; j++) {
-      if(this.comparator(records, records, minIndex, j) > 0)
+
+      // Increment the frequency count
+      this->frequencyCount++;
+
+      if(this->comparator(records, records, minIndex, j) > 0)
         minIndex = j;
     }
 
     // Do a swap between the two
-    if(minIndex != i)
-      this.swapper(records, minIndex, i);
+    if(minIndex != i) {
+      
+      // Increment the frequency count
+      this->frequencyCount++;
+
+      // Perform the swap
+      this->swapper(records, minIndex, i);
+    }
   }
 }
 

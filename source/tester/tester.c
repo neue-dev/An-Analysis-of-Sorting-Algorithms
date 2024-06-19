@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-10 12:31:00
- * @ Modified time: 2024-06-18 16:08:46
+ * @ Modified time: 2024-06-20 00:38:50
  * @ Description:
  * 
  * The file contains all the testing utilities we will be using to benchmark our algorithms.
@@ -201,7 +201,7 @@ void _Tester_recordsConfig(Tester *this) {
   int i;
 
   // Sort the array so we can compute its entropy later
-  MergeSort_main(this->sorter, this->shuffle, this->N);
+  MergeSort_main(&this->sorter, this->shuffle, this->N);
 
   // Create a copy of the array with the wrapper struct
   for(i = 0; i < this->N; i++) {
