@@ -38,18 +38,18 @@
 [$] merge sort took an average of 0.4000 ms to sort N=100
 [$] merge sort took an average of 1618 ops to sort N=100
 
-[!] Running cycle 1 for selection sort... sorted in 0 ms, 5140 ops.
-[!] Running cycle 2 for selection sort... sorted in 1 ms, 5140 ops.
-[!] Running cycle 3 for selection sort... sorted in 0 ms, 5140 ops.
-[!] Running cycle 4 for selection sort... sorted in 0 ms, 5140 ops.
-[!] Running cycle 5 for selection sort... sorted in 0 ms, 5140 ops.
-[!] Running cycle 6 for selection sort... sorted in 0 ms, 5140 ops.
-[!] Running cycle 7 for selection sort... sorted in 1 ms, 5140 ops.
-[!] Running cycle 8 for selection sort... sorted in 0 ms, 5140 ops.
-[!] Running cycle 9 for selection sort... sorted in 0 ms, 5140 ops.
-[!] Running cycle 10 for selection sort... sorted in 1 ms, 5140 ops.
+[!] Running cycle 1 for selection sort... sorted in 0 ms, 5049 ops.
+[!] Running cycle 2 for selection sort... sorted in 1 ms, 5049 ops.
+[!] Running cycle 3 for selection sort... sorted in 0 ms, 5049 ops.
+[!] Running cycle 4 for selection sort... sorted in 0 ms, 5049 ops.
+[!] Running cycle 5 for selection sort... sorted in 0 ms, 5049 ops.
+[!] Running cycle 6 for selection sort... sorted in 0 ms, 5049 ops.
+[!] Running cycle 7 for selection sort... sorted in 1 ms, 5049 ops.
+[!] Running cycle 8 for selection sort... sorted in 0 ms, 5049 ops.
+[!] Running cycle 9 for selection sort... sorted in 0 ms, 5049 ops.
+[!] Running cycle 10 for selection sort... sorted in 1 ms, 5049 ops.
 [$] selection sort took an average of 0.3000 ms to sort N=100
-[$] selection sort took an average of 5140 ops to sort N=100
+[$] selection sort took an average of 5049 ops to sort N=100
 
 [!] Running cycle 1 for smooth sort... sorted in 0 ms, 1414 ops.
 [!] Running cycle 2 for smooth sort... sorted in 1 ms, 1414 ops.
@@ -118,18 +118,18 @@
 [$] merge sort took an average of 61.5000 ms to sort N=25000
 [$] merge sort took an average of 800042 ops to sort N=25000
 
-[!] Running cycle 1 for selection sort... sorted in 3589 ms, 312537492 ops.
-[!] Running cycle 2 for selection sort... sorted in 3591 ms, 312537492 ops.
-[!] Running cycle 3 for selection sort... sorted in 3572 ms, 312537492 ops.
-[!] Running cycle 4 for selection sort... sorted in 3601 ms, 312537492 ops.
-[!] Running cycle 5 for selection sort... sorted in 3612 ms, 312537492 ops.
-[!] Running cycle 6 for selection sort... sorted in 3594 ms, 312537492 ops.
-[!] Running cycle 7 for selection sort... sorted in 3653 ms, 312537492 ops.
-[!] Running cycle 8 for selection sort... sorted in 3646 ms, 312537492 ops.
-[!] Running cycle 9 for selection sort... sorted in 3655 ms, 312537492 ops.
-[!] Running cycle 10 for selection sort... sorted in 3657 ms, 312537492 ops.
+[!] Running cycle 1 for selection sort... sorted in 3589 ms, 312512499 ops.
+[!] Running cycle 2 for selection sort... sorted in 3591 ms, 312512499 ops.
+[!] Running cycle 3 for selection sort... sorted in 3572 ms, 312512499 ops.
+[!] Running cycle 4 for selection sort... sorted in 3601 ms, 312512499 ops.
+[!] Running cycle 5 for selection sort... sorted in 3612 ms, 312512499 ops.
+[!] Running cycle 6 for selection sort... sorted in 3594 ms, 312512499 ops.
+[!] Running cycle 7 for selection sort... sorted in 3653 ms, 312512499 ops.
+[!] Running cycle 8 for selection sort... sorted in 3646 ms, 312512499 ops.
+[!] Running cycle 9 for selection sort... sorted in 3655 ms, 312512499 ops.
+[!] Running cycle 10 for selection sort... sorted in 3657 ms, 312512499 ops.
 [$] selection sort took an average of 3617.0000 ms to sort N=25000
-[$] selection sort took an average of 312537492 ops to sort N=25000
+[$] selection sort took an average of 312512499 ops to sort N=25000
 
 [!] Running cycle 1 for smooth sort... sorted in 57 ms, 842653 ops.
 [!] Running cycle 2 for smooth sort... sorted in 56 ms, 842653 ops.
@@ -198,18 +198,18 @@
 [$] merge sort took an average of 149.8000 ms to sort N=50000
 [$] merge sort took an average of 1700044 ops to sort N=50000
 
-[!] Running cycle 1 for selection sort... sorted in 23340 ms, 1250074987 ops.
-[!] Running cycle 2 for selection sort... sorted in 22299 ms, 1250074987 ops.
-[!] Running cycle 3 for selection sort... sorted in 22506 ms, 1250074987 ops.
-[!] Running cycle 4 for selection sort... sorted in 23507 ms, 1250074987 ops.
-[!] Running cycle 5 for selection sort... sorted in 23609 ms, 1250074987 ops.
-[!] Running cycle 6 for selection sort... sorted in 23129 ms, 1250074987 ops.
-[!] Running cycle 7 for selection sort... sorted in 23540 ms, 1250074987 ops.
-[!] Running cycle 8 for selection sort... sorted in 23412 ms, 1250074987 ops.
-[!] Running cycle 9 for selection sort... sorted in 22895 ms, 1250074987 ops.
-[!] Running cycle 10 for selection sort... sorted in 21362 ms, 1250074987 ops.
+[!] Running cycle 1 for selection sort... sorted in 23340 ms, 1250024999 ops.
+[!] Running cycle 2 for selection sort... sorted in 22299 ms, 1250024999 ops.
+[!] Running cycle 3 for selection sort... sorted in 22506 ms, 1250024999 ops.
+[!] Running cycle 4 for selection sort... sorted in 23507 ms, 1250024999 ops.
+[!] Running cycle 5 for selection sort... sorted in 23609 ms, 1250024999 ops.
+[!] Running cycle 6 for selection sort... sorted in 23129 ms, 1250024999 ops.
+[!] Running cycle 7 for selection sort... sorted in 23540 ms, 1250024999 ops.
+[!] Running cycle 8 for selection sort... sorted in 23412 ms, 1250024999 ops.
+[!] Running cycle 9 for selection sort... sorted in 22895 ms, 1250024999 ops.
+[!] Running cycle 10 for selection sort... sorted in 21362 ms, 1250024999 ops.
 [$] selection sort took an average of 22959.9000 ms to sort N=50000
-[$] selection sort took an average of 1250074987 ops to sort N=50000
+[$] selection sort took an average of 1250024999 ops to sort N=50000
 
 [!] Running cycle 1 for smooth sort... sorted in 139 ms, 1807629 ops.
 [!] Running cycle 2 for smooth sort... sorted in 137 ms, 1807629 ops.
@@ -278,18 +278,18 @@
 [$] merge sort took an average of 279.6000 ms to sort N=75000
 [$] merge sort took an average of 2700046 ops to sort N=75000
 
-[!] Running cycle 1 for selection sort... sorted in 60350 ms, 2812612490 ops.
-[!] Running cycle 2 for selection sort... sorted in 59483 ms, 2812612490 ops.
-[!] Running cycle 3 for selection sort... sorted in 62347 ms, 2812612490 ops.
-[!] Running cycle 4 for selection sort... sorted in 61033 ms, 2812612490 ops.
-[!] Running cycle 5 for selection sort... sorted in 61500 ms, 2812612490 ops.
-[!] Running cycle 6 for selection sort... sorted in 60682 ms, 2812612490 ops.
-[!] Running cycle 7 for selection sort... sorted in 60300 ms, 2812612490 ops.
-[!] Running cycle 8 for selection sort... sorted in 59943 ms, 2812612490 ops.
-[!] Running cycle 9 for selection sort... sorted in 59037 ms, 2812612490 ops.
-[!] Running cycle 10 for selection sort... sorted in 59274 ms, 2812612490 ops.
+[!] Running cycle 1 for selection sort... sorted in 60350 ms, 2812537499 ops.
+[!] Running cycle 2 for selection sort... sorted in 59483 ms, 2812537499 ops.
+[!] Running cycle 3 for selection sort... sorted in 62347 ms, 2812537499 ops.
+[!] Running cycle 4 for selection sort... sorted in 61033 ms, 2812537499 ops.
+[!] Running cycle 5 for selection sort... sorted in 61500 ms, 2812537499 ops.
+[!] Running cycle 6 for selection sort... sorted in 60682 ms, 2812537499 ops.
+[!] Running cycle 7 for selection sort... sorted in 60300 ms, 2812537499 ops.
+[!] Running cycle 8 for selection sort... sorted in 59943 ms, 2812537499 ops.
+[!] Running cycle 9 for selection sort... sorted in 59037 ms, 2812537499 ops.
+[!] Running cycle 10 for selection sort... sorted in 59274 ms, 2812537499 ops.
 [$] selection sort took an average of 60394.9000 ms to sort N=75000
-[$] selection sort took an average of 2812612490 ops to sort N=75000
+[$] selection sort took an average of 2812537499 ops to sort N=75000
 
 [!] Running cycle 1 for smooth sort... sorted in 239 ms, 2824141 ops.
 [!] Running cycle 2 for smooth sort... sorted in 237 ms, 2824141 ops.
@@ -358,18 +358,18 @@
 [$] merge sort took an average of 402.0000 ms to sort N=100000
 [$] merge sort took an average of 3600046 ops to sort N=100000
 
-[!] Running cycle 1 for selection sort... sorted in 117183 ms, 5000059999 ops.
-[!] Running cycle 2 for selection sort... sorted in 114678 ms, 5000059999 ops.
-[!] Running cycle 3 for selection sort... sorted in 114283 ms, 5000059999 ops.
-[!] Running cycle 4 for selection sort... sorted in 105406 ms, 5000059999 ops.
-[!] Running cycle 5 for selection sort... sorted in 109229 ms, 5000059999 ops.
-[!] Running cycle 6 for selection sort... sorted in 109052 ms, 5000059999 ops.
-[!] Running cycle 7 for selection sort... sorted in 108173 ms, 5000059999 ops.
-[!] Running cycle 8 for selection sort... sorted in 110175 ms, 5000059999 ops.
-[!] Running cycle 9 for selection sort... sorted in 107657 ms, 5000059999 ops.
-[!] Running cycle 10 for selection sort... sorted in 109998 ms, 5000059999 ops.
+[!] Running cycle 1 for selection sort... sorted in 117183 ms, 5000049999 ops.
+[!] Running cycle 2 for selection sort... sorted in 114678 ms, 5000049999 ops.
+[!] Running cycle 3 for selection sort... sorted in 114283 ms, 5000049999 ops.
+[!] Running cycle 4 for selection sort... sorted in 105406 ms, 5000049999 ops.
+[!] Running cycle 5 for selection sort... sorted in 109229 ms, 5000049999 ops.
+[!] Running cycle 6 for selection sort... sorted in 109052 ms, 5000049999 ops.
+[!] Running cycle 7 for selection sort... sorted in 108173 ms, 5000049999 ops.
+[!] Running cycle 8 for selection sort... sorted in 110175 ms, 5000049999 ops.
+[!] Running cycle 9 for selection sort... sorted in 107657 ms, 5000049999 ops.
+[!] Running cycle 10 for selection sort... sorted in 109998 ms, 5000049999 ops.
 [$] selection sort took an average of 110583.4000 ms to sort N=100000
-[$] selection sort took an average of 5000059999 ops to sort N=100000
+[$] selection sort took an average of 5000049999 ops to sort N=100000
 
 [!] Running cycle 1 for smooth sort... sorted in 377 ms, 3860019 ops.
 [!] Running cycle 2 for smooth sort... sorted in 366 ms, 3860019 ops.
@@ -439,18 +439,18 @@ ALMOST SORTED
 [$] merge sort took an average of 343.5000 ms to sort N=100000
 [$] merge sort took an average of 3600046 ops to sort N=100000
 
-[!] Running cycle 1 for selection sort... sorted in 114736 ms, 5000059999 ops.
-[!] Running cycle 2 for selection sort... sorted in 112254 ms, 5000059999 ops.
-[!] Running cycle 3 for selection sort... sorted in 109893 ms, 5000059999 ops.
-[!] Running cycle 4 for selection sort... sorted in 115382 ms, 5000059999 ops.
-[!] Running cycle 5 for selection sort... sorted in 112713 ms, 5000059999 ops.
-[!] Running cycle 6 for selection sort... sorted in 113756 ms, 5000059999 ops.
-[!] Running cycle 7 for selection sort... sorted in 111101 ms, 5000059999 ops.
-[!] Running cycle 8 for selection sort... sorted in 112216 ms, 5000059999 ops.
-[!] Running cycle 9 for selection sort... sorted in 114146 ms, 5000059999 ops.
-[!] Running cycle 10 for selection sort... sorted in 112375 ms, 5000059999 ops.
+[!] Running cycle 1 for selection sort... sorted in 114736 ms, 5000049999 ops.
+[!] Running cycle 2 for selection sort... sorted in 112254 ms, 5000049999 ops.
+[!] Running cycle 3 for selection sort... sorted in 109893 ms, 5000049999 ops.
+[!] Running cycle 4 for selection sort... sorted in 115382 ms, 5000049999 ops.
+[!] Running cycle 5 for selection sort... sorted in 112713 ms, 5000049999 ops.
+[!] Running cycle 6 for selection sort... sorted in 113756 ms, 5000049999 ops.
+[!] Running cycle 7 for selection sort... sorted in 111101 ms, 5000049999 ops.
+[!] Running cycle 8 for selection sort... sorted in 112216 ms, 5000049999 ops.
+[!] Running cycle 9 for selection sort... sorted in 114146 ms, 5000049999 ops.
+[!] Running cycle 10 for selection sort... sorted in 112375 ms, 5000049999 ops.
 [$] selection sort took an average of 112857.2000 ms to sort N=100000
-[$] selection sort took an average of 5000059999 ops to sort N=100000
+[$] selection sort took an average of 5000049999 ops to sort N=100000
 
 [!] Running cycle 1 for smooth sort... sorted in 123 ms, 1659917 ops.
 [!] Running cycle 2 for smooth sort... sorted in 116 ms, 1659917 ops.
@@ -520,18 +520,18 @@ TOTALLY REVERSED
 [$] merge sort took an average of 394.1000 ms to sort N=100000
 [$] merge sort took an average of 3600046 ops to sort N=100000
 
-[!] Running cycle 1 for selection sort... sorted in 125971 ms, 5000099999 ops.
-[!] Running cycle 2 for selection sort... sorted in 132160 ms, 5000099999 ops.
-[!] Running cycle 3 for selection sort... sorted in 132490 ms, 5000099999 ops.
-[!] Running cycle 4 for selection sort... sorted in 127969 ms, 5000099999 ops.
-[!] Running cycle 5 for selection sort... sorted in 127262 ms, 5000099999 ops.
-[!] Running cycle 6 for selection sort... sorted in 126973 ms, 5000099999 ops.
-[!] Running cycle 7 for selection sort... sorted in 127598 ms, 5000099999 ops.
-[!] Running cycle 8 for selection sort... sorted in 126126 ms, 5000099999 ops.
-[!] Running cycle 9 for selection sort... sorted in 129704 ms, 5000099999 ops.
-[!] Running cycle 10 for selection sort... sorted in 143119 ms, 5000099999 ops.
+[!] Running cycle 1 for selection sort... sorted in 125971 ms, 5000049999 ops.
+[!] Running cycle 2 for selection sort... sorted in 132160 ms, 5000049999 ops.
+[!] Running cycle 3 for selection sort... sorted in 132490 ms, 5000049999 ops.
+[!] Running cycle 4 for selection sort... sorted in 127969 ms, 5000049999 ops.
+[!] Running cycle 5 for selection sort... sorted in 127262 ms, 5000049999 ops.
+[!] Running cycle 6 for selection sort... sorted in 126973 ms, 5000049999 ops.
+[!] Running cycle 7 for selection sort... sorted in 127598 ms, 5000049999 ops.
+[!] Running cycle 8 for selection sort... sorted in 126126 ms, 5000049999 ops.
+[!] Running cycle 9 for selection sort... sorted in 129704 ms, 5000049999 ops.
+[!] Running cycle 10 for selection sort... sorted in 143119 ms, 5000049999 ops.
 [$] selection sort took an average of 129937.2000 ms to sort N=100000
-[$] selection sort took an average of 5000099999 ops to sort N=100000
+[$] selection sort took an average of 5000049999 ops to sort N=100000
 
 [!] Running cycle 1 for smooth sort... sorted in 204 ms, 3284188 ops.
 [!] Running cycle 2 for smooth sort... sorted in 208 ms, 3284188 ops.

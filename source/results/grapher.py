@@ -147,7 +147,7 @@ def df_filter_runs_np(df, n, p):
   '''
   return df[(df['N'] == n) & (df['P'] == p)]
 
-def df_create_p_lineplot(df, name, sorters):
+def df_create_p_lineplot(df, name, sorters, yvar='time'):
   '''
   This function creates a graph of the sort times of each algorithm for a given P.
   '''
@@ -178,7 +178,7 @@ def df_create_p_lineplot(df, name, sorters):
       X.append(N)
 
       for sorter in sorters:
-        Y[sorter].append(sub_df[sorter].sum() / sub_df[sorter].count())
+        Y[sorter].append(sub_df[sorter + ' ' + yvar].sum() / sub_df[sorter + ' ' + yvar].count())
 
     # After generating the series data, we plot what we have
     # The first plot is a linear plot
@@ -194,7 +194,7 @@ def df_create_p_lineplot(df, name, sorters):
     plt_style_plot()
     plt_save_plot('./graphs/' + name + '-lnt-vs-lnN,for-P=' + str(P) + '.png')
 
-def df_create_n_lineplot(df, name, sorters):
+def df_create_n_lineplot(df, name, sorters, yvar='time'):
   '''
   This function creates a graph of the sort times of each algorithm for a given N.
   '''
@@ -225,7 +225,7 @@ def df_create_n_lineplot(df, name, sorters):
       X.append(P)
 
       for sorter in sorters:
-        Y[sorter].append(sub_df[sorter].sum() / sub_df[sorter].count())
+        Y[sorter].append(sub_df[sorter + ' ' + yvar].sum() / sub_df[sorter + ' ' +yvar].count())
 
     # After generating the series data, we plot what we have
     # The first plot is a linear plot
@@ -241,7 +241,7 @@ def df_create_n_lineplot(df, name, sorters):
     plt_style_plot()
     plt_save_plot('./graphs/' + name + '-lnt-vs-lnP,for-N=' + str(N) + '.png')
 
-def df_create_entropy_scatterplot(df, name, sorters):
+def df_create_entropy_scatterplot(df, name, sorters, yvar='time'):
   '''
   This graphs the runtime of each algorithm with respect to the entropy of the shuffled array.
   We do this per value of N, because the entropy also kinda depends on N.
@@ -271,7 +271,7 @@ def df_create_entropy_scatterplot(df, name, sorters):
 
       # Append the times of the sorters
       for sorter in sorters:
-        Y[sorter].append(row[sorter])
+        Y[sorter].append(row[sorter + ' ' + yvar])
 
     plt_new_plot('Sort Time vs. Entropy for N=' + str(N), 600, 600)
     plt_do_plot_scatter(X, Y, sorters)
@@ -279,7 +279,7 @@ def df_create_entropy_scatterplot(df, name, sorters):
     plt_style_plot()
     plt_save_plot('./graphs/' + name + '-t-vs-entropy,for-N=' + str(N) + '.png')
 
-def df_create_determination_scatterplot(df, name, sorters):
+def df_create_determination_scatterplot(df, name, sorters, yvar='time'):
   '''
   This graphs the runtime of each algorithm with respect to the entropy of the shuffled array.
   We do this per value of N, because the entropy also kinda depends on N.
@@ -309,7 +309,7 @@ def df_create_determination_scatterplot(df, name, sorters):
 
       # Append the times of the sorters
       for sorter in sorters:
-        Y[sorter].append(row[sorter])
+        Y[sorter].append(row[sorter + ' ' + yvar])
 
     plt_new_plot('Sort Time vs. R^2 for N=' + str(N), 600, 600)
     plt_do_plot_scatter(X, Y, sorters)
@@ -317,7 +317,7 @@ def df_create_determination_scatterplot(df, name, sorters):
     plt_style_plot()
     plt_save_plot('./graphs/' + name + '-t-vs-determination,for-N=' + str(N) + '.png')
 
-def df_create_correlation_scatterplot(df, name, sorters):
+def df_create_correlation_scatterplot(df, name, sorters, yvar='time'):
   '''
   This graphs the runtime of each algorithm with respect to the entropy of the shuffled array.
   We do this per value of N, because the entropy also kinda depends on N.
@@ -347,7 +347,7 @@ def df_create_correlation_scatterplot(df, name, sorters):
 
       # Append the times of the sorters
       for sorter in sorters:
-        Y[sorter].append(row[sorter])
+        Y[sorter].append(row[sorter + ' ' + yvar])
 
     plt_new_plot('Sort Time vs. R for N=' + str(N), 600, 600)
     plt_do_plot_scatter(X, Y, sorters)
