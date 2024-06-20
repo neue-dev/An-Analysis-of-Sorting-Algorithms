@@ -176,18 +176,26 @@ Note that for each iteration, performing insertion sort on the new roots (if the
 
 No illustrations exist for this part of the algorithm, as the other illustrations suffice to provide an explanation for this already. Follow the first stage of smooth sort in reverse, and it should be easy to visualize how root removal looks; repeat the process outlined by the second stage, and understanding how each iteration sorts new roots should become clear. 
 
-It is left as an exercise to the reader to understand how smooth sort approaches linear time for nearly-sorted lists (or you can ask me in person).
+It is left as an exercise to the reader to understand how smooth sort approaches linear time for nearly-sorted lists... (or you can ask me in person).
 
 ![other algorithms](./README/headers/header-other-algorithms.png)
 ---
 
-### 4.1 Insertion Sort
+### 4.1 Insertion Sort and Selection Sort
 
-### 4.2 Selection Sort
+Insertion sort and selection sort are both $\mathcal{O}(n^2)$ algorithms. However, they have a few nuances that make one better than the other in certain situations.
 
-### 4.3 Merge Sort
+Selection sort always performs the same number of comparisons, regardless of the state of the array. This means that when the given array is already sorted, selection sort won't even know about it until it's compared every pair of elements together. Insertion sort, on the other hand, can run in $\mathcal{O}(n)$ time in the best case. Because it only ever compares elements that are adjacent to each other, these comparisons can end up "terminating" a pass prematurely when the array is already sorted.
 
-### 4.4 Tim Sort
+Selection sort "selects" the smallest (or greatest) element left in the ***unsorted portion** of the array*. Insertion sort "inserts" the current element into its correct location within the ***sorted portion** of the array*.
+
+### 4.2 Merge Sort
+
+Merge sort takes a divide-and-conquer approach to sorting an array. Given any array, it splits it into two new arrays of half the size and calls the routine on those arrays. Eventually, arrays of size 1 will be left; these arrays are considered sorted by default. When sorted arrays are encountered, merging them can occur. Merging two arrays happens by repeatedly selecting the smaller of the leftmost elements in each array and pushing this unto the sorted array (note that the "sorted array" here refers to an auxiliary piece of memory; other implementations of merge sort exist with less space consumption, although these come with the cost of increasing the time complexity of the algorithm). Eventually, all the inner function calls resolve into sorted subarrays, and a sorted version of the array is gradually created. The final step of the algorithm (according to the implementation of this project) is to copy the sorted version of the array onto the original.
+
+Merge sort has a time complexity of $\mathcal{O}(n \log n)$. This is both its best case and worst case. The reason for this is that there will be at most $\log_2(n)$ levels of divisions of an array into halves; in other words, the deepest level of a nested function call will be at most $\log_2(n)$. And for each level, the total number of operations executed by all nested calls (within that level) will be in the order of $\mathcal{O}(n)$, because we're traversing each subarray linearly during these merges.
+
+### 4.3 Tim Sort
 
 Now I won't bother going in-depth with tim sort; it's not really the main algorithm I chose anyway. Nevertheless, I feel like it deserves a special mention. The original publication outlining tim sort actually takes inspiration [from another academic paper](https://dl.acm.org/doi/10.5555/313559.313859) which led me down a rabbit hole of information theory. This eventually helped me realize my ideas on how to benchmark the sorting algorithms.
 
