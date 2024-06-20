@@ -9,6 +9,8 @@ PLEASE READ THE HTML FILE INSTEAD.
 ![overview](./README/headers/header-overview.png)
 ---
 
+<br />
+
 This repository currently only features a few select sorting algorithms. They are:
 
 1. Insertion Sort
@@ -21,6 +23,8 @@ This repository currently only features a few select sorting algorithms. They ar
 In hindsight, smooth sort was the most difficult to implement, but it also brought me the most insights and enjoyment. Because the implementations of the other algorithms are already widely-known, I place an emphasis on explaining the mechanism of smooth sort below and combine the others into a single section: ***Other Algorithms***. However, I've elected to devote a separate section for Heap Sort; this precedes my discussion of smooth sort (it'll become clear why I decided to explain this too).
 
 The following report will also outline the methods that were used to benchmark the sorting algorithms. After much research, I decided to procedurally generate custom data sets (still using the `struct Record` provided by the starter code). These were created using a number of parameters (particularly, the number of records ($N$) and the shuffle amount ($P$), which we elaborate further in the sections below), and the integrity of the resulting shuffles were measured using well-defined metrics (in this case, entropy ($H$), correlation ($r$), and determination($r^2$)—again, more on these later). All in all, the parameters and measurements provided a richer context for analyzing the behavior of the algorithms under different circumstances. As per with the specifications of the project, both the execution times ($t$) and frequency counts ($f$) were recorded.
+
+<br />
 
 ### 1.1 Running the Program
 
@@ -40,6 +44,8 @@ So for example you could run the executable with the command `main algos=smooth,
 If you want to run the algorithms with the default datasets provided by the starter code, you can also specify the `debug` argument; instead of calling `./main`, you run `./main debug`. The resulting process will execute each of the algorithms ten times for all of the starter datasets. The output of this process is not saved to a file, although the printed text can be piped into one if this is desired.
 
 Note that for all tests, the integrity of the sorted arrays are automatically verified. It is ensured that **(1)** they are in the right order and **(2)** they have no missing entries. For more information on the specific implementation of these, head over to ***Comparisons and Individual Analyses***.
+
+<br />
 
 ### 1.2 Creating Custom Tests
 
@@ -66,6 +72,8 @@ To gather the frequency counts on your own, simply call the corresponding `Recor
 > 
 > <br/>
 
+<br />
+
 ### 1.3 A Note on Python Helper Files
 
 Some might notice that the project contains a few Python files. These can be ignored and were simply used to automate the running of the C program. It allowed the possibility to perform batch tests without having to type the commands one after the other (this was necessary for my device because creating a bulk command that ran the C executable for more than a few minutes in a single process caused it to be killed by the OS). Additionally, another Python script was also utilized to generate some of the visuals of this report (particularly those that graph data; the other illustrations were created in [Figma](https://figma.com/)).
@@ -73,13 +81,19 @@ Some might notice that the project contains a few Python files. These can be ign
 ![heap sort](./README/headers/header-heap-sort.png)
 ---
 
+<br />
+
 Heap sort has been described as ["selection sort using the right data structure"](https://link.springer.com/chapter/10.1007/978-3-030-54256-6_4). While that was not something that made sense to me a year ago, it was something that clicked during this project. Both of them select the smallest (or largest) element within an array and move them to their proper location; however, heap sort does this in $\mathcal{O}(\log n)$ time while selection sort takes $\mathcal{O}(n)$.
 
 Heap sort treats the array differently: instead of viewing it as a sequential list of elements, heap sort visualizes it in the form of a tree, with the associations between parent nodes and child nodes outlined in a simple manner. Every $i^\text{th}$ element in the array is the child of the $\lfloor \frac{n - 1}{2} \rfloor^\text{th}$ entry and a parent of elements $2i + 1$ and $2i + 2$. By defining the tree in this way, adjacent nodes can be found easily at the expense of just a multiplication or two.
 
+<br />
+
 ### 2.1 Why Do We Use A Tree?
 
 But what benefit does a tree have over a sequential view of an array of elements? Because of the structure of a the tree (which in the case of heap sort is actually a max-heap), we are guaranteed to know that every element is greater than all its descendants. This invariant allows us to shift an element to its right place within the structure without having to compare it to every single element in the array; the motion associated with performing this action is vertical along the tree, and thus only depends on the height of the tree. This is wonderful because the height of a binary tree is always around $log_2(n)$ of the number of nodes $n$! Thus, visualizing the array in this manner allows us to execute a sort with $\mathcal{O}(\log n)$ comparisons per pass (giving us a total runtime of $\mathcal{O}(n \log n)$).
+
+<br />
 
 ### 2.2 The Heap Sort Algorithm
 
@@ -118,11 +132,15 @@ Anyway, on to the fun part...
 ![smooth sort](./README/headers/header-smooth-sort.png)
 ---
 
+<br />
+
 The reason I decided to explain heap sort prior to smooth sort is because the two algorithms rely on the same fundamental idea: visualizing an array in a manner that differs from its linear structure. However, smooth sort attempts to remedy a certain problem with heap sort: the largest element of the array is always at the root (the beginning) of the array, when ultimately it must end up at the opposite end. This means that regardless of the initial state of our array, $n \cdot \log n$ operations must necessarily happen. Heap sort does not care whether or not our data is sorted to some degree.
 
 Smooth sort, on the other hand, takes an unorthodox approach. For one, it doesn't create a single tree but rather a *forest of max-heaps*. For another, it builds these trees such that their root nodes are on the right. This entails way less computations for lists that are close to being sorted. It also means that smooth sort, in the best case, is $\mathcal{O}(n)$! Note that as amazing as this sounds, we will see towards the latter half of this paper (again, in the section ***Comparisons and Individual Analyses***) whether or not its merits are of any practical value.
 
 But how does it work, exactly?
+
+<br />
 
 ### 3.1 Leonardo Numbers and Leonardo Heaps
 
@@ -148,6 +166,8 @@ Now consider for a moment trees with $L(i)$ nodes. If we structure the trees suc
 
 Whereas heap sort uses a single complete binary tree to represent the array, smooth sort uses a forest of Leonardo trees instead.
 
+<br />
+
 ### 3.2 Generating the Forest
 
 Generating the forest of Leonardo trees for smooth sort is more straightforward than it sounds. The illustration below will likely do better to explain the process, but I will try to outline it regardless. The process relies on the fact that any number can be expressed as the sum of a subset of the Leonardo numbers. We can prove this using mathematical induction, though again, we refuse to wander beyond the scope of this report.
@@ -158,6 +178,8 @@ We begin by starting at the left of the array and proceed rightwards until the l
 
 The exact rules for deciding whether or not to append the next element as a root node or as a singleton are simple: if the two rightmost Leonardo trees in the forest have adjacent orders (one if of order $k$ and another of order $k - 1$), then we merge those two (alongside the new root) to create a Leonardo tree of the next order ($k + 1$). Otherwise, we add a singleton node. The actual code uses the bits of an `unsigned int` to keep track of the orders of the Leonardo trees currently in the forest: a $1$ on the $k^\text{th}$ least-significant bit (LSB) of the variable signifies that a Leonardo tree of order $k$ is present. Do note that because of this method, we are restricted to sorting arrays that hold a number of elements no more than the sum of the first $32$ Leonardo numbers (that's a few million records; if we want to circumvent this, we can just use an `unsigned long`). For the purposes of this project, this is more than enough.
 
+<br />
+
 ### 3.3 Sorting the Roots of the Heapified Trees
 
 Before we can proceed with the actual sorting, we need to cover another subroutine of smooth sort. After it generates the forest of max-heaps, it must guarantee that the root of the rightmost tree is the greatest element in the array. This allows it to remove that node from the forest and place it into the sorted portion of the array (which is where it happens to be already). But for this to be true, the roots of all the trees in the forest must be sorted in ascending order. Sorting the roots of the Leonardo trees represents the second intermediate stage of the algorithm.
@@ -165,6 +187,8 @@ Before we can proceed with the actual sorting, we need to cover another subrouti
 ![Smoothsort second stage.](./README/figures/smooth-sort-root-sorting.png)
 
 Note that we perform an insertion sort for each of the roots starting from the leftmost tree. At the end of each pass, the last modified tree is heapified (and the rest are left as is: if the root of a max-heap is replaced by a greater element, the max-heap property must still be satisfied by that heap). Eventually, the roots will be in ascending order.
+
+<br />
 
 ### 3.4 Sorting Using the Heapified Trees
 
@@ -181,6 +205,8 @@ It is left as an exercise to the reader to understand how smooth sort approaches
 ![other algorithms](./README/headers/header-other-algorithms.png)
 ---
 
+<br />
+
 ### 4.1 Insertion Sort and Selection Sort
 
 Insertion sort and selection sort are both $\mathcal{O}(n^2)$ algorithms. However, they have a few nuances that make one better than the other in certain situations.
@@ -189,11 +215,15 @@ Selection sort always performs the same number of comparisons, regardless of the
 
 Selection sort "selects" the smallest (or greatest) element left in the ***unsorted portion** of the array*. Insertion sort "inserts" the current element into its correct location within the ***sorted portion** of the array*.
 
+<br />
+
 ### 4.2 Merge Sort
 
 Merge sort takes a divide-and-conquer approach to sorting an array. Given any array, it splits it into two new arrays of half the size and calls the routine on those arrays. Eventually, arrays of size 1 will be left; these arrays are considered sorted by default. When sorted arrays are encountered, merging them can occur. Merging two arrays happens by repeatedly selecting the smaller of the leftmost elements in each array and pushing this unto the sorted array (note that the "sorted array" here refers to an auxiliary piece of memory; other implementations of merge sort exist with less space consumption, although these come with the cost of increasing the time complexity of the algorithm). Eventually, all the inner function calls resolve into sorted subarrays, and a sorted version of the array is gradually created. The final step of the algorithm (according to the implementation of this project) is to copy the sorted version of the array onto the original.
 
 Merge sort has a time complexity of $\mathcal{O}(n \log n)$. This is both its best case and worst case. The reason for this is that there will be at most $\log_2(n)$ levels of divisions of an array into halves; in other words, the deepest level of a nested merge sort function call will be at most $\log_2(n)$. And for each level, the total number of operations executed by all nested calls (within that level) will be on the order of $\mathcal{O}(n)$, because we're traversing each subarray linearly during these merges.
+
+<br />
 
 ### 4.3 Tim Sort
 
@@ -204,7 +234,9 @@ Some caveats with the implementation of tim sort used by this project: it's not 
 ![shuffling, entropy, and correlation](./README/headers/header-shuffling-entropy-correlation.png)
 ---
 
-### 5.1. Shuffling
+<br />
+
+### 5.1 Shuffling
 
 There is a well-known shuffling algorithm that generates a permutation of the elements of a sequence in a *reliably-random* way. By this, we mean to say that every possible permutation is equally likely, and the shuffling process does not favor any single one. This is called the [Fisher-Yates algorithm](https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle).
 
@@ -233,7 +265,9 @@ In the implementation, things are notated a bit differently and we have $<$ inst
 
 When performing a shuffle on data, it's helpful to know just how much of a shuffle we were able to do. To help us measure this idea of "shuffling", we come up with two metrics, the first of which is entropy.
 
-### 5.2. Entropy
+<br />
+
+### 5.2 Entropy
 
 Entropy is often associated with the idea of disorder. Fundamentally, the concept of "disorder" is not too far from the concept of "messing up" a deck of cards, although context necessitates that we refer to the second case as [information entropy](https://en.wikipedia.org/wiki/Entropy_(information_theory)#:~:text=Generally%2C%20information%20entropy%20is%20the,referred%20to%20as%20Shannon%20entropy.). Interestingly enough, both information theory and statistical mechanics have characterized their notions of entropy in much the same way. We focus on the formulation Claude Shannon provided for information theory (who impressively came up with the form [independent of any knowledge of statistical mechanics](https://mathoverflow.net/questions/403036/john-von-neumanns-remark-on-entropy)):
 
@@ -280,7 +314,9 @@ where $s(r_i)$ returns the index of the record *in the sorted array*. Thus, a hi
 
 Do note that in order for this approach to work, we adjust negative differences to fall within the range $[0, N-1]$ ($N$ is the number of records). We do this by adding $N$ whenever $x_i < 0$. Effectively, this just gives us the residue of $x_i \text{ mod } N$. If we were to leave this step out, our computation for entropy would likely have its terms cancel out, and we would end up with 0 when in fact the system displays a high degree of entropy.
 
-### 5.3. Correlation and Determination
+<br />
+
+### 5.3 Correlation and Determination
 
 [Another useful idea](https://stats.stackexchange.com/questions/78591/correlation-between-two-decks-of-cards/) to help us assess the "shuffledness" of an array is correlation. Using the same function $s(r_i)$ from above, we can create a rough estimate of the disorder in our array by determining the strength of the correlation between $i$ and $s(r_i)$. A sorted array will always have $i=s(r_i)$ (that is, the values of the sorted indices of the records are equal to their current position in the array), and would produce a correlation of exactly $1$; a sorted array *in reverse order* would give $${-1}. An unsorted array will likely have a very small correlation value (something close to 0). Unlike entropy, our scale lives within the interval $[-1, 1]$.
 
@@ -291,7 +327,11 @@ Nevertheless, both the coefficient of correlation and determination will be used
 ![comparisons and individual analyses](./README/headers/header-comparisons-analyses.png)
 ---
 
+<br />
+
 This section discusses the two different methods used to compare and analyze the different algorithms. The first uses the provided datasets for the project; there are seven of these, and all algorithms we're allowed to run on them ten times. The second involves a testing framework specifically coded for this project. Do note, however, that flexibility was considered in designing this system, and the framework may be used to benchmark other sorting algorithms (even ones that don't use the `Record` data structure) so long as they follow the interfaces required by the framework.
+
+<br />
 
 ### 6.1 Preliminary Testing with the Starter Datasets: Time Taken by the Algorithms
 
@@ -311,6 +351,8 @@ As expected, both $\mathcal{O}(n^2)$ algorithms had runtimes that increased sign
 
 For the $\mathcal{O}(n \log n)$ algorithms, we make some interesting observations. Heap sort performs considerably better on data that's almost sorted, but performs even better on data that's sorted in reverse! Almost the same can be said for smooth sort, although it tends to prefer the correct sort order of data. Based on our discusion of entropy above, we know that the datasets in these cases should have low measures of disorder (a reversed array isnt shuffled that well, it's just in the opposite order), and as we will see later, heap sort and smooth sort perform considerably better for most datasets with low entropy. We will tackle why this is the case in the latter half of this section (when we discuss the custom testing framework that was used). For the other $\mathcal{O}(n \log n)$ algorithms, the improvements they exhibit for low-entropy datasets are far less pronounced. However, when dealing with highly entropic data, heap sort and tim sort tend to dominate in terms of execution time. 
 
+<br />
+
 ### 6.2 Preliminary Testing with the Starter Datasets: Frequency Count of the Algorithms
 
 For the simpler algorithms, measuring frequency counts was pretty straightforward. Algorithms like insertion sort and selection sort were the easiest to configure for this, since they had no subroutines. Merge sort, tim sort, and heap sort were slightly more difficult because of the recursions they employed, but they were still relatively manageable. The real difficulty came with smooth sort. Smooth sort used so many helper functions I had to decide which ones to include and which ones to regard as just "math operations". I could follow the rule of incrementing the counter at the start of every loop and the start of every function call, but I had to choose which one of these made sense to count. For instance, one of the loops in smooth sort did nothing but iterate through the bits of a single `unsigned int` and performed some basic arithmetic on them. It didn't make sense to count the loop as a sequence of many different instructions because the loop as a whole just did a single math operation (or to put it another way, the math operation I was performing with a loop probably wouldn't use an explicit loop in other languages). In the end, I struck a compromise and made sure that **the functions and loops that were meant to *iterate through records* were counted**. This was how I defined the frequency counts for all the algorithms. 
@@ -329,11 +371,15 @@ As we've mentioned, selection sort will perform the same number of iterations re
 
 When looking at the other sorting algorithms, we can see that they perform a varying number of iterations. Smooth sort seems to have the largest change in this: when dealing with arrays that are close to being sorted, the number of iterations needed by smooth sort decreases significantly. While heap sort had a similar property with regard to execution times, it does not seem to have much of an improvement when considering the frequency count produced by the algorithm. Again, we will tackle why this is the case in the proceeding sections.
 
+<br />
+
 ### 6.3 The Custom Testing Framework: The Sort Checker
 
 Before we proceed to the collected data, we must first discuss the methods that were used to verify the integrity and validity of the sorted arrays. Initially, this was done by checking the order of the elements in the final array. If the array had its elements in a nondecreasing (or nonincreasing) arrangement, then the function would say the array was sorted. However, after debugging the more complicated algorithms, I encountered problems that made me realize this check was insufficient. Sometimes, due to logical bugs, certain entries would be duplicated and would overwrite other entries. It was then possible to have a sorted collection of elements but with some of the original entries missing in the final array.
 
 To remedy this, I implemented a binary search that checked if every element in the original array was also present in the final array. If the first check was positive (the array was in the correct order), then the checker would proceed to execute the binary search. All in all, this meant that the verification of the sortedness of the array will always take at most $\mathcal{O}(n \log n)$ (since a binary search taking $\mathcal{O}(\log n)$ would be conducted for $n$ different elements).
+
+<br />
 
 ### 6.4 The Custom Testing Framework: Doing the Runs and Cycles
 
@@ -381,16 +427,24 @@ Note that when we save the results of a run, we're also saving the values of $N$
 
 For all the data collection that was performed using the framework, the number of cycles and runs were always set to $10$.
 
+<br />
+
 ### 6.5 The Custom Testing Framework: Results and Analysis
 
 <!-- Mention P and N here again -->
+
+<br />
 
 ### 6.6 The Custom Testing Framework: Spotlighting Individual Algorithms
 
 ![recommendations, afterthoughts, and anecdotes](./README/headers/header-recommendations-afterthoughts-anecdotes.png)
 ---
 
+<br />
+
 Here are a few reflections I've had the privilege of noting down following the completion of the project. Note that these are not in chronological order.
+
+<br />
 
 ### 7.1 Smooth Sort Bug: C Behaves Differently on Different Platforms
 
@@ -402,13 +456,19 @@ This was working all fine and well (which I guess one should expect since the fo
 
 It turns out that doing `(int) log(8) / log(2)` on Windows gave... $2$! What? Why? I honestly don't know, but this was also true for other powers of two. The `log(x) / log(2)` would work fine for just about any value of $x$ **EXCEPT** for powers of two. And that really messed with smooth sort. Linux didn't have this problem, though, and it's likely it has something to do with the float-precision of the numbers being used. Regardless, I immediately found a solution to my problem (which in hindsight should've been the implemetation since the start): `log2()`. If only I'd known about the function at the beginning, the problem would've never occurred... but is it my fault? Perhaps, perhaps not. It's either bad documentation on the part of the C Library or bad documentation comprehension on my part.
 
+<br />
+
 ### 7.2 Shifting, not Swapping
 
 Initially, heap sort actually wasn't the fastest algorithm; there was no clear winner, but tim sort and merge sort seemed to dominate for the most part. That was until I realized all the algorithms that used swaps could be optimized. If I copied insertion sort and stored the current element in a temp variable, I could theoreitcally cut the execution times of the algorithms in half (as they would have to copy half the amount of data per shift vs. per swap). This actually ended up being true and sped up heap sort so much that it overtook every other algorithm after that. Do note that I did the same optimization for smooth sort, but it was already kind of slow to begin with, so even though it ran twice as fast, it was still slower than its $\mathcal{O}(n \log n)$ brethren (for the most part). Again, I suspect the excessive amount of function calls to be part of the reason why this is so (for smooth sort, I isolated so many subroutines into their own functions for convenience, but I think that might have ended up hurting performance). And actually, I was a bit right, because smooth sort gained another optimization after I did a certain refactoring...
 
+<br />
+
 ### 7.3 I Should've Read the Specs First... But Also Touche, Good Software Design
 
 I'd spent about ten days on the entire project at that point when suddenly, the day before the submission, I reread the specifications and realized I needed to do the frequency counts for each algorithm (I had no idea that was required). I was about to lose it when I realized I'd created structs for each of the sorting algorithms, so that storing state for each of them (such as frequency count) would be no biggie. The function signature would remain practically the same, and only an extra struct member would need to be created. While it did take about half an hour to set up (and I had to redo all the tests again), the fact that it took *only half an hour* to set up was a relief. I felt kinda happy realizing the way I code these days gives my programs a leeway for flexibility.
+
+<br />
 
 ### 7.4 How Could I Forget: a `struct` is Passed by Value!
 
@@ -418,11 +478,15 @@ Initially, all my sorting algorithms had their "sorter" structs passed to them b
 
 While I was doing this, I had to update the function signatures to accept a pointer to the sorter struct instead of a copy of it; this would allow me to update the struct member holding the value of the curent frequency count for each algorithm. However, upon doing so, I noticed an abrupt change in the speed of smooth sort; it was actually able to compete with the other algorithms. Keep in mind that while I was doing the refactoring, I was also changing a number of other things, so the reason for this speed boost remained a mystery to me for a few minutes. Eventually, I realized what was going on and kept note of it here.
 
+<br />
+
 ### 7.5 Correlation, NOT JUST Determination
 
 Towards the latter half of the testing phase, I realized how much more valuable it would be to measure the *coefficient of correlation* and not just the coefficient of determination. While the initial idea was to use the latter metric (because I thought measuring 'shuffledness' was sufficient), I later realized that knowing the 'bias' of a dataset (whether it tends to be in the *right order* or in *reverse*) would just be as insightful, since some of the algorithms obviously perform differently based on this. In this case, correlation would definitely give us more insights to work with.
 
 Due to the delay of this realization, I had to restart all the tests I had done at that point. All in all, counting mishaps and dry-runs, I probably left my laptop on for a total of at least 48 hours running tests on the algorithms. In case you're curious, my humble potato has an `Intel i3-6006u` processor, so it was definitely up for the task. 
+
+<br />
 
 ### 7.6 My Smooth Sort Can Be Optimized Further
 
