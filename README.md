@@ -376,7 +376,7 @@ Note that when we "save data somewhere else", we're saving it alongside the valu
 ![recommendations, afterthoughts, and anecdotes](./README/headers/header-recommendations-afterthoughts-anecdotes.png)
 ---
 
-Here are a few reflections I've had the privilege of noting down following the completion of the project.
+Here are a few reflections I've had the privilege of noting down following the completion of the project. Note that these are not in chronological order.
 
 ### 7.1 Smooth Sort Bug: C Behaves Differently on Different Platforms
 
@@ -392,20 +392,23 @@ It turns out that doing `(int) log(8) / log(2)` on Windows gave... $2$! What? Wh
 
 Initially, heap sort actually wasn't the fastest algorithm; there was no clear winner, but tim sort and merge sort seemed to dominate for the most part. That was until I realized all the algorithms that used swaps could be optimized. If I copied insertion sort and stored the current element in a temp variable, I could theoreitcally cut the execution times of the algorithms in half (as they would have to copy half the amount of data per shift vs. per swap). This actually ended up being true and sped up heap sort so much that it overtook every other algorithm after that. Do note that I did the same optimization for smooth sort, but it was already kind of slow to begin with, so even though it ran twice as fast, it was still slower than its $\mathcal{O}(n \log n)$ brethren (for the most part). Again, I suspect the excessive amount of function calls to be part of the reason why this is so (for smooth sort, I isolated so many subroutines into their own functions for convenience, but I think that might have ended up hurting performance). And actually, I was a bit right, because smooth sort gained another optimization after I did a certain refactoring...
 
-### 7.3 How Could I Forget: a `struct` is Passed by Value!
+### 7.3 I Should've Read the Specs First... But Also Touche, Good Software Design
+
+I'd spent about ten days on the entire project at that point when suddenly, the day before the submission, I reread the specifications and realized I needed to do the frequency counts for each algorithm (I had no idea that was required). I was about to lose it when I realized I'd created structs for each of the sorting algorithms, so that storing state for each of them (such as frequency count) would be no biggie. The function signature would remain practically the same, and only an extra struct member would need to be created. While it did take about half an hour to set up (and I had to redo all the tests again), the fact that it took *only half an hour* to set up was a relief. I felt kinda happy realizing the way I code these days gives my programs a leeway for flexibility.
+
+### 7.4 How Could I Forget: a `struct` is Passed by Value!
 
 It's amazing how many things I ended up realizing towards the end of the project. 
-// ! continue
 
-### 7.4 Correlation, NOT JUST Determination
+Initially, all my sorting algorithms had their "sorter" structs passed to them by value. This was fine for most of the algorithms because they only had to copy the struct once (when they were calling the main routine of the algorithm). However, smooth sort had many subroutines, and each one was passed a *copy* of the struct. I somehow overlooked the problem, and for the last week or so I'd been using a heavily underoptimized version of smooth sort; it's even worse because the sorter struct for smooth sort was the largest out of all the algorithms... then, by mere serendipity, I was forced to refactor my sorting algorithms to measure their frequency counts.
 
-Towards the latter half of the testing phase, I realized how much more valuable it would be to measure the *coefficient of correlation* and not the coefficient of determination. While the initial idea was to use the latter metric because I thought measuring 'shuffledness' was sufficient, I later realized that knowing the 'bias' of a dataset (whether it tends to be in the *right order* or in *reverse*) would just be as insightful, since some of the algorithms obviously perform differently based on this. In this case, correlation would definitely give us more insights to work with.
+While I was doing this, I had to update the function signatures to accept a pointer to the sorter struct instead of a copy of it; this would allow me to update the struct member holding the value of the curent frequency count for each algorithm. However, upon doing so, I noticed an abrupt change in the speed of smooth sort; it was actually able to compete with the other algorithms. Keep in mind that while I was doing the refactoring, I was also changing a number of other things, so the reason for this speed boost remained a mystery to me for a few minutes. Eventually, I realized what was going on and kept note of it here.
+
+### 7.5 Correlation, NOT JUST Determination
+
+Towards the latter half of the testing phase, I realized how much more valuable it would be to measure the *coefficient of correlation* and not just the coefficient of determination. While the initial idea was to use the latter metric (because I thought measuring 'shuffledness' was sufficient), I later realized that knowing the 'bias' of a dataset (whether it tends to be in the *right order* or in *reverse*) would just be as insightful, since some of the algorithms obviously perform differently based on this. In this case, correlation would definitely give us more insights to work with.
 
 Due to the delay of this realization, I had to restart all the tests I had done at that point. All in all, counting mishaps and dry-runs, I probably left my laptop on for a total of at least 48 hours running tests on the algorithms. In case you're curious, my humble potato has an `Intel i3-6006u` processor, so it was definitely up for the task. 
-
-### 7.5 I Should've Read the Specs First... But Also Touche, Good Software Design
-
-I'd spent about ten days on the entire project at that point when suddenly, the day before the submission, I reread the specifications and realized I needed to do the frequency counts for each algorithm (I had no idea that was required). I was about to lose it when I realized I'd created structs for each of the sorting algorithms, so that storing state for each of them (such as frequency count) would be no biggie. The function signature would remain the same, and only an extra struct member would need to be created. While it did take about half an hour to set up (and I had to redo all the tests again), the fact that it took *only half an hour* to set up was a relief. I felt kinda happy realizing the way I code these days gives my programs a leeway for flexibility.
 
 ### 7.6 My Smooth Sort Can Be Optimized Further
 
@@ -424,3 +427,4 @@ On the other hand, we can place the root sorting subroutine back into the first 
                                                   |,4-  ) )-,_. ,\ (  `'-'
                                                  '---''(_/--'  `-'\_)
 ```
+[neue-dev](https://github.com/neue-dev)
