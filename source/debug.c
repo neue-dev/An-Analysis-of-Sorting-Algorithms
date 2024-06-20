@@ -94,7 +94,7 @@ int _Debug_checkSort(Record *records, Record *shuffle, int N) {
 void _Debug_testAll(Record *records, Record *shuffle, int N) {
   int i, j, sorter;
   long start, end;
-  double time;
+  double time, freq;
 
   // Test label
   printf("# === TEST FOR N = %8d === #\n", N);
@@ -154,15 +154,24 @@ void _Debug_testAll(Record *records, Record *shuffle, int N) {
 
       // Get the total
       time += end - start;
+      freq += _Engine_getFreqCount(NULL, sorter);
 
       // Check for sort integrity
-      if(_Debug_checkSort(records, shuffle, N))
+      if(_Debug_checkSort(records, shuffle, N)) {
         printf("sorted in %ld ms.\n", end - start);
-      else printf("FAILED!\n");
+        printf("sorted with %ld ops.\n", _Engine_getFreqCount(NULL, sorter));
+
+      // The sort was unsuccessful
+      } else {
+        printf("FAILED!\n");
+      }
     }
 
+    // Print summary
     printf("[$] %s took an average of %.4lf ms to sort N=%d\n\n", 
       _Engine_getName(NULL, sorter), time / 10, N);
+    printf("[$] %s took an average of %.0lf ops to sort N=%d\n\n", 
+      _Engine_getName(NULL, sorter), freq / 10, N);
   }
 
   printf("\n");
