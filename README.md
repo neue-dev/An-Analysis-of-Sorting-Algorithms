@@ -596,3 +596,27 @@ On the other hand, we can place the root sorting subroutine back into the first 
                                                  '---''(_/--'  `-'\_)
 ```
 [neue-dev](https://github.com/neue-dev)
+
+<br />
+
+### 8.1 Author's Acknowledgements
+
+[1] *Correlation between two Decks of cards?* (n.d.). Cross Validated. https://stats.stackexchange.com/questions/78591/
+
+[2] Dijkstra, E. W. (1982). Smoothsort, an alternative for sorting in situ. *Science of Computer Programming, 1*(3), 223–233. https://doi.org/10.1016/0167-6423(82)90016-8
+
+[3] *Fast computing of log2 for 64-bit integers*. (n.d.). Stack Overflow. https://stackoverflow.com/questions/11376288/
+
+[4] GeeksforGeeks. (2023, February 22). *In-Place merge sort*. GeeksforGeeks. https://www.geeksforgeeks.org/in-place-merge-sort/
+
+[5] *How to generate a random int in C?* (n.d.). Stack Overflow. https://stackoverflow.com/questions/822323/
+
+[6] *John von Neumann’s remark on entropy*. (n.d.). MathOverflow. https://mathoverflow.net/questions/403036/
+
+[7] *Smoothsort demystified*. (n.d.). https://www.keithschwarz.com/smoothsort
+
+[8] Wikipedia contributors. (2024, April 3). *Fisher–Yates shuffle*. Wikipedia. https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+
+[9] Wikipedia contributors. (2024, April 27). *Heapsort*. Wikipedia. https://en.wikipedia.org/wiki/Heapsort
+
+[10] Wikipedia contributors. (2024, May 8). *Merge sort*. Wikipedia. https://en.wikipedia.org/wiki/Merge_sort
