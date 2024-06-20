@@ -137,6 +137,7 @@ L(1) &= 1 \\
 L(i) &= L(i - 1) + L(i - 2) + 1 \\
 \end{align}
 $$
+
 <br/>
 
 To the acute reader, this might seem rather similar to the Fibonacci sequence, aside from the $+1$ embedded into each iteration. Indeed, the two sequences are actually related by a simple formula, and this relationship is essential to proving the $\mathcal{O}(n \log n)$ behavior of smooth sort. But as neat as this may be, it is beyond the scope of this report (although you may ask me in person if you wish).
@@ -157,7 +158,25 @@ We begin by starting at the left of the array and proceed rightwards until the l
 
 The exact rules for deciding whether or not to append the next element as a root node or as a singleton are simple: if the two rightmost Leonardo trees in the forest have adjacent orders (one if of order $k$ and another of order $k - 1$), then we merge those two (alongside the new root) to create a Leonardo tree of the next order ($k + 1$). Otherwise, we add a singleton node. The actual code uses the bits of an `unsigned int` to keep track of the orders of the Leonardo trees currently in the forest: a $1$ on the $k^\text{th}$ least-significant bit (LSB) of the variable signifies that a Leonardo tree of order $k$ is present. Do note that because of this method, we are restricted to sorting arrays that hold a number of elements no more than the sum of the first $32$ Leonardo numbers (that's a few million records; if we want to circumvent this, we can just use an `unsigned long`). For the purposes of this project, this is more than enough.
 
-### 3.3 Sorting Using the Heapified Trees
+### 3.3 Sorting the Roots of the Heapified Trees
+
+Before we can proceed with the actual sorting, we need to cover another subroutine of smooth sort. After it generates the forest of max-heaps, it must guarantee that the root of the rightmost tree is the greatest element in the array. This allows it to remove that node from the forest and place it into the sorted portion of the array (which is where it happens to be already). But for this to be true, the roots of all the trees in the forest must be sorted in ascending order. Sorting the roots of the Leonardo trees represents the second intermediate stage of the algorithm.
+
+![Smoothsort second stage.](./README/figures/smooth-sort-root-sorting.png)
+
+Note that we perform an insertion sort for each of the roots starting from the leftmost tree. At the end of each pass, the last modified tree is heapified (and the rest are left as is: if the root of a max-heap is replaced by a greater element, the max-heap property must still be satisfied by that heap). Eventually, the roots will be in ascending order.
+
+### 3.4 Sorting Using the Heapified Trees
+
+Once the roots have been sorted, we can begin removing the greatest element of the forest until the array is fully sorted. Since the greatest element must always be the root of the rightmost tree, there is no need to move this element; rather, it is the structure of the heaps that change with each iteration.
+
+During each root removal, either one of two things will happen: **(1)** the root leaves behind no subtrees because it was a singleton, in which case we can proceed to remove the next root, or **(2)** the root exposes two new subtrees, the roots of which must be rearranged with the roots of the existing trees on their left. In the second case, we repeat the process illustrated in the previous subsection to maintain the property that all the roots within the forest are in ascending order; however, instead of doing this for all the roots, we only do this for the roots of the exposed subtrees (the rest of the roots should still be in order). Eventually, we reach the end of the array and arrive at a sorted list.
+
+Note that for each iteration, performing insertion sort on the new roots (if there are any) will take at most $\mathcal{O}(\log n)$ time because every array of length $N$ can be expressed as the sum of at most $\log n$ Leonardo numbers; in other words, we have about a logarithmic number of Leonardo heaps (with respect to the array size) at any given time. Heapifying the modified trees at the end of this insertion also takes $\mathcal{O}(\log n)$. We can add these together, and overall, each pass still takes $\mathcal{O}(\log n)$. If we multiply this by the number of iterations required, we get $\mathcal{O}(n \log n)$. Adding this with the time complexity of the first stage of smooth sort still yields $\mathcal{O}(n \log n)$.
+
+No illustrations exist for this part of the algorithm, as the other illustrations suffice to provide an explanation for this already. Follow the first stage of smooth sort in reverse, and it should be easy to visualize how root removal looks; repeat the process outlined by the second stage, and understanding how each iteration sorts new roots should become clear. 
+
+It is left as an exercise to the reader to understand how smooth sort approaches linear time for nearly-sorted lists (or you can ask me in person).
 
 ![other algorithms](./README/headers/header-other-algorithms.png)
 ---
@@ -358,6 +377,14 @@ Due to the delay of this realization, I had to restart all the tests I had done 
 ### 7.4 I Should've Read the Specs First... But Also Touche, Good Software Design
 
 I'd spent about ten days on the entire project at that point when suddenly, the day before the submission, I reread the specifications and realized I needed to do the frequency counts for each algorithm (I had no idea that was required). I was about to lose it when I realized I'd created structs for each of the sorting algorithms, so that storing state for each of them (such as frequency count) would be no biggie. The function signature would remain the same, and only an extra struct member would need to be created. While it did take about half an hour to set up (and I had to redo all the tests again), the fact that it took *only half an hour* to set up was a relief. I felt kinda happy realizing the way I code these days gives my programs a leeway for flexibility.
+
+### 7.5 My Smooth Sort Can Be Optimized Further
+
+I'm saying this with a few hours left before the submission of the project... I don't have time to rerun all the tests with the optimization I wish to conduct. Nevertheless, I might decide to do this even after the project is over.
+
+Basically, one of the existing subroutines within the current implementation was a left over from my initial draft of smooth sort. During the root sorting phase, my smooth sort used to need to compare the nodes of the trees with their children in order to insert the nodes correctly. This was because root sorting was carried out during the heapification phase, and so newly inserted roots would not necessarily belong to heapified trees at that moment. However, upon revising the algorithm a few days ago, I moved the root sorting phase to the latter half of the algorithm, so that roots were sorted during the actual sorting phase. This made it unnecessary to make the comparisons with the children of each root. Thus, if these extraneous comparisons are removed, there is a possibility for smooth sort to become much more efficient (although only by a small amount). 
+
+On the other hand, we can place the root sorting subroutine back into the first half of the algorithm and do without the sorting phase completely, since heapifying in this manner would actually create the sorted array already. Whether or not this will be any faster, I do not know.
 
 ![author](./README/headers/header-author.png)
 ---
