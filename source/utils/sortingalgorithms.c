@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-05-24 11:21:27
- * @ Modified time: 2024-06-20 00:37:25
+ * @ Modified time: 2024-06-20 15:42:05
  * @ Description:
  * 
  * The file contains a wrapper for each of the implementations of the sorting algorithms.
@@ -142,6 +142,72 @@ void Record_smoothSort(Record *records, int n) {
 void Record_timSort(Record *records, int n) {
   if(!isInitted) _Record_warn();
   else TimSort_main(&_Record_TS, records, n);
+}
+
+/**
+ * Insertion sort frequency count.
+ * 
+ * @return  { long }  The frequency count incurred by insertion sort.
+*/
+long Record_getInsertionSortFreq() {
+  if(!isInitted) _Record_warn();
+  else return _Record_IS.frequencyCount;
+  return -1;
+}
+
+/**
+ * Selection sort frequency count.
+ * 
+ * @return  { long }  The frequency count incurred by selection sort.
+*/
+long Record_getSelectionSortFreq() {
+  if(!isInitted) _Record_warn();
+  else return _Record_LS.frequencyCount;
+  return -1;
+}
+
+/**
+ * Merge sort frequency count.
+ * 
+ * @return  { long }  The frequency count incurred by merge sort.
+*/
+long Record_getMergeSortFreq() {
+  if(!isInitted) _Record_warn();
+  else return _Record_MS.frequencyCount;
+  return -1;
+}
+
+/**
+ * Heap sort frequency count.
+ * 
+ * @return  { long }  The frequency count incurred by heap sort.
+*/
+long Record_getHeapSortFreq() {
+  if(!isInitted) _Record_warn();
+  else return _Record_HS.frequencyCount;
+  return -1;
+}
+
+/**
+ * Smooth sort frequency count.
+ * 
+ * @return  { long }  The frequency count incurred by smooth sort.
+*/
+long Record_getSmoothSortFreq() {
+  if(!isInitted) _Record_warn();
+  else return _Record_SS.frequencyCount;
+  return -1;
+}
+
+/**
+ * Tim sort frequency count.
+ * 
+ * @return  { long }  The frequency count incurred by tim sort.
+*/
+long Record_getTimSortFreq() {
+  if(!isInitted) _Record_warn();
+  else return _Record_TS.frequencyCount;
+  return -1;
 }
 
 #endif
