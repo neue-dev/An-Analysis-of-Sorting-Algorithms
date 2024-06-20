@@ -212,8 +212,8 @@ It's actually simpler than it sounds: you traverse an array of elements starting
 
 ```Python
 for k = (array.length - 1) to k = 0:
-    k' = random number from 0 to k
-    swap array[k] with array[k']
+    k' = randomNumber(0, k)
+    swap(array[k], array[k'])
 ```
 
 Despite it's simplicity, it reliably selects a permutation of the original array in a uniform manner (assuming your random function for choosing a number between each $[0, k]$ is unbiased).
@@ -222,11 +222,11 @@ To perform shuffling for this project, a slight variation of the original algori
 
 ```Python
 for k = (array.length - 1) to k = 0:
-    k' = random number from 0 to k
-    t = random float from 0 to 1
+    k' = randomNumber(0, k)
+    t = randomFloat(0, 1)
 
     if t <= P and t > 0:
-        swap array[k] with array[k']
+        swap(array[k], array[k'])
 ```
 
 In the implementation, things are notated a bit differently and we have $<$ instead of $<=$, but that's okay because the computations in the actual code account for that subtlety.
@@ -307,9 +307,9 @@ This test was relatively straightforward. To ensure the reliability of the measu
 | `almostsorted.txt`    | $33722.8$ ms   | $112857.2$ ms  | $190.6$ ms | $343.5$ ms | $120.8$ ms  | $303.4$ ms |
 | `totallyreversed.txt` | $369691.3$ ms  | $129937.2$ ms  | $158.1$ ms | $394.1$ ms | $210.2$ ms  | $348.7$ ms |
 
-As expected, both $\mathcal{O}(n^2)$ algorithms had runtimes that increased significantly with respect to the problem size. In the worst case scenario (sorting a list in reverse), insertion sort took around $6$ mins, while selection sort took a little over $2$ mins. While selection sort is supposed to run at about the same time for a given problem size (regardless of the shuffle) because it always performs the same number of comparisons for a given $N$, the slight increase in execution time observed for `totallyreversed.txt` is likely due to the elevated *number of swaps* performed by selection sort. On the other hand, when looking at the best case scenario (sorting the `almostsorted.txt` dataset), selection sort unfortunately does worse off for some reason, but insertion sort finishes in about half a minute. This makes sense as insertion sort is expected to run in $\mathcal{O}(n)$ for sorted datasets.
+As expected, both $\mathcal{O}(n^2)$ algorithms had runtimes that increased significantly with respect to the problem size. In the worst case scenario (sorting a list in reverse), insertion sort took around $6$ mins, while selection sort took a little over $2$ mins. While selection sort is supposed to run at about the same time for a given problem size (regardless of the shuffle) because it always performs the same number of comparisons for a given $N$, the slight increase in execution time observed for `totallyreversed.txt` is likely due to the elevated *number of swaps* performed by selection sort. On the other hand, when looking at the best case scenario (sorting the `almostsorted.txt` dataset), selection sort unfortunately does worse off for some reason. However, insertion sort finishes in about half a minute. This makes sense as insertion sort is expected to run in $\mathcal{O}(n)$ for sorted datasets.
 
-For the $\mathcal{O}(n \log n)$ algorithms, we make some interesting observations. Heap sort performs considerably better on data that's almost sorted, but performs even better on data that's sorted in reverse! Almost the same can be said for smooth sort, although it tends to prefer the correct sort order of data. Based on our discusion of entropy above, we know that the datasets in these cases should have low measures of disorder (a reversed array isnt shuffled that well, it's just in the opposite order), and as we will see in the analyses of the succeeding sections, heap sort and smooth sort perform considerably better for datasets with low entropy. We will tackle why this is the case in the latter half of the analysis (when we discuss the custom testing framework that was used). For the other $\mathcal{O}(n \log n)$ algorithms, the improvements they exhibit for low-entropy datasets are far less pronounced. However, when dealing with highly entropic data, heap sort and tim sort tend to dominate in terms of execution time. 
+For the $\mathcal{O}(n \log n)$ algorithms, we make some interesting observations. Heap sort performs considerably better on data that's almost sorted, but performs even better on data that's sorted in reverse! Almost the same can be said for smooth sort, although it tends to prefer the correct sort order of data. Based on our discusion of entropy above, we know that the datasets in these cases should have low measures of disorder (a reversed array isnt shuffled that well, it's just in the opposite order), and as we will see later, heap sort and smooth sort perform considerably better for most datasets with low entropy. We will tackle why this is the case in the latter half of this section (when we discuss the custom testing framework that was used). For the other $\mathcal{O}(n \log n)$ algorithms, the improvements they exhibit for low-entropy datasets are far less pronounced. However, when dealing with highly entropic data, heap sort and tim sort tend to dominate in terms of execution time. 
 
 ### 6.2 Preliminary Testing with the Starter Datasets: Frequency Count of the Algorithms
 
@@ -331,11 +331,13 @@ When looking at the other sorting algorithms, we can see that they perform a var
 
 ### 6.3 The Custom Testing Framework: The Sort Checker
 
-Initially the testing framework only checked "sortedness" by checking the order of the elements in the array. If the array had its elements in a nondecreasing (or nonincreasing) arrangement, then the function would say the array was sorted. However, after debugging the more complicated algorithms, I encountered problems that made me realize this check was insufficient.
+Before we proceed to the collected data, we must first discuss the methods that were used to verify the integrity and validity of the sorted arrays. Initially, this was done by checking the order of the elements in the final array. If the array had its elements in a nondecreasing (or nonincreasing) arrangement, then the function would say the array was sorted. However, after debugging the more complicated algorithms, I encountered problems that made me realize this check was insufficient. Sometimes, due to logical bugs, certain entries would be duplicated and would overwrite other entries. It was then possible to have a sorted collection of elements but with some of the original entries missing in the final array.
+
+To remedy this, I implemented a binary search that checked if every element in the original array was also present in the final array. If the first check was positive (the array was in the correct order), then the checker would proceed to execute the binary search. All in all, this meant that the verification of the sortedness of the array will always take at most $\mathcal{O}(n \log n)$ (since a binary search taking $\mathcal{O}(\log n)$ would be conducted for $n$ different elements).
 
 ### 6.4 The Custom Testing Framework: Doing the Runs and Cycles
 
-As mentioned a number of times above, a testing framework was also constructed to aid in the comparison and analyses of the different algorithms. The framework allows us to execute a number of different *runs*, each of which perform a set of specific *cycles*. In this case, a run refers to different shufflings of records for a given $(N, P)$, while a cycle refers to a set of attempts (for all algorithms) to sort a certain shuffle. Multiple cycles ensure that we account for the actual time it takes each algorithm to sort a given array (in case outliers of bad timing happen to be present); runs allow us to be confident that the times we're getting aren't for a particularly "good" or "bad" shuffle (the shuffle wasn't unlikely). If this still isn't clear, the pseudocode below should elucidate what I mean:
+The custom testing framework allows us to execute a number of different ***runs***, each of which perform a set of specific ***cycles***. In this case, a run refers to a specific shuffling of records for a given $(N, P)$, while a cycle refers to a set of single attempts (for all algorithms) to sort a certain shuffle (if the meaning of $N$ and $P$ are unclear, refer to ***Shuffling, Entropy and Correlation***). Multiple cycles ensure that we account for the actual time it takes each algorithm to sort a given shuffle (in case outliers of "bad timing" happen to be present); runs allow us to be confident that the times we're getting aren't for a particularly "good" or "bad" shuffle (the shuffle wasn't an unlikely one). If this still isn't clear, the pseudocode below should illustrate what I mean:
 
 ```python
 
@@ -343,29 +345,41 @@ As mentioned a number of times above, a testing framework was also constructed t
 set value of N
 set value of P
 
+suffle_data = 1d array storing information about shuffles   # init to all 0s
+times = 2d array to store execution times                   # init to all 0s
+freqs = 2d array to store freq counts                       # init to all 0s
+
 # Testing algorithm for a given N and P
-for i in number of runs:
-    shuffle = new shuffle of records according to N and P
-    times = 2d array to store execution times, init to all 0s
+for run in runs:
+    shuffle = generateNewShuffle(N, P)
+    shuffle_data[run] = getShuffleParameters(shuffle)
 
     # Perform the required number of cycles
-    for j in number of cycles:
+    for cycle in cycles:
 
         # Do the sort for each algorithm
         for algo in algorithms:
-            tosort = copy order of shuffled records
+            tosort = createShuffleCopy(shuffle)
             
-            start = get start time
+            start = getStartTime()
             algo.sort(tosort)
-            end = get end time
+            end = getEndTime()
+            
+            # Get the measurements for this cycle
+            t = end - start
+            f = algo.freqCount
 
-            times[algorithm][run] = end - start
+            times[algorithm][run] += t
+            freqs[algorithm][run] += f
         
     # Get the average of all cycles for this run
-    times[algorithm][run] /= number of cycles
+    times[algorithm][run] /= cycles
+    freqs[algorithm][run] /= cycles
 ```
 
-Note that when we "save data somewhere else", we're saving it alongside the values of $N$ and $P$ that were used for those runs. The choice of $(N, P)$ definitely affects the times we will be seeing, and so it is imperative we keep track of them. Additionally, the choice for the number of cycles is often set to `cycles=5`, while runs have `runs=5`.
+Note that when we save the results of a run, we're also saving the values of $N$ and $P$ that were used for that run (and the measurements of entropy, correlation, and determination that were gathered). The choice of $(N, P)$ definitely affects the times we will be seeing, and so it is imperative we keep track of them. 
+
+For all the data collection that was performed using the framework, the number of cycles and runs were always set to $10$.
 
 ### 6.5 The Custom Testing Framework: Results and Analysis
 
