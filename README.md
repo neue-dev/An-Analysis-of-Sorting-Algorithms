@@ -1,3 +1,9 @@
+<!-- 
+PLEASE READ THE HTML FILE INSTEAD.
+PLEASE READ THE HTML FILE INSTEAD.
+PLEASE READ THE HTML FILE INSTEAD.
+ -->
+
 ![an analysis of sorting algorithms](./README/title.png)
 
 ![overview](./README/headers/header-overview.png)
@@ -12,30 +18,28 @@ This repository currently only features a few select sorting algorithms. They ar
 5. Smooth Sort
 6. Tim Sort
 
-In hindsight, smooth sort was the most difficult to implement, but it also brought me the most insights and enjoyment. Because the implementations of the other algorithms are already widely-known, I put emphasis on explaining the mechanism of smooth sort below and leave out the others (except for Heap Sort... It'll become clear why I decided to explain this too).
+In hindsight, smooth sort was the most difficult to implement, but it also brought me the most insights and enjoyment. Because the implementations of the other algorithms are already widely-known, I place an emphasis on explaining the mechanism of smooth sort below and combine the others into a single section: ***Other Algorithms***. However, I've elected to devote a separate section for Heap Sort; this precedes my discussion of smooth sort (it'll become clear why I decided to explain this too).
 
-Additionally, I'll outline the methods I used to benchmark the sorting algorithms. After much research, I decided to generate my own data sets (still using the `struct Record` provided by the starter code) to test the different implementations. I landed on a few ways to measure "entropy" (how shuffled an array is) to help me understand how the sorting algorithms would behave under different circumstances.
-
-Likewise, to verify the amount by which the different algorithms would scale (in terms of execution time), the sizes of the custom data sets were varied too.
+I will also outline the methods that were used to benchmark the sorting algorithms. After much research, I decided to generate my own random data sets (still using the `struct Record` provided by the starter code). These were generated using a number of parameters (particularly, the number of records ($N$) and the shuffle amount ($P$), which we elaborate further in proceeding sections), and the integrity of the resulting shuffles were measured using well-defined metrics (in this case, entropy ($H$), correlation ($r$), and determination($r^2$)—again, more on these later). All in all, the parameters and measurements provided a richer context for analyzing the behavior of the different algorithms in varying circumstances. As per with the specifications of the project, both the execution times ($t$) and frequency counts ($f$) were recorded.
 
 ### 1.1 Running the Program
 
-Compiling the program is relatively straightforward. Just use `gcc` and type the command `gcc main.c -o main`. The resulting built executable `main` can then be run. **For linux users**, I do leave another small but important note as the math library is not linked by default: if you are using a Linux device, run `gcc main.c -o main -lm` instead.
+Compiling the program is relatively straightforward. Just use `gcc` and type the command `gcc main.c -o main`. The resulting executable `main` can then be run. **For linux users**, I do leave another small but important note as the math library is not linked by default: if you are using a Linux device, run `gcc main.c -o main -lm` instead.
 
 Depending on what exactly you want to run, the program accepts a number of different command-line arguments. They are listed below.
 
 * `algos`, the algorithms to run, default is `insertion,selection,heap,merge,smooth,tim`.
 * `N`, the number of records to sort, default is `100`.
-* `P`, the shuffling amount (explained later), default is `1.0`.
-* `cycles`, the number of cycles per run (explained later), default is `1`.
-* `runs`, the number of runs per $(N, P)$ (also explained later in this document), default is `1`.
+* `P`, the shuffling amount, default is `1.0`.
+* `cycles`, the number of cycles per run, default is `1`.
+* `runs`, the number of runs per $(N, P)$, default is `1`.
 * `out`, the name of the file to write the results to, default is `output.csv`; of course, you may specify directories within the path.
 
-So for example you could run the executable with the command `main algos=smooth,heap,merge N=500,5000,50000 P=0.005,0.05,0.5,1.0 cycles=5 runs=2`. This performs two runs for each pair of $(N,P)$, with each run having $5$ cycles (if what $(N,P)$ means is unclear, do not fret as this will be explained further later on; for immediate information on these concepts, including the definitions of runs and cycles, jump to the section on ***Comparisons and Individual Analyses***). You can leave out *any or all* of the arguments above, and the program will run with the default values assigned to the unspecified arguments. Also, **strictly no spaces** when inputting comma-separated arguments.
+So for example you could run the executable with the command `main algos=smooth,heap,merge N=500,5000,50000 P=0.005,0.05,0.5,1.0 cycles=5 runs=2`. This performs two runs for each pair of $(N,P)$, with each run having $5$ cycles (if any of these terms seem vague or unclear, do not fret as these will be defined later on; for immediate information on them, jump to the section on ***Comparisons and Individual Analyses***). You can leave out *any or all* of the arguments above, and the program will run with the default values assigned to the unspecified arguments. The order of the arguments does not matter; that is, calling `./main N=1000,2000 P=1.0` and `./main P=1.0 N=2000,1000` would run the same routines. However, note that **strictly no spaces** are allowed when inputting the comma-separated values.
 
-However, if you want to run the algorithms with the default datasets provided by the starter code, you can also specify the `debug` argument; instead of calling `./main`, you run `./main debug`. The resulting process will execute each of the algorithms ten different times for all of the starter datasets. The debug process also checks the sorted arrays and verifies that they are $(1)$ in the correct order and (2) not missing any entries (the second check was necessary for debugging algorithms that copied elements to temporary variables and pasted them elsewhere later; missing entries could result from flawed logic or bad coding). In the case of this project, the output of this process was redirected to a text file for later processing. It is good to note that both the aforementioned checks were passed by all algorithms for all the given datasets. More about these checks and their implementations will be explained in ***Comparisons and Individual Analyses***.
+If you want to run the algorithms with the default datasets provided by the starter code, you can also specify the `debug` argument; instead of calling `./main`, you run `./main debug`. The resulting process will execute each of the algorithms ten times for all of the starter datasets. The output of this process is not saved to a file, although the printed text can be piped into one if this is desired.
 
-<!-- Detail how running the main program with different parameters can give different results -->
+Note that for all tests, the integrity of the sorted arrays are automatically verified. It is ensured that (1) they are in the right order and (2) they have no missing entries. For more information on the specific implementation of these, head over to ***Comparisons and Individual Analyses***.
 
 ### 1.2 Creating Custom Tests
 
@@ -50,21 +54,26 @@ Because of the way the program is structured, it is possible to import `sortinga
 
 Note how all the functions preserve the same signature to facilitate testing. Functions that use recursion (such as merge sort) have been abstracted into their own files to avoid succumbing to spaghetti code.
 
+To gather the frequency counts on your own, simply call the corresponding `Record_get<sorter>SortFreq()` function. For instance, after calling `Record_heapSort(records, N)` for some variables `records` and `N`, I can then do something like `printf("heap sort frequency count: %ld", Record_getHeapSortFreq())`. The frequency count value is always of type `long`. 
+
+> <br/>
 > <b style="color: rgba(255, 55, 55, 1); background-color: rgba(255, 55, 55, 0.16); padding: 4px 8px;">IMPORTANT REMINDERS</b>
 >
 > Please keep the following in mind to avoid any problems running your custom tests:
 >
-> 1. When importing `sortingalgorithms.c` and using any of the `Record_...Sort()` functions, <b style="color: rgba(255, 55, 55, 1);">DO NOT FORGET TO RUN</b> `Record_initSorters()` at the start of the main function (with no parameters). This function has to be run once before any of the sorting algorithms can work.
+> 1. When importing `sortingalgorithms.c` and using any of the `Record_<sorter>Sort()` functions, <b style="color: rgba(255, 55, 55, 1);">DO NOT FORGET TO RUN</b> `Record_initSorters()` at the start of the main function (with no parameters). This function has to be run once before any of the sorting algorithms can work.
 > 2. <b style="color: rgba(255, 55, 55, 1);">DO NOT MOVE</b> any of the files around to prevent breaking any of the imports.
+> 
+> <br/>
 
 ### 1.3 A Note on Python Helper Files
 
-Some might notice that the project contains a few Python files. These can be ignored and were simply used to automate the running of the C program. It allowed the possibility to perform batch tests without having to type the commands one after the other. Additionally, another Python script was also utilized to generate some of the visuals of this report (particularly those that graph data; the other illustrations were created in [Figma](https://figma.com/)).
+Some might notice that the project contains a few Python files. These can be ignored and were simply used to automate the running of the C program. It allowed the possibility to perform batch tests without having to type the commands one after the other (this was necessary for my device because creating a bulk command that ran the C executable for more than a few minutes in a single process caused it to be killed by the OS). Additionally, another Python script was also utilized to generate some of the visuals of this report (particularly those that graph data; the other illustrations were created in [Figma](https://figma.com/)).
 
 ![heap sort](./README/headers/header-heap-sort.png)
 ---
 
-Heap sort has been described as ["selection sort using the right data structure"](https://link.springer.com/chapter/10.1007/978-3-030-54256-6_4). While that was not something that made sense to me a year ago, it was something that clicked during this project.
+Heap sort has been described as ["selection sort using the right data structure"](https://link.springer.com/chapter/10.1007/978-3-030-54256-6_4). While that was not something that made sense to me a year ago, it was something that clicked during this project. Both of them select the smallest (or largest) element within an array and move them to their proper location; however, heap sort does this in $\mathcal{O}(\log n)$ time while selection sort takes $\mathcal{O}(n)$.
 
 Heap sort treats the array differently: instead of viewing it as a sequential list of elements, heap sort visualizes it in the form of a tree, with the associations between parent nodes and child nodes outlined in a simple manner. Every $i^\text{th}$ element in the array is the child of the $\lfloor \frac{n - 1}{2} \rfloor^\text{th}$ entry and a parent of elements $2i + 1$ and $2i + 2$. By defining the tree in this way, adjacent nodes can be found easily at the expense of just a multiplication or two.
 
@@ -141,14 +150,20 @@ We begin by starting at the left of the array and proceeding rightwards until th
 
 ![Smoothsort first stage.](./README/figures/smooth-sort-heapification.png)
 
-The exact rules for deciding whether or not to append the next element as a root node or as a singleton are simple: if the two rightmost Leonardo trees in the forest have adjacent orders, then we merge those two (alongside the new root) to create a Leonardo tree of the next order. Otherwise, we add a singleton node. The actual code uses the bits of an `unsigned int` to keep track of the orders of the Leonardo trees currently in the forest: a $1$ on the $k\text{th}$ least-significant bit (LSB) of the variable signifies that a Leonardo tree of order $k$ is present. Do note that because of this method, we are restricted to sorting arrays that hold a number of elements no more than the sum of the first $32$ Leonardo numbers (that's a few million records; if we want to circumvent this, we can just use an `unsigned long`). 
+The exact rules for deciding whether or not to append the next element as a root node or as a singleton are simple: if the two rightmost Leonardo trees in the forest have adjacent orders, then we merge those two (alongside the new root) to create a Leonardo tree of the next order. Otherwise, we add a singleton node. The actual code uses the bits of an `unsigned int` to keep track of the orders of the Leonardo trees currently in the forest: a $1$ on the $k^\text{th}$ least-significant bit (LSB) of the variable signifies that a Leonardo tree of order $k$ is present. Do note that because of this method, we are restricted to sorting arrays that hold a number of elements no more than the sum of the first $32$ Leonardo numbers (that's a few million records; if we want to circumvent this, we can just use an `unsigned long`). 
 
 ### 3.3 Sorting Using the Heapified Trees
 
 ![other algorithms](./README/headers/header-other-algorithms.png)
 ---
 
-### 4.1 Tim Sort
+### 4.1 Insertion Sort
+
+### 4.2 Selection Sort
+
+### 4.3 Merge Sort
+
+### 4.4 Tim Sort
 
 Now I won't bother going in-depth with tim sort; it's not really the main algorithm I chose anyway. Nevertheless, I feel like it deserves a special mention. The original publication outlining tim sort actually takes inspiration [from another academic paper](https://dl.acm.org/doi/10.5555/313559.313859) which led me down a rabbit hole of information theory. This eventually helped me realize my ideas on how to benchmark the sorting algorithms.
 
