@@ -2,6 +2,7 @@
 .vscode/
 
 main
+main.exe
 main.debug
 
 graphs/

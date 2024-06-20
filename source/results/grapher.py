@@ -124,9 +124,15 @@ def df_get_np(df):
   This function returns the unique values of N and P stored by the CSV.
   '''
 
+  N_array = df['N'].unique()
+  P_array = df['P'].unique()
+
+  N_array.sort()
+  P_array.sort()
+
   return {
-    'N_array': df['N'].unique(),
-    'P_array': df['P'].unique(),
+    'N_array': N_array,
+    'P_array': P_array,
   }
 
 def df_filter_runs_n(df, n):
@@ -151,6 +157,11 @@ def df_create_p_lineplot(df, name, sorters, yvar='time'):
   '''
   This function creates a graph of the sort times of each algorithm for a given P.
   '''
+
+  # Define the unit of the title
+  unit = 'ms'
+  if yvar == 'freq':
+    unit = '(ops)'
   
   # The N and P values to check
   N_array = df_get_np(df)['N_array']
@@ -182,13 +193,13 @@ def df_create_p_lineplot(df, name, sorters, yvar='time'):
 
     # After generating the series data, we plot what we have
     # The first plot is a linear plot
-    plt_new_plot('Sort Time (ms) vs. N for P=' + str(P), 600, 600)
+    plt_new_plot('Sort ' + yvar + ' ' + unit + ' vs. N for P=' + str(P), 600, 600)
     plt_do_plot_line(X, Y, sorters)
     plt_style_plot()
     plt_save_plot('./graphs/' + name + '-t-vs-N,for-P=' + str(P) + '.png')
 
     # The second plot is a log vs log plot
-    plt_new_plot('ln(Sort Time) vs. ln(N) for P=' + str(P), 600, 600)
+    plt_new_plot('ln(Sort ' + yvar + ') vs. ln(N) for P=' + str(P), 600, 600)
     plt_do_plot_line(X, Y, sorters)
     plt_log_axes()
     plt_style_plot()
@@ -198,6 +209,11 @@ def df_create_n_lineplot(df, name, sorters, yvar='time'):
   '''
   This function creates a graph of the sort times of each algorithm for a given N.
   '''
+
+  # Define the unit of the title
+  unit = 'ms'
+  if yvar == 'freq':
+    unit = '(ops)'
   
   # The N and P values to check
   N_array = df_get_np(df)['N_array']
@@ -229,13 +245,13 @@ def df_create_n_lineplot(df, name, sorters, yvar='time'):
 
     # After generating the series data, we plot what we have
     # The first plot is a linear plot
-    plt_new_plot('Sort Time (ms) vs. P for N=' + str(N), 600, 600)
+    plt_new_plot('Sort ' + yvar + ' ' + unit + ' vs. P for N=' + str(N), 600, 600)
     plt_do_plot_line(X, Y, sorters)
     plt_style_plot()
     plt_save_plot('./graphs/' + name + '-t-vs-P,for-N=' + str(N) + '.png')
 
     # The second plot is a log vs log plot
-    plt_new_plot('ln(Sort Time) vs. ln(P) for N=' + str(N), 600, 600)
+    plt_new_plot('ln(Sort ' + yvar + ') vs. ln(P) for N=' + str(N), 600, 600)
     plt_do_plot_line(X, Y, sorters)
     plt_log_axes()
     plt_style_plot()
@@ -246,6 +262,11 @@ def df_create_entropy_scatterplot(df, name, sorters, yvar='time'):
   This graphs the runtime of each algorithm with respect to the entropy of the shuffled array.
   We do this per value of N, because the entropy also kinda depends on N.
   '''
+
+  # Define the unit of the title
+  unit = 'ms'
+  if yvar == 'freq':
+    unit = '(ops)'
 
   # The N values to check
   N_array = df_get_np(df)['N_array']
@@ -273,7 +294,7 @@ def df_create_entropy_scatterplot(df, name, sorters, yvar='time'):
       for sorter in sorters:
         Y[sorter].append(row[sorter + ' ' + yvar])
 
-    plt_new_plot('Sort Time vs. Entropy for N=' + str(N), 600, 600)
+    plt_new_plot('Sort ' + yvar + ' ' + unit + ' vs. Entropy for N=' + str(N), 600, 600)
     plt_do_plot_scatter(X, Y, sorters)
     # plt_log_y()
     plt_style_plot()
@@ -284,6 +305,11 @@ def df_create_determination_scatterplot(df, name, sorters, yvar='time'):
   This graphs the runtime of each algorithm with respect to the entropy of the shuffled array.
   We do this per value of N, because the entropy also kinda depends on N.
   '''
+
+  # Define the unit of the title
+  unit = 'ms'
+  if yvar == 'freq':
+    unit = '(ops)'
 
   # The N values to check
   N_array = df_get_np(df)['N_array']
@@ -311,7 +337,7 @@ def df_create_determination_scatterplot(df, name, sorters, yvar='time'):
       for sorter in sorters:
         Y[sorter].append(row[sorter + ' ' + yvar])
 
-    plt_new_plot('Sort Time vs. R^2 for N=' + str(N), 600, 600)
+    plt_new_plot('Sort ' + yvar + ' ' + unit + ' vs. R^2 for N=' + str(N), 600, 600)
     plt_do_plot_scatter(X, Y, sorters)
     # plt_log_y()
     plt_style_plot()
@@ -322,6 +348,11 @@ def df_create_correlation_scatterplot(df, name, sorters, yvar='time'):
   This graphs the runtime of each algorithm with respect to the entropy of the shuffled array.
   We do this per value of N, because the entropy also kinda depends on N.
   '''
+
+  # Define the unit of the title
+  unit = 'ms'
+  if yvar == 'freq':
+    unit = '(ops)'
 
   # The N values to check
   N_array = df_get_np(df)['N_array']
@@ -349,49 +380,90 @@ def df_create_correlation_scatterplot(df, name, sorters, yvar='time'):
       for sorter in sorters:
         Y[sorter].append(row[sorter + ' ' + yvar])
 
-    plt_new_plot('Sort Time vs. R for N=' + str(N), 600, 600)
+    plt_new_plot('Sort ' + yvar + ' ' + unit + ' vs. R for N=' + str(N), 600, 600)
     plt_do_plot_scatter(X, Y, sorters)
     # plt_log_y()
     plt_style_plot()
     plt_save_plot('./graphs/' + name + '-t-vs-correlation,for-N=' + str(N) + '.png')
       
+# This graphs execution times
+for i in range(2):
+  
+  # This is where we store all our dataframes
+  DF_ALL = df_cleanup(pd.read_csv('./all-n-100-10k-and-p-0-1.csv'))
+  DF_N2_N_TEST = df_cleanup(pd.read_csv('./n2-n-test.csv'))
+  DF_N2_P_TEST = df_cleanup(pd.read_csv('./n2-p-test.csv'))
+  DF_NLOGN_N_TEST = df_cleanup(pd.read_csv('./nlogn-n-test.csv'))
+  DF_NLOGN_P_TEST = df_cleanup(pd.read_csv('./nlogn-p-test.csv'))
+  
+  # Invert the datasets
+  if i == 1:
+    DF_N2_N_TEST = df_cleanup(pd.read_csv('./n2-p-test.csv'))
+    DF_N2_P_TEST = df_cleanup(pd.read_csv('./n2-n-test.csv'))
+    DF_NLOGN_N_TEST = df_cleanup(pd.read_csv('./nlogn-p-test.csv'))
+    DF_NLOGN_P_TEST = df_cleanup(pd.read_csv('./nlogn-n-test.csv'))
 
-# This is where we store all our dataframes
-DF_ALL = df_cleanup(pd.read_csv('./all-n-100-10k-and-p-0-1.csv'))
-DF_N2_N_TEST = df_cleanup(pd.read_csv('./n2-n-test.csv'))
-DF_N2_P_TEST = df_cleanup(pd.read_csv('./n2-p-test.csv'))
-DF_NLOGN_N_TEST = df_cleanup(pd.read_csv('./nlogn-n-test.csv'))
-DF_NLOGN_P_TEST = df_cleanup(pd.read_csv('./nlogn-p-test.csv'))
+  df_create_n_lineplot(DF_ALL, 'n-graphs/time-all', SORTERS)
+  df_create_n_lineplot(DF_N2_N_TEST, 'n-graphs/time-n2', SORTERS[:2])
+  df_create_n_lineplot(DF_NLOGN_N_TEST, 'n-graphs/time-nlogn', SORTERS[2:])
 
+  df_create_p_lineplot(DF_ALL, 'p-graphs/time-all', SORTERS)
+  df_create_p_lineplot(DF_N2_P_TEST, 'p-graphs/time-n2', SORTERS[:2])
+  df_create_p_lineplot(DF_NLOGN_P_TEST, 'p-graphs/time-nlogn', SORTERS[2:])
 
-df_create_n_lineplot(DF_ALL, 'n-graphs/all', SORTERS)
-df_create_n_lineplot(DF_N2_N_TEST, 'n-graphs/n2', SORTERS[:2])
-df_create_n_lineplot(DF_NLOGN_N_TEST, 'n-graphs/nlogn', SORTERS[2:])
+  df_create_entropy_scatterplot(DF_ALL, 'entropy-graphs/time-all', SORTERS);
+  df_create_entropy_scatterplot(DF_N2_P_TEST, 'entropy-graphs/time-insertion', SORTERS[0:1]);
+  df_create_entropy_scatterplot(DF_N2_P_TEST, 'entropy-graphs/time-selection', SORTERS[1:2]);
+  df_create_entropy_scatterplot(DF_NLOGN_P_TEST, 'entropy-graphs/time-heap', SORTERS[2:3]);
+  df_create_entropy_scatterplot(DF_NLOGN_P_TEST, 'entropy-graphs/time-merge', SORTERS[3:4]);
+  df_create_entropy_scatterplot(DF_NLOGN_P_TEST, 'entropy-graphs/time-smooth', SORTERS[4:5]);
+  df_create_entropy_scatterplot(DF_NLOGN_P_TEST, 'entropy-graphs/time-tim', SORTERS[5:6]);
 
-df_create_p_lineplot(DF_ALL, 'p-graphs/all', SORTERS)
-df_create_p_lineplot(DF_N2_P_TEST, 'p-graphs/n2', SORTERS[:2])
-df_create_p_lineplot(DF_NLOGN_P_TEST, 'p-graphs/nlogn', SORTERS[2:])
+  df_create_determination_scatterplot(DF_ALL, 'determination-graphs/time-all', SORTERS);
+  df_create_determination_scatterplot(DF_N2_P_TEST, 'determination-graphs/time-insertion', SORTERS[0:1]);
+  df_create_determination_scatterplot(DF_N2_P_TEST, 'determination-graphs/time-selection', SORTERS[1:2]);
+  df_create_determination_scatterplot(DF_NLOGN_P_TEST, 'determination-graphs/time-heap', SORTERS[2:3]);
+  df_create_determination_scatterplot(DF_NLOGN_P_TEST, 'determination-graphs/time-merge', SORTERS[3:4]);
+  df_create_determination_scatterplot(DF_NLOGN_P_TEST, 'determination-graphs/time-smooth', SORTERS[4:5]);
+  df_create_determination_scatterplot(DF_NLOGN_P_TEST, 'determination-graphs/time-tim', SORTERS[5:6]);
 
-df_create_entropy_scatterplot(DF_ALL, 'entropy-graphs/all', SORTERS);
-df_create_entropy_scatterplot(DF_N2_P_TEST, 'entropy-graphs/insertion', SORTERS[0:1]);
-df_create_entropy_scatterplot(DF_N2_P_TEST, 'entropy-graphs/selection', SORTERS[1:2]);
-df_create_entropy_scatterplot(DF_NLOGN_P_TEST, 'entropy-graphs/heap', SORTERS[2:3]);
-df_create_entropy_scatterplot(DF_NLOGN_P_TEST, 'entropy-graphs/merge', SORTERS[3:4]);
-df_create_entropy_scatterplot(DF_NLOGN_P_TEST, 'entropy-graphs/smooth', SORTERS[4:5]);
-df_create_entropy_scatterplot(DF_NLOGN_P_TEST, 'entropy-graphs/tim', SORTERS[5:6]);
+  df_create_correlation_scatterplot(DF_ALL, 'correlation-graphs/time-all', SORTERS);
+  df_create_correlation_scatterplot(DF_N2_P_TEST, 'correlation-graphs/time-insertion', SORTERS[0:1]);
+  df_create_correlation_scatterplot(DF_N2_P_TEST, 'correlation-graphs/time-selection', SORTERS[1:2]);
+  df_create_correlation_scatterplot(DF_NLOGN_P_TEST, 'correlation-graphs/time-heap', SORTERS[2:3]);
+  df_create_correlation_scatterplot(DF_NLOGN_P_TEST, 'correlation-graphs/time-merge', SORTERS[3:4]);
+  df_create_correlation_scatterplot(DF_NLOGN_P_TEST, 'correlation-graphs/time-smooth', SORTERS[4:5]);
+  df_create_correlation_scatterplot(DF_NLOGN_P_TEST, 'correlation-graphs/time-tim', SORTERS[5:6]);
 
-df_create_determination_scatterplot(DF_ALL, 'determination-graphs/all', SORTERS);
-df_create_determination_scatterplot(DF_N2_P_TEST, 'determination-graphs/insertion', SORTERS[0:1]);
-df_create_determination_scatterplot(DF_N2_P_TEST, 'determination-graphs/selection', SORTERS[1:2]);
-df_create_determination_scatterplot(DF_NLOGN_P_TEST, 'determination-graphs/heap', SORTERS[2:3]);
-df_create_determination_scatterplot(DF_NLOGN_P_TEST, 'determination-graphs/merge', SORTERS[3:4]);
-df_create_determination_scatterplot(DF_NLOGN_P_TEST, 'determination-graphs/smooth', SORTERS[4:5]);
-df_create_determination_scatterplot(DF_NLOGN_P_TEST, 'determination-graphs/tim', SORTERS[5:6]);
+  # This graphs the frequency counts
+  df_create_n_lineplot(DF_ALL, 'n-graphs/freq-all', SORTERS, 'freq')
+  df_create_n_lineplot(DF_N2_N_TEST, 'n-graphs/freq-n2', SORTERS[:2],'freq')
+  df_create_n_lineplot(DF_NLOGN_N_TEST, 'n-graphs/freq-nlogn', SORTERS[2:], 'freq')
 
-df_create_correlation_scatterplot(DF_ALL, 'correlation-graphs/all', SORTERS);
-df_create_correlation_scatterplot(DF_N2_P_TEST, 'correlation-graphs/insertion', SORTERS[0:1]);
-df_create_correlation_scatterplot(DF_N2_P_TEST, 'correlation-graphs/selection', SORTERS[1:2]);
-df_create_correlation_scatterplot(DF_NLOGN_P_TEST, 'correlation-graphs/heap', SORTERS[2:3]);
-df_create_correlation_scatterplot(DF_NLOGN_P_TEST, 'correlation-graphs/merge', SORTERS[3:4]);
-df_create_correlation_scatterplot(DF_NLOGN_P_TEST, 'correlation-graphs/smooth', SORTERS[4:5]);
-df_create_correlation_scatterplot(DF_NLOGN_P_TEST, 'correlation-graphs/tim', SORTERS[5:6]);
+  df_create_p_lineplot(DF_ALL, 'p-graphs/freq-all', SORTERS, 'freq')
+  df_create_p_lineplot(DF_N2_P_TEST, 'p-graphs/freq-n2', SORTERS[:2], 'freq')
+  df_create_p_lineplot(DF_NLOGN_P_TEST, 'p-graphs/freq-nlogn', SORTERS[2:], 'freq')
+
+  df_create_entropy_scatterplot(DF_ALL, 'entropy-graphs/freq-all', SORTERS, 'freq');
+  df_create_entropy_scatterplot(DF_N2_P_TEST, 'entropy-graphs/freq-insertion', SORTERS[0:1], 'freq');
+  df_create_entropy_scatterplot(DF_N2_P_TEST, 'entropy-graphs/freq-selection', SORTERS[1:2], 'freq');
+  df_create_entropy_scatterplot(DF_NLOGN_P_TEST, 'entropy-graphs/freq-heap', SORTERS[2:3], 'freq');
+  df_create_entropy_scatterplot(DF_NLOGN_P_TEST, 'entropy-graphs/freq-merge', SORTERS[3:4], 'freq');
+  df_create_entropy_scatterplot(DF_NLOGN_P_TEST, 'entropy-graphs/freq-smooth', SORTERS[4:5], 'freq');
+  df_create_entropy_scatterplot(DF_NLOGN_P_TEST, 'entropy-graphs/freq-tim', SORTERS[5:6], 'freq');
+
+  df_create_determination_scatterplot(DF_ALL, 'determination-graphs/freq-all', SORTERS, 'freq');
+  df_create_determination_scatterplot(DF_N2_P_TEST, 'determination-graphs/freq-insertion', SORTERS[0:1], 'freq');
+  df_create_determination_scatterplot(DF_N2_P_TEST, 'determination-graphs/freq-selection', SORTERS[1:2], 'freq');
+  df_create_determination_scatterplot(DF_NLOGN_P_TEST, 'determination-graphs/freq-heap', SORTERS[2:3], 'freq');
+  df_create_determination_scatterplot(DF_NLOGN_P_TEST, 'determination-graphs/freq-merge', SORTERS[3:4], 'freq');
+  df_create_determination_scatterplot(DF_NLOGN_P_TEST, 'determination-graphs/freq-smooth', SORTERS[4:5], 'freq');
+  df_create_determination_scatterplot(DF_NLOGN_P_TEST, 'determination-graphs/freq-tim', SORTERS[5:6], 'freq');
+
+  df_create_correlation_scatterplot(DF_ALL, 'correlation-graphs/freq-all', SORTERS, 'freq');
+  df_create_correlation_scatterplot(DF_N2_P_TEST, 'correlation-graphs/freq-insertion', SORTERS[0:1], 'freq');
+  df_create_correlation_scatterplot(DF_N2_P_TEST, 'correlation-graphs/freq-selection', SORTERS[1:2], 'freq');
+  df_create_correlation_scatterplot(DF_NLOGN_P_TEST, 'correlation-graphs/freq-heap', SORTERS[2:3], 'freq');
+  df_create_correlation_scatterplot(DF_NLOGN_P_TEST, 'correlation-graphs/freq-merge', SORTERS[3:4], 'freq');
+  df_create_correlation_scatterplot(DF_NLOGN_P_TEST, 'correlation-graphs/freq-smooth', SORTERS[4:5], 'freq');
+  df_create_correlation_scatterplot(DF_NLOGN_P_TEST, 'correlation-graphs/freq-tim', SORTERS[5:6], 'freq');
