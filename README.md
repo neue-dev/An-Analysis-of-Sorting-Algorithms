@@ -293,25 +293,35 @@ Nevertheless, both the coefficient of correlation and determination will be used
 
 This section discusses the two different methods used to compare and analyze the different algorithms. The first uses the provided datasets for the project; there are seven of these, and all algorithms we're allowed to run on them. The second involves a testing framework specifically coded for this project. Do note, however, that flexibility was considered in designing this system, and the framework may be used to benchmark other sorting algorithms (even ones that don't use the `Record` data structure) so long as they follow the interfaces required by the framework.
 
-### 6.1 Frequency Count of the Algorithms
-
-### 6.2 Testing with the Starter Datasets
+### 6.1 Testing with the Starter Datasets: Time Taken by the Algorithms
 
 This test was relatively straightforward. To ensure the reliability of the measured durations, each algorithm was run ten times on all of the provided datasets. The results were then recorded unto a text file (encoded by the executable by piping its text output) and are summarized by the table below. Note that all the values depicted here represent the average duration taken by the algorithm across the ten different attempts of sorting each dataset (and thus contain an extra significant figure).
 
 | Dataset / Algorithm   | Insertion Sort | Selection Sort | Heap Sort  | Merge Sort | Smooth Sort | Tim Sort   |
 | --------------------- | -------------- | -------------- | ---------- | ---------- | ----------- | ---------- |
-| `random100.txt`       | $0.3$ ms       | $0.3$ ms       | $0.2$ ms   | $0.2$ ms   | $0.4$ ms    | $0.2$ ms   |
-| `random25000.txt`     | $8249.3$ ms    | $3395.1$ ms    | $40.6$ ms  | $63.9$ ms  | $99.5$ ms   | $49.3$ ms  |
-| `random50000.txt`     | $37339.8$ ms   | $17930.9$ ms   | $90.6$ ms  | $141.4$ ms | $238.0$ ms  | $114.4$ ms |
-| `random75000.txt`     | $90797.0$ ms   | $48789.1$ ms   | $160.7$ ms | $265.9$ ms | $404.1$ ms  | $235.2$ ms |
-| `random100000.txt`    | $167628.7$ ms  | $91376.1$ ms   | $229.0$ ms | $357.1$ ms | $513.8$ ms  | $313.3$ ms |
-| `almostsorted.txt`    | $32694.2$ ms   | $91235.9$ ms   | $173.6$ ms | $331.4$ ms | $187.8$ ms  | $285.0$ ms |
-| `totallyreversed.txt` | $335970.4$ ms  | $103090.6$ ms  | $148.7$ ms | $338.6$ ms | $366.4$ ms  | $298.1$ ms |
+| `random100.txt`       | $0.6$ ms       | $0.3$ ms       | $0.4$ ms   | $0.4$ ms   | $0.5$ ms    | $0.2$ ms   |
+| `random25000.txt`     | $8039.3$ ms    | $3617.0$ ms    | $39.9$ ms  | $61.5$ ms  | $56.3$ ms   | $48.7$ ms  |
+| `random50000.txt`     | $39824.6$ ms   | $22959.9$ ms   | $93.6$ ms  | $149.8$ ms | $138.7$ ms  | $111.7$ ms |
+| `random75000.txt`     | $97120.4$ ms   | $60394.9$ ms   | $148.8$ ms | $279.6$ ms | $241.7$ ms  | $237.7$ ms   |
+| `random100000.txt`    | $181901.7$ ms  | $110583.4$ ms  | $230.6$ ms | $402.0$ ms | $369.6$ ms  | $341.6$ ms |
+| `almostsorted.txt`    | $33722.8$ ms   | $112857.2$ ms  | $190.6$ ms | $343.5$ ms | $120.8$ ms  | $303.4$ ms |
+| `totallyreversed.txt` | $369691.3$ ms  | $129937.2$ ms  | $158.1$ ms | $394.1$ ms | $210.2$ ms  | $348.7$ ms |
 
 As expected, both $\mathcal{O}(n^2)$ algorithms had runtimes that increased significantly with respect to the problem size. In the worst case scenario (sorting a list in reverse), insertion sort took around $5 \frac{1}{2}$ mins, while selection sort took a little over $1 \frac{1}{2}$ mins. While selection sort is supposed to run at about the same time for a given problem size (regardless of the shuffle) because it always performs the same number of comparisons for a given $N$, the slight increase in execution time observed for `totallyreversed.txt` is likely due to the increased *number of swaps* performed by selection sort.
 
 For the $\mathcal{O}(n \log n)$ algorithms, we make some interesting observations. While merge sort behaves as expected and always runs in approximately $\mathcal{O}(n \log n)$ regardless of the provided shuffle, heap sort performs considerably better on data that's almost sorted and data that's structured in reverse. Based on our discusion of entropy above, we know that both of these datasets should have low measures of disorder (a reversed array isnt shuffled that well, it's just in the opposite order), and as we will see in the analyses of the succeeding section, heap sort performs considerably better for datasets with low entropy. Almost the same can be said for smooth sort, although it does have a preference for the correct ordering of data.
+
+### 6.2 Testing with the Starter Datasets: Frequency Count of the Algorithms
+
+| Dataset / Algorithm   | Insertion Sort  | Selection Sort  | Heap Sort   | Merge Sort  | Smooth Sort | Tim Sort    |
+| --------------------- | --------------- | --------------- | ----------- | ----------- | ----------- | ----------- |
+| `random100.txt`       | $2,856$         | $5,140$         | $878$       | $1,618$     | $1,414$     | $1,096$     |
+| `random25000.txt`     | $156,009,090$   | $312,537,492$   | $418,922$   | $800,042$   | $842,653$   | $671,449$   |
+| `random50000.txt`     | $625,794,731$   | $1,250,074,987$ | $887,555$   | $1,700,044$ | $1,807,629$ | $1,442,943$ |
+| `random75000.txt`     | $1,411,869,612$ | $2,812,612,490$ | $1,373,838$ | $2,700,046$ | $2,824,141$ | $2,314,729$ |
+| `random100000.txt`    | $2,489,326,458$ | $5,000,059,999$ | $1,875,310$ | $3,600,046$ | $3,860,019$ | $3,088,714$ |
+| `almostsorted.txt`    | $572,622,325$   | $5,000,059,999$ | $1,936,069$ | $3,600,046$ | $1,659,917$ | $2,835,761$ |
+| `totallyreversed.txt` | $5,000,049,999$ | $5,000,059,999$ | $1,797,435$ | $3,600,046$ | $3,284,188$ | $3,462,540$ |
 
 ### 6.3 The Custom Testing Framework: The Sort Checker
 
@@ -374,19 +384,24 @@ It turns out that doing `(int) log(8) / log(2)` on Windows gave... $2$! What? Wh
 
 ### 7.2 Shifting, not Swapping
 
-Initially, heap sort actually wasn't the fastest algorithm; there was no clear winner, but tim sort and merge sort seemed to dominate for the most part. That was until I realized all the algorithms that used swaps could be optimized. If I copied insertion sort and stored the current element in a temp variable, I could theoreitcally cut the execution times of the algorithms in half (as they would have to copy half the amount of data per shift vs. per swap). This actually ended up being true and sped up heap sort so much that it overtook every other algorithm after that. Do note that I did the same optimization for smooth sort, but it was already kind of slow to begin with, so even though it ran twice as fast, it was still slower than its $\mathcal{O}(n \log n)$ brethren (for the most part). Again, I suspect the excessive amount of function calls to be part of the reason why this is so (for smooth sort, I isolated so many subroutines into their own functions for convenience, but I think that might have ended up hurting performance).
+Initially, heap sort actually wasn't the fastest algorithm; there was no clear winner, but tim sort and merge sort seemed to dominate for the most part. That was until I realized all the algorithms that used swaps could be optimized. If I copied insertion sort and stored the current element in a temp variable, I could theoreitcally cut the execution times of the algorithms in half (as they would have to copy half the amount of data per shift vs. per swap). This actually ended up being true and sped up heap sort so much that it overtook every other algorithm after that. Do note that I did the same optimization for smooth sort, but it was already kind of slow to begin with, so even though it ran twice as fast, it was still slower than its $\mathcal{O}(n \log n)$ brethren (for the most part). Again, I suspect the excessive amount of function calls to be part of the reason why this is so (for smooth sort, I isolated so many subroutines into their own functions for convenience, but I think that might have ended up hurting performance). And actually, I was a bit right, because smooth sort gained another optimization after I did a certain refactoring...
 
-### 7.3 Correlation, NOT JUST Determination
+### 7.3 How Could I Forget: a `struct` is Passed by Value!
+
+It's amazing how many things I ended up realizing towards the end of the project. 
+// ! continue
+
+### 7.4 Correlation, NOT JUST Determination
 
 Towards the latter half of the testing phase, I realized how much more valuable it would be to measure the *coefficient of correlation* and not the coefficient of determination. While the initial idea was to use the latter metric because I thought measuring 'shuffledness' was sufficient, I later realized that knowing the 'bias' of a dataset (whether it tends to be in the *right order* or in *reverse*) would just be as insightful, since some of the algorithms obviously perform differently based on this. In this case, correlation would definitely give us more insights to work with.
 
 Due to the delay of this realization, I had to restart all the tests I had done at that point. All in all, counting mishaps and dry-runs, I probably left my laptop on for a total of at least 48 hours running tests on the algorithms. In case you're curious, my humble potato has an `Intel i3-6006u` processor, so it was definitely up for the task. 
 
-### 7.4 I Should've Read the Specs First... But Also Touche, Good Software Design
+### 7.5 I Should've Read the Specs First... But Also Touche, Good Software Design
 
 I'd spent about ten days on the entire project at that point when suddenly, the day before the submission, I reread the specifications and realized I needed to do the frequency counts for each algorithm (I had no idea that was required). I was about to lose it when I realized I'd created structs for each of the sorting algorithms, so that storing state for each of them (such as frequency count) would be no biggie. The function signature would remain the same, and only an extra struct member would need to be created. While it did take about half an hour to set up (and I had to redo all the tests again), the fact that it took *only half an hour* to set up was a relief. I felt kinda happy realizing the way I code these days gives my programs a leeway for flexibility.
 
-### 7.5 My Smooth Sort Can Be Optimized Further
+### 7.6 My Smooth Sort Can Be Optimized Further
 
 I'm saying this with a few hours left before the submission of the project... I don't have time to rerun all the tests with the optimization I wish to conduct. Nevertheless, I might decide to do this even after the project is over.
 

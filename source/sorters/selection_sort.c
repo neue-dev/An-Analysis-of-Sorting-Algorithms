@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-09 01:32:05
- * @ Modified time: 2024-06-20 00:52:34
+ * @ Modified time: 2024-06-20 20:54:51
  * @ Description:
  * 
  * Selection sort implementation.
@@ -80,9 +80,6 @@ void SelectionSort_main(SelectionSort *this, t_Record records, int n) {
 
     // Do a swap between the two
     if(minIndex != i) {
-      
-      // Increment the frequency count
-      this->frequencyCount++;
 
       // Perform the swap
       this->swapper(records, minIndex, i);

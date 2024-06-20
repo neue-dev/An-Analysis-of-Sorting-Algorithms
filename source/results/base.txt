@@ -358,18 +358,18 @@
 [$] merge sort took an average of 402.0000 ms to sort N=100000
 [$] merge sort took an average of 3600046 ops to sort N=100000
 
-[!] Running cycle 1 for selection sort... sorted in 117183 ms, 5000149988 ops.
-[!] Running cycle 2 for selection sort... sorted in 114678 ms, 5000149988 ops.
-[!] Running cycle 3 for selection sort... sorted in 114283 ms, 5000149988 ops.
-[!] Running cycle 4 for selection sort... sorted in 105406 ms, 5000149988 ops.
-[!] Running cycle 5 for selection sort... sorted in 109229 ms, 5000149988 ops.
-[!] Running cycle 6 for selection sort... sorted in 109052 ms, 5000149988 ops.
-[!] Running cycle 7 for selection sort... sorted in 108173 ms, 5000149988 ops.
-[!] Running cycle 8 for selection sort... sorted in 110175 ms, 5000149988 ops.
-[!] Running cycle 9 for selection sort... sorted in 107657 ms, 5000149988 ops.
-[!] Running cycle 10 for selection sort... sorted in 109998 ms, 5000149988 ops.
+[!] Running cycle 1 for selection sort... sorted in 117183 ms, 5000059999 ops.
+[!] Running cycle 2 for selection sort... sorted in 114678 ms, 5000059999 ops.
+[!] Running cycle 3 for selection sort... sorted in 114283 ms, 5000059999 ops.
+[!] Running cycle 4 for selection sort... sorted in 105406 ms, 5000059999 ops.
+[!] Running cycle 5 for selection sort... sorted in 109229 ms, 5000059999 ops.
+[!] Running cycle 6 for selection sort... sorted in 109052 ms, 5000059999 ops.
+[!] Running cycle 7 for selection sort... sorted in 108173 ms, 5000059999 ops.
+[!] Running cycle 8 for selection sort... sorted in 110175 ms, 5000059999 ops.
+[!] Running cycle 9 for selection sort... sorted in 107657 ms, 5000059999 ops.
+[!] Running cycle 10 for selection sort... sorted in 109998 ms, 5000059999 ops.
 [$] selection sort took an average of 110583.4000 ms to sort N=100000
-[$] selection sort took an average of 5000149988 ops to sort N=100000
+[$] selection sort took an average of 5000059999 ops to sort N=100000
 
 [!] Running cycle 1 for smooth sort... sorted in 377 ms, 3860019 ops.
 [!] Running cycle 2 for smooth sort... sorted in 366 ms, 3860019 ops.
