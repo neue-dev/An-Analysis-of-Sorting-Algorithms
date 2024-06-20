@@ -104,6 +104,7 @@ void _Debug_testAll(Record *records, Record *shuffle, int N) {
     
     // The time we use to compute the average
     time = 0;
+    freq = 0;
 
     for(j = 0; j < 10; j++) {
 
@@ -158,8 +159,8 @@ void _Debug_testAll(Record *records, Record *shuffle, int N) {
 
       // Check for sort integrity
       if(_Debug_checkSort(records, shuffle, N)) {
-        printf("sorted in %ld ms.\n", end - start);
-        printf("sorted with %ld ops.\n", _Engine_getFreqCount(NULL, sorter));
+        printf("sorted in %ld ms, ", end - start);
+        printf("%ld ops.\n", _Engine_getFreqCount(NULL, sorter));
 
       // The sort was unsuccessful
       } else {
