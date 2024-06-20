@@ -22,7 +22,7 @@ This repository currently only features a few select sorting algorithms. They ar
 
 In hindsight, smooth sort was the most difficult to implement, but it also brought me the most insights and enjoyment. Because the implementations of the other algorithms are already widely-known, I place an emphasis on explaining the mechanism of smooth sort below and combine the others into a single section: ***Other Algorithms***. However, I've elected to devote a separate section for Heap Sort; this precedes my discussion of smooth sort (it'll become clear why I decided to explain this too).
 
-The following report will also outline the methods that were used to benchmark the sorting algorithms. After much research, I decided to procedurally generate custom data sets (still using the `struct Record` provided by the starter code). These were created using a number of parameters (particularly, the number of records ($N$) and the shuffle amount ($P$), which we elaborate further in the sections below), and the integrity of the resulting shuffles were measured using well-defined metrics (in this case, entropy ($H$), correlation ($r$), and determination($r^2$)—again, more on these later). All in all, the parameters and measurements provided a richer context for analyzing the behavior of the algorithms under different circumstances. In line with the specifications of the project, both the execution times ($t$) and frequency counts ($f$) were recorded.
+The following report will also outline the methods that were used to benchmark the sorting algorithms. After much research, I decided to procedurally generate custom data sets (still using the `struct Record` provided by the starter code). These were created using a number of parameters (particularly, the number of records ($N$) and the shuffle amount ($P$), which we elaborate further in the sections below), and the integrity of the resulting shuffles were measured using well-defined metrics (in this case, entropy, correlation ($r$), and determination($r^2$)—again, more on these later). All in all, the parameters and measurements provided a richer context for analyzing the behavior of the algorithms under different circumstances. In line with the specifications of the project, both the execution times ($t$) and frequency counts ($f$) were recorded.
 
 <br />
 
@@ -266,9 +266,9 @@ for k = (array.length - 1) to k = 0:
     swap(array[k], array[k'])
 ```
 
-Despite it's simplicity, it reliably selects a permutation of the original array in a uniform manner (assuming your random function for choosing a number between each $[0, k]$ is unbiased).
+Despite its simplicity, it reliably selects a permutation of the original array in a uniform manner (assuming your random number function is unbiased).
 
-To perform shuffling for this project, a slight variation of the original algorithm is used. Whereas the original Fisher-Yates always executes a shuffle for each element, the variation used here only performs swaps probabilitically. A swap happens $P$ amount of the time ($P=1$ means we always swap, $P=0$ means we never swap). In pseudocode:
+To conduct the array shuffling for this project, a slight variation of the original algorithm was used. Whereas the original Fisher-Yates always executes a shuffle for each element, the variation used here only performs swaps probabilistically. Swaps happen $P$ amount of the time ($P=1$ means we always swap, $P=0$ means we never swap). In pseudocode:
 
 ```Python
 for k = (array.length - 1) to k = 0:
@@ -281,7 +281,7 @@ for k = (array.length - 1) to k = 0:
 
 In the implementation, things are notated a bit differently and we have $<$ instead of $<=$, but that's okay because the computations in the actual code account for that subtlety.
 
-When performing a shuffle on data, it's helpful to know just how much of a shuffle we were able to do. To help us measure this idea of "shuffling", we come up with two metrics, the first of which is entropy.
+When performing a shuffle on data, it's helpful to know just *how much of a shuffle* we were able to do. To help us measure this idea of "shuffling", we come up with a few metrics, the first of which is entropy.
 
 <br />
 
@@ -312,9 +312,9 @@ $$
 
 <br>
 
-When $p_x=1$, then the event isn't suprising at all and the value above reduces to $0$. On the other hand, for smaller values of $p_x$, the value above increases and indicates that the event is "more surprising". Vaguely speaking maximizing entropy means "maximizing surprise and uncertainty", and this is achieved by dispersing our random variable across all possible values of the sample space. If some event were highly likely, then most of the time the outcome wouldn't surprise us at all. But if every outcome were equally likely, then each outcome would be very "surprising" because we would have no idea which one would likely happen next (as a fair warning, don't take the word "surprising" to mean anything rigorous here; it's only meant to be an analogy).
+When $p_x=1$, then the event isn't suprising at all and the value above reduces to $0$. On the other hand, for smaller values of $p_x$, the value above increases and indicates that the event is "more surprising". Roughly speaking, maximizing entropy means "maximizing surprise and uncertainty", and this is achieved by dispersing our random variable across all possible values of the sample space. If some event were highly likely, then most of the time the outcome wouldn't surprise us at all. But if every outcome were equally likely, then each outcome would be very "surprising" because we would have no idea which one would likely happen next (as a fair warning, don't take the word "surprising" to mean anything rigorous here; it's only meant to be an analogy).
 
-So how can we use this to analyze the "shuffledness" of our arrays? Entropy manifests in our sequences of records when it becomes hard to expect which record comes after a given record. In a sorted list (or a list with some structure to it), this is easy because the records form a sort of pattern. Thus, when traversing the array, at any given point, it is reasonable to have an expectation for what the next record might be (it won't be anything surprising). However, when an array is shuffled really well, it becomes really hard to tell what record might come next, and so things are "uncertain" and "surprising". 
+So how can we use this to analyze the "shuffledness" of our arrays? Entropy manifests in our sequences of records when it becomes hard to expect which record comes after a given record. In a sorted list (or a list with some structure to it), this is easy because the records form a sort of pattern. Thus, when traversing the array, it is reasonable to have an expectation for what the next record might be at any given point (it won't be anything *surprising*). However, when an array is shuffled really well, it becomes really hard to tell what record might come next, and so things are "uncertain" and "surprising". 
 
 [To approach this more rigorously](https://stats.stackexchange.com/questions/78591/correlation-between-two-decks-of-cards/79552#79552), we define a random variable $X$ to represent the possible differences between any two adjacent records. That is, for any two adjacent records $r_i$ and $r_{i + 1}$ along the shuffled array, we define $x_i$ to be
 
@@ -328,9 +328,9 @@ $$
 
 <br>
 
-where $s(r_i)$ returns the index of the record *in the sorted array*. Thus, a highly entropic array will have $X$ vary considerably, whereas in a sorted array, $P(X=1)$ is $1$ and no other differences occur.
+where $s(r_i)$ returns the index of the record *in the sorted array* (keep in mind that the $i$ here denotes the position of the record in the original array). Thus, a highly entropic array will have $X$ vary considerably, whereas in a sorted array, $P(X=1)$ is $1$ and no other differences occur.
 
-Do note that in order for this approach to work, we adjust negative differences to fall within the range $[0, N-1]$ ($N$ is the number of records). We do this by adding $N$ whenever $x_i < 0$. Effectively, this just gives us the residue of $x_i \text{ mod } N$. If we were to leave this step out, our computation for entropy would likely have its terms cancel out, and we would end up with 0 when in fact the system displays a high degree of entropy.
+Do note that in order for this approach to work, we adjust negative differences to fall within the range $[0, N-1]$ ($N$ is the number of records). We do this by adding $N$ whenever $x_i < 0$. Effectively, this just gives us the residue of $x_i \text{ mod } N$. If we were to leave this step out, our computation for entropy would likely have its terms cancel out. We would end up with a measure of $0$ when in fact the system displays a high degree of entropy.
 
 <br />
 
@@ -338,34 +338,34 @@ Do note that in order for this approach to work, we adjust negative differences 
 
 [Another useful idea](https://stats.stackexchange.com/questions/78591/correlation-between-two-decks-of-cards/) to help us assess the "shuffledness" of an array is correlation. Using the same function $s(r_i)$ from above, we can create a rough estimate of the disorder in our array by determining the strength of the correlation between $i$ and $s(r_i)$. A sorted array will always have $i=s(r_i)$ (that is, the values of the sorted indices of the records are equal to their current position in the array), and would produce a correlation of exactly $1$; a sorted array *in reverse order* would give $${-1}. An unsorted array will likely have a very small correlation value (something close to 0). Unlike entropy, our scale lives within the interval $[-1, 1]$.
 
-However, when measuring shuffledness alone, the measure of correlation tends to be a bit superfluous in that we don't need to know whether or not the array was in reverse or the right order. Either way, the array wouldn't be considered "well-shuffled" (it might not be sorted, but it isn't that jumbled up). To give us a better sense of shuffledness alone, we can square the value of the correlation coefficient. This particular number is used a lot in inferential statistics and has a special name: [the coefficient of determination](https://en.wikipedia.org/wiki/Coefficient_of_determination). Although this number has a few different interpretations, we ignore most of these as they do not apply to our framework, though we use it for its relevance in determining the disorder within our datasets.
+However, when measuring shuffledness alone, the measure of correlation tends to be a bit superfluous in that we don't need to know whether or not the array was in reverse or the right order. Either way, the array wouldn't be considered "well-shuffled" (it might not be sorted, but it isn't that jumbled up). To give us a better sense of shuffledness alone, we can square the value of the correlation coefficient. This particular number is used a lot in inferential statistics and has a special name: [the coefficient of determination](https://en.wikipedia.org/wiki/Coefficient_of_determination). Although this number has a few different interpretations, we ignore most of them as they do not apply to our framework. Nevertheless, we use it to quantify the disorder of our datasets.
 
-Nevertheless, both the coefficient of correlation and determination will be used to assess the performances of the different algorithms. The latter will supplement our measurements of entropy, while the former will give us insights into how the algorithms react to data that has a bias for being sorted in the correct order or the reverse order.  
+We will still use both the coefficient of correlation and determination to assess the performances of the different algorithms. The latter will supplement our measurements of entropy, while the former will give us insights into how the algorithms react to data that are nearly sorted or nearly reversed. From hereon, we refer to the two as $r$ and $r^2$, respectively.  
 
 ![comparisons and individual analyses](./README/headers/header-comparisons-analyses.png)
 ---
 
 <br />
 
-This section discusses the two different methods used to compare and analyze the different algorithms. The first uses the provided datasets for the project; there are seven of these, and all algorithms we're allowed to run on them ten times. The second involves a testing framework specifically coded for this project. Do note, however, that flexibility was considered in designing this system, and the framework may be used to benchmark other sorting algorithms (even ones that don't use the `Record` data structure) so long as they follow the interfaces required by the framework.
+This section discusses the two different methods used to compare and analyze the different algorithms. The first uses the provided datasets for the project; there are seven of these, and all algorithms we're allowed to run on them ten times. The second involves a testing framework specifically coded for this project. Do note that flexibility was considered in designing this system, and the framework may be used to benchmark other sorting algorithms (even those that don't use the `Record` data structure) so long as they follow the interfaces required by the framework.
 
 <br />
 
 ### 6.1 Preliminary Testing with the Starter Datasets: Time Taken by the Algorithms
 
-This test was relatively straightforward. To ensure the reliability of the measured durations, each algorithm was run ten times on all of the provided datasets. The results were then recorded unto a text file (by piping the actual output of the executable) and are summarized in the table below. Note that all the values depicted here represent the average duration taken by the algorithm across the ten different attempts of sorting each dataset (and thus contain an extra significant figure).
+This test was relatively straightforward. To ensure the reliability of the measured durations, each algorithm was run ten times on all of the provided datasets. The results were then recorded unto a text file (by piping the actual output of the executable) and are summarized in the table below. Note that all the values depicted here represent the average duration taken by the algorithm across their ten attempts (and thus contain an extra significant figure).
 
 | Dataset / Algorithm   | Insertion Sort | Selection Sort | Heap Sort  | Merge Sort | Smooth Sort | Tim Sort   |
 | --------------------- | -------------- | -------------- | ---------- | ---------- | ----------- | ---------- |
 | `random100.txt`       | $0.6$ ms       | $0.3$ ms       | $0.4$ ms   | $0.4$ ms   | $0.5$ ms    | $0.2$ ms   |
 | `random25000.txt`     | $8039.3$ ms    | $3617.0$ ms    | $39.9$ ms  | $61.5$ ms  | $56.3$ ms   | $48.7$ ms  |
 | `random50000.txt`     | $39824.6$ ms   | $22959.9$ ms   | $93.6$ ms  | $149.8$ ms | $138.7$ ms  | $111.7$ ms |
-| `random75000.txt`     | $97120.4$ ms   | $60394.9$ ms   | $148.8$ ms | $279.6$ ms | $241.7$ ms  | $237.7$ ms   |
+| `random75000.txt`     | $97120.4$ ms   | $60394.9$ ms   | $148.8$ ms | $279.6$ ms | $241.7$ ms  | $237.7$ ms |
 | `random100000.txt`    | $181901.7$ ms  | $110583.4$ ms  | $230.6$ ms | $402.0$ ms | $369.6$ ms  | $341.6$ ms |
 | `almostsorted.txt`    | $33722.8$ ms   | $112857.2$ ms  | $190.6$ ms | $343.5$ ms | $120.8$ ms  | $303.4$ ms |
 | `totallyreversed.txt` | $369691.3$ ms  | $129937.2$ ms  | $158.1$ ms | $394.1$ ms | $210.2$ ms  | $348.7$ ms |
 
-As expected, both $\mathcal{O}(n^2)$ algorithms had runtimes that increased significantly with respect to the problem size. In the worst case scenario (sorting a list in reverse), insertion sort took around $6$ mins, while selection sort took a little over $2$ mins. While selection sort is supposed to run at about the same time for a given problem size (regardless of the shuffle) because it always performs the same number of comparisons for a given $N$, the slight increase in execution time observed for `totallyreversed.txt` is likely due to the elevated *number of swaps* performed by selection sort. On the other hand, when looking at the best case scenario (sorting the `almostsorted.txt` dataset), selection sort unfortunately does worse off for some reason. However, insertion sort finishes in about half a minute. This makes sense as insertion sort is expected to run in $\mathcal{O}(n)$ for sorted datasets.
+As expected, both $\mathcal{O}(n^2)$ algorithms had runtimes that increased significantly with respect to the problem size. In the worst case scenario (sorting a list in reverse), insertion sort took around $6$ mins, while selection sort took a little over $2$ mins. While selection sort is supposed to run at about the same time for a fixed problem size (regardless of the shuffle) due to its constant number of comparisons for a given $N$, the slight increase in execution time observed for `totallyreversed.txt` is likely due to the elevated *number of swaps* performed by selection sort. On the other hand, when looking at the best case scenario (sorting the `almostsorted.txt` dataset), selection sort unfortunately does worse off for some reason. However, insertion sort finishes in about half a minute: this makes sense as insertion sort is expected to run closer to $\mathcal{O}(n)$ for nearly sorted datasets.
 
 For the $\mathcal{O}(n \log n)$ algorithms, we make some interesting observations. Heap sort performs considerably better on data that's almost sorted, but performs even better on data that's sorted in reverse! Almost the same can be said for smooth sort, although it tends to prefer the correct sort order of data. Based on our discusion of entropy above, we know that the datasets in these cases should have low measures of disorder (a reversed array isnt shuffled that well, it's just in the opposite order), and as we will see later, heap sort and smooth sort perform considerably better for most datasets with low entropy. We will tackle why this is the case in the latter half of this section (when we discuss the custom testing framework that was used). For the other $\mathcal{O}(n \log n)$ algorithms, the improvements they exhibit for low-entropy datasets are far less pronounced. However, when dealing with highly entropic data, heap sort and tim sort tend to dominate in terms of execution time. 
 
@@ -373,7 +373,9 @@ For the $\mathcal{O}(n \log n)$ algorithms, we make some interesting observation
 
 ### 6.2 Preliminary Testing with the Starter Datasets: Frequency Count of the Algorithms
 
-For the simpler algorithms, measuring frequency counts was pretty straightforward. Algorithms like insertion sort and selection sort were the easiest to configure for this, since they had no subroutines. Merge sort, tim sort, and heap sort were slightly more difficult because of the recursions they employed, but they were still relatively manageable. The real difficulty came with smooth sort. Smooth sort used so many helper functions I had to decide which ones to include and which ones to regard as just "math operations". I could follow the rule of incrementing the counter at the start of every loop and the start of every function call, but I had to choose which one of these made sense to count. For instance, one of the loops in smooth sort did nothing but iterate through the bits of a single `unsigned int` and performed some basic arithmetic on them. It didn't make sense to count the loop as a sequence of many different instructions because the loop as a whole just did a single math operation (or to put it another way, the math operation I was performing with a loop probably wouldn't use an explicit loop in other languages). In the end, I struck a compromise and made sure that **the functions and loops that were meant to *iterate through records* were counted**. This was how I defined the frequency counts for all the algorithms. 
+For the simpler algorithms, measuring frequency counts was pretty straightforward. Algorithms like insertion sort and selection sort were the easiest to configure for this, since they had no subroutines. Merge sort, tim sort, and heap sort were slightly more difficult because of the recursions they employed, but they were still relatively manageable. The real difficulty came with smooth sort. Smooth sort used so many helper functions I had to decide which ones to include and which ones to regard as just "math operations". 
+
+Initially, I came up with a decent rule of thumb: the counter would only be incremented *at the start of every loop and at the start of every function call*. But given the convoluted nature of smooth sort, that rule wasn't rigid enough. For instance, one of the loops used by smooth sort did nothing but iterate through the bits of a single `unsigned int` and performed some basic arithmetic on them. It didn't make sense to count the loop as a sequence of many different instructions because the loop as a whole just did a single math operation (or to put it another way, the math operation I was performing with a loop probably wouldn't use an explicit loop in other languages). In the end, I struck a compromise and made sure that **the functions and loops that were meant to *iterate through records* were counted**. This was how I defined the frequency counts for all the algorithms. 
 
 | Dataset / Algorithm   | Insertion Sort  | Selection Sort  | Heap Sort   | Merge Sort  | Smooth Sort | Tim Sort    |
 | --------------------- | --------------- | --------------- | ----------- | ----------- | ----------- | ----------- |
@@ -385,23 +387,25 @@ For the simpler algorithms, measuring frequency counts was pretty straightforwar
 | `almostsorted.txt`    | $572,622,325$   | $5,000,049,999$ | $1,936,069$ | $3,600,046$ | $1,659,917$ | $2,835,761$ |
 | `totallyreversed.txt` | $5,000,049,999$ | $5,000,049,999$ | $1,797,435$ | $3,600,046$ | $3,284,188$ | $3,462,540$ |
 
-As we've mentioned, selection sort will perform the same number of iterations regardless of the state of the original array. Thus, we can see the constant frequency count exhibited by selection sort. Merge sort has the same property, although do note that this does not mean it performs the same number of swaps regardless of the state of the array. With the way the frequency counting was set up, it just means that it performs the same number of iterations through the array. 
+As we've mentioned above, selection sort will perform the same number of iterations regardless of the state of the original array. This is clearly visible in the table above, where selection sort performs the same number of iterations on the datasets with $100000$ records. Merge sort has the same property, although do note that this does not mean it performs the same number of swaps regardless of the state of the array. With the way the frequency count was set up, it just means that it performs the same number of *iterations on the array*. 
 
-When looking at the other sorting algorithms, we can see that they perform a varying number of iterations. Smooth sort seems to have the largest change in this: when dealing with arrays that are close to being sorted, the number of iterations needed by smooth sort decreases significantly. While heap sort had a similar property with regard to execution times, it does not seem to have much of an improvement when considering the frequency count produced by the algorithm. Again, we will tackle why this is the case in the proceeding sections.
+When looking at the other sorting algorithms, we can see that they perform a varying number of iterations. Smooth sort seems to have the largest change in this: when dealing with arrays that are close to being sorted, smooth sort executes significantly less iterations. While heap sort had a similar property with regard to execution time, it does not seem to have much of an improvement when considering the frequency count produced by the algorithm. Again, we will tackle why this is the case in the proceeding sections.
 
 <br />
 
 ### 6.3 The Custom Testing Framework: The Sort Checker
 
-Before we proceed to the collected data, we must first discuss the methods that were used to verify the integrity and validity of the sorted arrays. Initially, this was done by checking the order of the elements in the final array. If the array had its elements in a nondecreasing (or nonincreasing) arrangement, then the function would say the array was sorted. However, after debugging the more complicated algorithms, I encountered problems that made me realize this check was insufficient. Sometimes, due to logical bugs, certain entries would be duplicated and would overwrite other entries. It was then possible to have a sorted collection of elements but with some of the original entries missing in the final array.
+Before we proceed to the collected data, we must first discuss the methods that were used to verify the correctness of the sorted arrays. Initially, this was done by checking the order of the elements in the final array. If the array had its elements in a nondecreasing (or nonincreasing) arrangement, then the checker would say that the array was successfully sorted. However, after debugging the more convoluted algorithms, I encountered problems that made me realize this check was insufficient. Sometimes, due to logical bugs, certain entries would be duplicated and would overwrite other entries. It was then possible to have a sorted collection of elements but with some of the original entries missing from the final array.
 
-To remedy this, I implemented a binary search that checked if every element in the original array was also present in the final array. If the first check was positive (the array was in the correct order), then the checker would proceed to execute the binary search. All in all, this meant that the verification of the sortedness of the array will always take at most $\mathcal{O}(n \log n)$ (since a binary search taking $\mathcal{O}(\log n)$ would be conducted for $n$ different elements).
+To remedy this, I implemented a binary search that checked if every element in the original array was also present in the final array. If the first check was successful (the array was in the correct order), then the checker would proceed to execute the binary search. 
+
+With both checks in place, this meant that the verification of the sortedness of the array took at most $\mathcal{O}(n \log n)$ time, since $n$ different binary searches of complexity $\mathcal{O}(\log n)$ would be conducted (the first check only took $\mathcal{O}(n)$ since it sufficed to compare just the adjacent elements within the array).
 
 <br />
 
 ### 6.4 The Custom Testing Framework: Doing the Runs and Cycles
 
-The custom testing framework allows us to execute a number of different ***runs***, each of which perform a set of specific ***cycles***. In this case, a run refers to a specific shuffling of records for a given $(N, P)$, while a cycle refers to a set of single attempts (for all algorithms) to sort a certain shuffle (if the meaning of $N$ and $P$ are unclear, refer to ***Shuffling, Entropy and Correlation***). Multiple cycles ensure that we account for the actual time it takes each algorithm to sort a given shuffle (in case outliers of "bad timing" happen to be present); runs allow us to be confident that the times we're getting aren't for a particularly "good" or "bad" shuffle (the shuffle wasn't an unlikely one). If this still isn't clear, the pseudocode below should illustrate what I mean:
+The custom testing framework executes a number of different ***runs***, each of which performs a set number of ***cycles***. In the context of the framework, each run defines *a specific **shuffle of records** for a given pair of values* $(N, P)$ (recall that we defined $N$ and $P$ in ***Shuffling, Entropy and Correlation***), a cycle ***runs the selected algorithms once** for the shuffle of the current run*. Multiple cycles ensure that we account for the actual time it takes each algorithm to sort a given shuffle (in case outliers of "bad timing" happen to be present); runs allow us to be confident that the times we're getting aren't for a particularly "good" or "bad" shuffle for the current $(N, P)$ (the shuffle wasn't an unlikely one). If this still isn't clear, the pseudocode below should illustrate what I mean:
 
 ```python
 
@@ -416,6 +420,9 @@ freqs = 2d array to store freq counts                       # init to all 0s
 # Testing algorithm for a given N and P
 for run in runs:
     shuffle = generateNewShuffle(N, P)
+
+    # This not only saves the current values of N and P
+    # It also saves the measured entropy, correlation (r) and determination (r^2) of the current shuffle
     shuffle_data[run] = getShuffleParameters(shuffle)
 
     # Perform the required number of cycles
@@ -441,19 +448,84 @@ for run in runs:
     freqs[algorithm][run] /= cycles
 ```
 
-Note that when we save the results of a run, we're also saving the values of $N$ and $P$ that were used for that run (and the measurements of entropy, correlation, and determination that were gathered). The choice of $(N, P)$ definitely affects the times we will be seeing, and so it is imperative we keep track of them. 
+Note that when we save the results of a run, we're also saving the values of $N$ and $P$ that were used by that run, as well as the measurements of entropy, $r$, and $r^2$ that were gathered for its shuffle (entropy, $r$, and $r^2$ are also defined in  ***Shuffling, Entropy and Correlation***).
 
-For all the data collection that was performed using the framework, the number of cycles and runs were always set to $10$.
+For all the data collection that were performed using the framework, the number of cycles and runs were always set to $10$.
 
 <br />
 
 ### 6.5 The Custom Testing Framework: Results and Analysis
 
-<!-- Mention P and N here again -->
+<br />
+
+| Execution Time Graphs                                                     | Frequency Count Graphs                                                    |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| ![](./README/data-graphs/all/time-all-lnt-vs-lnN,for-P=1.0.png) | ![](./README/data-graphs/all/freq-all-lnt-vs-lnN,for-P=1.0-no-leg.png) |
+
+We begin with a general comparison of all the algorithms on one plot. From here, the asymptotic behavior of the different algorithms are obvious. The two red plots are those of the $\mathcal{O}(n^2)$ algorithms. The rest belong to the $\mathcal{O}(n \log n)$ algorithms. While our graphs of the execution times have a bit of variation (likely due to fluctuations in the device performance while testing), the graph of the frequency counts show a more rigid structure and support our theoretical understanding of the algorithms.
+
+If we plot the performance of the algorithms against $P$ instead of $N$, we observe a different aspect of the algorithms:
 
 <br />
 
-### 6.6 The Custom Testing Framework: Spotlighting Individual Algorithms
+| Execution Time Graphs                                                      | Frequency Count Graphs                                                      |
+| -------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| ![](./README/data-graphs/all/time-all-t-vs-P,for-N=10000.png) | ![](./README/data-graphs/all/freq-all-t-vs-P,for-N=10000-no-leg.png) |
+
+We can see that the quality of our graphs have severely degraded. Jokes aside, we start isolating the $\mathcal{O}(n \log n)$ algorithms from those of $\mathcal{O}(n^2)$ to be able to better compare them. Although the graphs above show us how insertion sort performs better on datasets that are close to sorted ($P>0$ but $P << 1$), the changes in the behavior of the $\mathcal{O}(n \log n)$ algorithms are much harder to see because of this. Now I believe that the more interesting analyses will come from our exploration of the $\mathcal{O}(n \log n)$ algorithms; because of this, we will not return to insertion and selection sort until near the end of this subsection.
+
+<br />
+
+| Execution Time Graphs                                                      | Frequency Count Graphs                                                      |
+| -------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| ![](./README/data-graphs/nlogn/time-nlogn-t-vs-P,for-N=1000.png) | ![](./README/data-graphs/nlogn/freq-nlogn-t-vs-P,for-N=1000-no-leg.png) |
+| ![](./README/data-graphs/nlogn/time-nlogn-t-vs-P,for-N=10000-no-leg.png) | ![](./README/data-graphs/nlogn/freq-nlogn-t-vs-P,for-N=10000-no-leg.png) |
+| ![](./README/data-graphs/nlogn/time-nlogn-t-vs-P,for-N=25000-no-leg.png) | ![](./README/data-graphs/nlogn/freq-nlogn-t-vs-P,for-N=25000-no-leg.png) |
+
+We can see just how much more nuance exists with these algorithms. It seems that all of them exhibit performance boosts for data that is nearly sorted, but none parallel the drastic gains flaunted by smooth sort. Especially when considering execution time alone, smooth sort becomes faster than heap sort for values of $P \in [0, 0.1)$. And even for $P$ in the range $[0, 0.5)$, smooth sort still bests the other two algorithms within its complexity class. 
+
+When looking at the execution times for heap sort, it seems to prefer both small negative and positive values of $P$: for $P \in [0, 0.1)$ **and** $P \in (-0.1, 0]$, heap sort performs significantly better. The reason heap sort speeds up even for reversed data sets is because the heapification process used by heap sort *prefers data in reverse order*. This was the very "problem" smooth sort tried to remedy (which is why smooth sort doesn't seem to be able to display the same resilience for reversed data sets). Nevertheless, both algorithms still perform significantly better for nearly sorted datasets, with the most likely reason being that less restructuring of the heaps are necessary when sorting data that's already structured.
+
+Now using the $P$ value alone isn't the most robust way to analyze the performance of the algorithms. It would be better to compare their performances with respect to the actual state of the shuffled array. In line with this, we first look at the performances of our algorithms with respect to the actual measured entropy of the different shuffles:
+
+<br />
+
+| Execution Time Graphs                                                      | Frequency Count Graphs                                                      |
+| -------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| ![](./README/data-graphs/nlogn/time-heap-t-vs-entropy,for-N=25000.png) | ![](./README/data-graphs/nlogn/freq-heap-t-vs-entropy,for-N=25000-no-leg.png) |
+| ![](./README/data-graphs/nlogn/time-merge-t-vs-entropy,for-N=25000.png) | ![](./README/data-graphs/nlogn/freq-merge-t-vs-entropy,for-N=25000-no-leg.png) |
+| ![](./README/data-graphs/nlogn/time-smooth-t-vs-entropy,for-N=25000.png) | ![](./README/data-graphs/nlogn/freq-smooth-t-vs-entropy,for-N=25000-no-leg.png) |
+| ![](./README/data-graphs/nlogn/time-tim-t-vs-entropy,for-N=25000.png) | ![](./README/data-graphs/nlogn/freq-tim-t-vs-entropy,for-N=25000-no-leg.png) |
+
+We've now isolated each algorithm into its own plot; an aggregate of all of these graphs would've been incomprehensible. Here, we confirm that heap sort has a bias for datasets with low entropy; that is, there is a strong correlation between the entropy of a shuffle and the time taken by heap sort to order that shuffle. Merge sort and tim sort have slight trends in their own right, though they are not as prominent. Smooth sort, on the other hand, has a somewhat boomerang-like shape. This tells us that graphing the execution time of these functions with respect to entropy alone hides something important. And indeed, the frequency counts of tim and heap sort show the same pattern. If instead we graph the execution times of these algorithms with respect to the $r$ value associated with the shuffle, we get a more comprehensive picture of the situation. 
+
+<br />
+
+| Execution Time Graphs                                                      | Frequency Count Graphs                                                      |
+| -------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| ![](./README/data-graphs/nlogn/time-heap-t-vs-correlation,for-N=25000.png) | ![](./README/data-graphs/nlogn/freq-heap-t-vs-correlation,for-N=25000-no-leg.png) |
+| ![](./README/data-graphs/nlogn/time-merge-t-vs-correlation,for-N=25000.png) | ![](./README/data-graphs/nlogn/freq-merge-t-vs-correlation,for-N=25000-no-leg.png) |
+| ![](./README/data-graphs/nlogn/time-smooth-t-vs-correlation,for-N=25000.png) | ![](./README/data-graphs/nlogn/freq-smooth-t-vs-correlation,for-N=25000-no-leg.png) |
+| ![](./README/data-graphs/nlogn/time-tim-t-vs-correlation,for-N=25000.png) | ![](./README/data-graphs/nlogn/freq-tim-t-vs-correlation,for-N=25000-no-leg.png) |
+
+The graphs look less like relations and more like functions, which is a good thing because we can infer much more from them now. The reason smooth sort had a boomerang-like graph when we were plotting against entropy was because entropy (as we discussed earlier) fails to account for the "direction" of the array (that is, whether or not it is kind of sorted or kind of reversed). By using $r$, we get to see the effect of this aspect of the shuffle on the different sorting algorithms.
+
+Again, we confirm that smooth sort indeed behaves better for nearly-sorted arrays, and just a bit more when they're totally reversed. Heap sort still displays the same affinity for low-entropy shuffles (both sorted and reversed arrays) when looking at its execution time; however, its frequency count tends to get better for reversed arrays precisely because its initial heapification stage ends up ordering the data in reverse. The only reason heap sort also performs better for nearly-sorted arrays is because the existing structure within a sorted shuffle leads to less sift operations later on during the execution of the algorithm.  
+
+But looking at merge sort, it seems as if the initial state of the array has little effect on its total execution time. This makes sense, as the number of recursive calls made by the routine will not be affected by the arrangement of the data; the same is true for the number of data comparisons and data copies made by merge sort.
+
+Tim sort, on the other hand, seems to display a preference for sorted data and a complete aversion for reversed arrays. The best way to understand this is to think of tim sort as a hybrid of merge and insertion sort (this is actually what it is). With this in mind, although we know that merge sort maintains the same number of operations regardless of the shuffle, insertion sort performs better for arrays that are closer to being sorted. With that, we have the perfect segue to return to the $\mathcal{O}(n^2)$ algorithms.
+
+<br />
+
+| Execution Time Graphs                                                     | Frequency Count Graphs                                                           |
+| ------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| ![](./README/data-graphs/all/time-all-t-vs-correlation,for-N=500.png)  | ![](./README/data-graphs/all/freq-all-t-vs-correlation,for-N=500-no-leg.png)  |
+| ![](./README/data-graphs/all/time-insertion-t-vs-correlation,for-N=500.png) | ![](./README/data-graphs/all/freq-insertion-t-vs-correlation,for-N=500-no-leg.png) |
+
+We no longer show selection sort in isolation, because it has a dull straight horizontal line (it's very uninteresting). Insertion sort has a behavior similar to that of tim sort when analyzing its performance based on the $r$ value of the datasets. This greatly overshadows the changes exhibited by the other algorithms, mostly because going from $\mathcal{O}(n^2)$ to $\mathcal{O}(n)$ is a significantly greater shift than going from $\mathcal{O}(n \log n)$ to $\mathcal{O}(n)$. 
+
+Note that our tests of the $\mathcal{O}(n^2)$ algorithms ran with considerably less records as the tests would've taken forever otherwise.
 
 ![recommendations, afterthoughts, and anecdotes](./README/headers/header-recommendations-afterthoughts-anecdotes.png)
 ---
@@ -502,7 +574,7 @@ While I was doing this, I had to update the function signatures to accept a poin
 
 Towards the latter half of the testing phase, I realized how much more valuable it would be to measure the *coefficient of correlation* and not just the coefficient of determination. While the initial idea was to use the latter metric (because I thought measuring 'shuffledness' was sufficient), I later realized that knowing the 'bias' of a dataset (whether it tends to be in the *right order* or in *reverse*) would just be as insightful, since some of the algorithms obviously perform differently based on this. In this case, correlation would definitely give us more insights to work with.
 
-Due to the delay of this realization, I had to restart all the tests I had done at that point. All in all, counting mishaps and dry-runs, I probably left my laptop on for a total of at least 48 hours running tests on the algorithms. In case you're curious, my humble potato has an `Intel i3-6006u` processor, so it was definitely up for the task. 
+Due to the delay of this realization, I had to restart all the tests I had done at that point. All in all, counting mishaps and dry-runs, I probably left my laptop on for a total of at least 50 hours running tests on the algorithms. In case you're curious, my humble potato has an `Intel i3-6006u` processor, so it was definitely up for the task. It also uses Ubuntu, not Windows. 
 
 <br />
 

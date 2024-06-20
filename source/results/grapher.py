@@ -27,6 +27,7 @@ FONT = 'Ubuntu'
 
 # Global settings for plt
 plt.rcParams['font.family'] = FONT
+plt.rcParams["legend.loc"] = 'upper left'
 
 def plt_new_plot(title, width=960, height=540):
   '''
@@ -159,7 +160,7 @@ def df_create_p_lineplot(df, name, sorters, yvar='time'):
   '''
 
   # Define the unit of the title
-  unit = 'ms'
+  unit = '(ms)'
   if yvar == 'freq':
     unit = '(ops)'
   
