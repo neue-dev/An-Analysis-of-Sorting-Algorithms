@@ -1,7 +1,7 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-06-11 00:20:03
- * @ Modified time: 2024-06-20 01:09:11
+ * @ Modified time: 2024-06-20 15:46:50
  * @ Description:
  * 
  * Handles the overall flow of the program.
@@ -153,12 +153,12 @@ char *_Engine_getName(Engine *this, int sorter) {
 */
 long _Engine_getFreqCount(Engine *this, int sorter) {
   switch(sorter) {
-    case SORTER_HEAP:       return _Record_HS.frequencyCount;
-    case SORTER_INSERTION:  return _Record_IS.frequencyCount;
-    case SORTER_MERGE:      return _Record_MS.frequencyCount;
-    case SORTER_SELECTION:  return _Record_LS.frequencyCount;
-    case SORTER_SMOOTH:     return _Record_SS.frequencyCount;
-    case SORTER_TIM:        return _Record_TS.frequencyCount;
+    case SORTER_HEAP:       return Record_getHeapSortFreq();
+    case SORTER_INSERTION:  return Record_getInsertionSortFreq();
+    case SORTER_MERGE:      return Record_getMergeSortFreq();
+    case SORTER_SELECTION:  return Record_getSelectionSortFreq();
+    case SORTER_SMOOTH:     return Record_getSmoothSortFreq();
+    case SORTER_TIM:        return Record_getTimSortFreq();
     default:                return -1;
   }
 }
