@@ -22,7 +22,7 @@ This repository currently only features a few select sorting algorithms. They ar
 
 In hindsight, smooth sort was the most difficult to implement, but it also brought me the most insights and enjoyment. Because the implementations of the other algorithms are already widely-known, I place an emphasis on explaining the mechanism of smooth sort below and combine the others into a single section: ***Other Algorithms***. However, I've elected to devote a separate section for Heap Sort; this precedes my discussion of smooth sort (it'll become clear why I decided to explain this too).
 
-The following report will also outline the methods that were used to benchmark the sorting algorithms. After much research, I decided to procedurally generate custom data sets (still using the `struct Record` provided by the starter code). These were created using a number of parameters (particularly, the number of records ($N$) and the shuffle amount ($P$), which we elaborate further in the sections below), and the integrity of the resulting shuffles were measured using well-defined metrics (in this case, entropy ($H$), correlation ($r$), and determination($r^2$)—again, more on these later). All in all, the parameters and measurements provided a richer context for analyzing the behavior of the algorithms under different circumstances. As per with the specifications of the project, both the execution times ($t$) and frequency counts ($f$) were recorded.
+The following report will also outline the methods that were used to benchmark the sorting algorithms. After much research, I decided to procedurally generate custom data sets (still using the `struct Record` provided by the starter code). These were created using a number of parameters (particularly, the number of records ($N$) and the shuffle amount ($P$), which we elaborate further in the sections below), and the integrity of the resulting shuffles were measured using well-defined metrics (in this case, entropy ($H$), correlation ($r$), and determination($r^2$)—again, more on these later). All in all, the parameters and measurements provided a richer context for analyzing the behavior of the algorithms under different circumstances. In line with the specifications of the project, both the execution times ($t$) and frequency counts ($f$) were recorded.
 
 <br />
 
@@ -39,9 +39,9 @@ Depending on what exactly you want to run, the program accepts a number of diffe
 * `runs`, the number of runs per $(N, P)$, default is `1`.
 * `out`, the name of the file to write the results to, default is `output.csv`; of course, you may specify directories within the path.
 
-So for example you could run the executable with the command `main algos=smooth,heap,merge N=500,5000,50000 P=0.005,0.05,0.5,1.0 cycles=5 runs=2`. This performs two runs for each pair of $(N,P)$, with each run having $5$ cycles (if any of these terms seem vague or unclear, do not fret as these will be defined later on; for immediate information on them, jump to the section on ***Comparisons and Individual Analyses***). You can leave out *any or all* of the arguments above, and the program will run with the default values assigned to the unspecified arguments. The order of the arguments does not matter; that is, calling `./main N=1000,2000 P=1.0` and `./main P=1.0 N=2000,1000` would run the same routines. However, note that **strictly no spaces** are allowed when inputting the comma-separated values.
+So for example you could run the executable with the command `main algos=smooth,heap N=500,5000,50000 P=-1.0,-0.5,0.5,1.0 cycles=5 runs=2`. This performs two runs for each pair of $(N,P)$, with each run having $5$ cycles (if any of these terms seem vague or unclear, do not fret as these will be defined later on; for immediate information on them, jump to the sections on ***Shuffling, Entropy, and Correlation*** and ***Comparisons and Individual Analyses***). You can leave out *any or all* of the arguments above, and the program will run with the default values assigned to the unspecified arguments. The order of the arguments does not matter; that is, calling `./main N=1000,2000 P=1.0` and `./main P=1.0 N=2000,1000` would run the same routines. However, note that **strictly no spaces** are allowed when inputting the comma-separated values.
 
-If you want to run the algorithms with the default datasets provided by the starter code, you can also specify the `debug` argument; instead of calling `./main`, you run `./main debug`. The resulting process will execute each of the algorithms ten times for all of the starter datasets. The output of this process is not saved to a file, although the printed text can be piped into one if this is desired.
+If you want to run the algorithms with the default datasets included in the starter code, you can also specify the `debug` argument; instead of calling `./main`, you run `./main debug`. The resulting process will execute each of the algorithms ten times for all of the starter datasets. The output of this process is not saved to a file, although the printed text can be piped into one if this is desired.
 
 Note that for all tests, the integrity of the sorted arrays are automatically verified. It is ensured that **(1)** they are in the right order and **(2)** they have no missing entries. For more information on the specific implementation of these, head over to ***Comparisons and Individual Analyses***.
 
@@ -60,7 +60,7 @@ Because of the way the program is structured, it is possible to import `sortinga
 
 Note how all the functions preserve the same signature to facilitate testing. Functions that use recursion (such as merge sort) have been abstracted into their own files to avoid succumbing to spaghetti code.
 
-To gather the frequency counts on your own, simply call the corresponding `Record_get<sorter>SortFreq()` function. For instance, after calling `Record_heapSort(records, N)` for some variables `records` and `N`, I can then do something like `printf("heap sort frequency count: %ld", Record_getHeapSortFreq())`. The frequency count value is always of type `long`. 
+To gather the frequency counts on your own, simply call the corresponding `Record_get<sorter>SortFreq()` function. For instance, after calling `Record_heapSort(records, N)` for some variables `records` and `N`, you can then do something like `printf("heap sort frequency count: %ld", Record_getHeapSortFreq())`. The frequency count value is always of type `long`. 
 
 > <br/>
 > <b style="color: rgba(255, 55, 55, 1); background-color: rgba(255, 55, 55, 0.16); padding: 4px 8px;">IMPORTANT REMINDERS</b>
@@ -76,22 +76,22 @@ To gather the frequency counts on your own, simply call the corresponding `Recor
 
 ### 1.3 A Note on Python Helper Files
 
-Some might notice that the project contains a few Python files. These can be ignored and were simply used to automate the running of the C program. It allowed the possibility to perform batch tests without having to type the commands one after the other (this was necessary for my device because creating a bulk command that ran the C executable for more than a few minutes in a single process caused it to be killed by the OS). Additionally, another Python script was also utilized to generate some of the visuals of this report (particularly those that graph data; the other illustrations were created in [Figma](https://figma.com/)).
+You might notice that the project contains two Python files. These can be ignored and were only used to facilitate with the data collection and presentation. The first file `driver.py` allowed me to do batch tests without having to type a lot of different commands (this was necessary for my device because combining all tests into a single process ran the C executable for more than a few minutes, which caused it to be killed by the OS midway the test). The other Python script `grapher.py` was utilized to generate some of the visuals for this report (particularly those that have graphed data; the other illustrations were created in [Figma](https://figma.com/)).
 
 ![heap sort](./README/headers/header-heap-sort.png)
 ---
 
 <br />
 
-Heap sort has been described as ["selection sort using the right data structure"](https://link.springer.com/chapter/10.1007/978-3-030-54256-6_4). While that was not something that made sense to me a year ago, it was something that clicked during this project. Both of them select the smallest (or largest) element within an array and move them to their proper location; however, heap sort does this in $\mathcal{O}(\log n)$ time while selection sort takes $\mathcal{O}(n)$.
+Heap sort has been described as ["selection sort using the right data structure"](https://link.springer.com/chapter/10.1007/978-3-030-54256-6_4). While this was not something that made sense to me a year ago, it was something that eventually clicked during this project. Both heap and selection sort choose the smallest (or largest) element within an array and move it to its proper location; however, heap sort takes $\mathcal{O}(\log n)$ time to perform this operation while selection sort takes $\mathcal{O}(n)$.
 
-Heap sort treats the array differently: instead of viewing it as a sequential list of elements, heap sort visualizes it in the form of a tree, with the associations between parent nodes and child nodes outlined in a simple manner. Every $i^\text{th}$ element in the array is the child of the $\lfloor \frac{n - 1}{2} \rfloor^\text{th}$ entry and a parent of elements $2i + 1$ and $2i + 2$. By defining the tree in this way, adjacent nodes can be found easily at the expense of just a multiplication or two.
+Heap sort treats the array differently: instead of viewing it as a sequential list of elements, heap sort visualizes it in the form of a tree, with the associations between parent nodes and child nodes outlined in a simple manner. Every $i^\text{th}$ element in the array is the child of the $\lfloor \frac{n - 1}{2} \rfloor^\text{th}$ element while also being the parent of elements $2i + 1$ and $2i + 2$. By defining the tree in this way, adjacent nodes can be found easily at the expense of just a multiplication or two.
 
 <br />
 
 ### 2.1 Why Do We Use A Tree?
 
-But what benefit does a tree have over a sequential view of an array of elements? Because of the structure of a the tree (which in the case of heap sort is actually a max-heap), we are guaranteed to know that every element is greater than all its descendants. This invariant allows us to shift an element to its right place within the structure without having to compare it to every single element in the array; the motion associated with performing this action is vertical along the tree, and thus only depends on the height of the tree. This is wonderful because the height of a binary tree is always around $log_2(n)$ of the number of nodes $n$! Thus, visualizing the array in this manner allows us to execute a sort with $\mathcal{O}(\log n)$ comparisons per pass (giving us a total runtime of $\mathcal{O}(n \log n)$).
+But what benefit does a tree have over the sequential representation of an array? Because of the structure of a tree (which in the case of heap sort is actually a ***max-heap***), we are guaranteed to know that every element is greater than all its descendants. This invariant allows us to shift an element to its right place within the structure without having to compare it to every single element in the array; the motion associated with performing this action is vertical along the tree, and thus only depends on the height of the tree. This is wonderful because the height of a binary tree with $n$ nodes is always bounded by $log_2(n) + 1$! Thus, visualizing the array in this manner allows us to execute a sort with $\mathcal{O}(\log n)$ comparisons per pass (giving us a total runtime of $\mathcal{O}(n \log n)$).
 
 <br />
 
@@ -121,11 +121,11 @@ for i = (array.length - 1) to i = 0:
     siftDown(array[0]);
 ```
 
-All in all, given that the two operations take $\mathcal{O}(n \log n)$ time, executing them one after the other must also take $\mathcal{O}(n \log n)$.
+All in all, given that the two loops each take $\mathcal{O}(n \log n)$ time, executing them one after the other must also take $\mathcal{O}(n \log n)$.
 
-It is also possible to optimize heap sort by starting the heapifying process at `i = pow(2, (int) log2(array.length)) - 1` (this is just the smallest power of $2$ less than the array length); this is possible because the leaf nodes do not have children and it would be pointless to call the function `siftDown()` on them. Nevertheless, even though the version of heap sort in this project does not use this optimization, **heap sort is generally the fastest among the six sorting algorithms** that were chosen (at least according to the implementations of this project). For more information about the analyses and results, refer to the section on ***Comparisons and Individual Analyses***.
+It is also possible to optimize heap sort by starting the heapifying process at `i = pow(2, (int) log2(array.length)) - 1` (this is just the smallest power of $2$ less than the array length); this makes sense because the leaf nodes do not have children, and it would be pointless to call the function `siftDown()` on them. Nevertheless, even though the version of heap sort used in this project does not have this optimization, **heap sort was generally the fastest among the six sorting algorithms** that were chosen (at least according to the implementations of this project). For more information about the analyses and results, refer to the section on ***Comparisons and Individual Analyses***.
 
-One important thing to note was that a different optimization was used to speed up heap sort. Originally, I managed to implement the algorithm exclusively using *swaps*. When sifting elements down the tree, a swap would occur at every level when it was possible. This meant copying two different records unto two different locations. However, upon saving the root in a temp variable and only "shifting" child nodes up instead of performing swaps (much like insertion sort shifts adjacent elements rather than swapping to the end), heap sort ran about twice as fast as it did in the initial runs (although sadly I did not save the data for the initial implementation of heap sort I had). This makes sense given the fact that the act of copying data was cut in half.
+One important thing to note was that a different optimization was used to speed up heap sort. Originally, I managed to implement the algorithm exclusively using ***swaps***. When sifting elements down the tree, a swap would occur at every level when it was possible. This meant copying two different records unto two different locations. However, I later decided to defer copying the root until the sifting routine had found its final location within the heap: we could store the root in a temp variable and "shift" child nodes up instead of swapping them each time (much like insertion sort shifts adjacent elements rather than performing swaps). Following this modification, heap sort ran about twice as fast as it did with the initial implementation. This makes sense given that the amount of data that needed to be copied around was cut in half.
 
 Anyway, on to the fun part...
 
@@ -134,9 +134,9 @@ Anyway, on to the fun part...
 
 <br />
 
-The reason I decided to explain heap sort prior to smooth sort is because the two algorithms rely on the same fundamental idea: visualizing an array in a manner that differs from its linear structure. However, smooth sort attempts to remedy a certain problem with heap sort: the largest element of the array is always at the root (the beginning) of the array, when ultimately it must end up at the opposite end. This means that regardless of the initial state of our array, $n \cdot \log n$ operations must necessarily happen. Heap sort does not care whether or not our data is sorted to some degree.
+The reason I decided to explain heap sort prior to smooth sort was because the two algorithms rely on the same fundamental idea: they both visualize an array in a way that differs from its linear structure. The difference is that smooth sort attempts to remedy a certain "problem" with heap sort: the largest element of the array is always at the root (the beginning) of the array, when ultimately it must end up at the opposite end. This means that regardless of the initial state of our array, around $n \cdot \log n$ operations must necessarily happen.
 
-Smooth sort, on the other hand, takes an unorthodox approach. For one, it doesn't create a single tree but rather a *forest of max-heaps*. For another, it builds these trees such that their root nodes are on the right. This entails way less computations for lists that are close to being sorted. It also means that smooth sort, in the best case, is $\mathcal{O}(n)$! Note that as amazing as this sounds, we will see towards the latter half of this paper (again, in the section ***Comparisons and Individual Analyses***) whether or not its merits are of any practical value.
+Smooth sort, on the other hand, takes an unorthodox approach. For one, it doesn't create a single tree but rather a ***forest of max-heaps***. For another, it builds these trees such that their roots are located on the right. Believe it or not, this structure entails way less operations for arrays that are close to being sorted. It also means that smooth sort, in the best case, is $\mathcal{O}(n)$! Note that as amazing as this sounds, we will see towards the latter half of this paper (in the section ***Comparisons and Individual Analyses***) whether or not these merits are of any practical value.
 
 But how does it work, exactly?
 
@@ -144,7 +144,7 @@ But how does it work, exactly?
 
 ### 3.1 Leonardo Numbers and Leonardo Heaps
 
-Before we discuss the underlying structure of the max-heaps created by smooth sort, I wish to bring forth the idea of [the Leonardo numbers](https://en.wikipedia.org/wiki/Leonardo_number). The Leonardo numbers are just an integer sequence defined by the recurrence:
+In order to discuss the underlying structure of the max-heaps created by smooth sort, I wish to bring forth the idea of [the Leonardo numbers](https://en.wikipedia.org/wiki/Leonardo_number). The Leonardo numbers are just an integer sequence defined by the recurrence:
 
 <br/>
 
@@ -158,49 +158,67 @@ $$
 
 <br/>
 
-To the acute reader, this might seem rather similar to the Fibonacci sequence, aside from the $+1$ embedded into each iteration. Indeed, the two sequences are actually related by a simple formula, and this relationship is essential to proving the $\mathcal{O}(n \log n)$ behavior of smooth sort. But as neat as this may be, it is beyond the scope of this report (although you may ask me in person if you wish).
+As a reference, I list the first few such numbers here, in the usual notation we define a sequence:
 
-Now consider for a moment trees with $L(i)$ nodes. If we structure the trees such that the left subtree contains $L(i - 1)$ nodes and the right subtree contains $L(i - 2)$ nodes, then the trees have the amazing property of being recursively defined by the Leonardo sequence. Equivalently, given any two trees with $L(i - 1)$ and $L(i - 2)$ nodes respectively, a new tree with $L(i)$ nodes can be constructed from the other two by adding a new root node (thus the $+1$ above). Because every node has at most two children, these trees are binary trees. From hereon, adopting the terminology used by [this article](https://www.keithschwarz.com/smoothsort/), we will refer to these trees as ***Leonardo trees***. Given a Leonardo tree with $L(k)$ nodes, we define its ***order to be*** $k$.
+<br/>
+
+$$
+\begin{align}
+L:\mathbb{N}_0 \rightarrow \{1, 1, 3, 5, 9, 15, 25, 41, 67, 109 \dots \}
+\end{align}
+$$
+
+<br/>
+
+To the acute reader, the recursive definition seems like an analogue of the Fibonacci sequence, aside from the $+1$ embedded into each iteration. Indeed, the two sequences are actually related by a simple formula, and this relationship is essential to proving the $\mathcal{O}(n \log n)$ behavior of smooth sort. But as neat as this may be, we avoid delving beyond the scope of this report (although you may ask me in person if you wish).
+
+Now consider for a moment trees with $L(i)$ nodes. If we structure the trees such that the left subtree contains $L(i - 1)$ nodes and the right subtree contains $L(i - 2)$ nodes, then the trees have the amazing property of being recursive! Equivalently, given any two trees with $L(i - 1)$ and $L(i - 2)$ nodes respectively, a new tree with $L(i)$ nodes can be constructed from the other two by adding a single node and assigning this as the parent of the roots of the two subtrees. Because every node within any such graph has at most two children, these trees are binary trees. From hereon, we adopt the terminology used by [this article](https://www.keithschwarz.com/smoothsort/) and refer to these trees as ***Leonardo trees***. Given a Leonardo tree with $L(k)$ nodes, we define its ***order to be*** $k$.
 
 ![leonardo-trees](./README/figures/leonardo-trees.png)
 
-Whereas heap sort uses a single complete binary tree to represent the array, smooth sort uses a forest of Leonardo trees instead.
+Whereas heap sort uses a single complete binary tree to represent the array, smooth sort uses a forest of Leonardo trees instead. 
 
 <br />
 
 ### 3.2 Generating the Forest
 
-Generating the forest of Leonardo trees for smooth sort is more straightforward than it sounds. The illustration below will likely do better to explain the process, but I will try to outline it regardless. The process relies on the fact that any number can be expressed as the sum of a subset of the Leonardo numbers. We can prove this using mathematical induction, though again, we refuse to wander beyond the scope of this report.
+Generating the forest of Leonardo trees for smooth sort is more straightforward than it sounds. The process relies on the fact that any number can be expressed as the sum of a subset of the Leonardo numbers. We can prove this fact using mathematical induction, though again, we refuse to wander beyond the scope of this report.
 
-We begin by starting at the left of the array and proceed rightwards until the last element is reached. During each iteration, the current element is either **(1)** added as a new tree on its own (a singleton), or **(2)** added as the root of a new tree consisting of the two rightmost trees in the forest. In the second case, the new tree is heapified to ensure it is a valid max-heap and a `siftDown()` function is called (note that like heap sort, the `siftDown()` we use for smooth sort doesn't rely on swaps but shifts). We can see the progression of the process below, where the newly added node is highlighted for each iteration.
+We begin by starting at the left of the array and proceed rightwards until we reach the last element. During each iteration, the current element is either **(1)** added as a new tree on its own (a singleton), or **(2)** added as the root of the new tree built from the two rightmost Leonardo trees in the forest. In the second case, the new tree is heapified to ensure it is a valid max-heap and a `siftDown()` function is called (note that like heap sort, the `siftDown()` we use for smooth sort doesn't rely on swaps but shifts). We can see how this progresses below, where the newly added node is always highlighted.
 
 ![Smoothsort first stage.](./README/figures/smooth-sort-heapification.png)
 
-The exact rules for deciding whether or not to append the next element as a root node or as a singleton are simple: if the two rightmost Leonardo trees in the forest have adjacent orders (one if of order $k$ and another of order $k - 1$), then we merge those two (alongside the new root) to create a Leonardo tree of the next order ($k + 1$). Otherwise, we add a singleton node. The actual code uses the bits of an `unsigned int` to keep track of the orders of the Leonardo trees currently in the forest: a $1$ on the $k^\text{th}$ least-significant bit (LSB) of the variable signifies that a Leonardo tree of order $k$ is present. Do note that because of this method, we are restricted to sorting arrays that hold a number of elements no more than the sum of the first $32$ Leonardo numbers (that's a few million records; if we want to circumvent this, we can just use an `unsigned long`). For the purposes of this project, this is more than enough.
+The exact rules for deciding whether or not to append the next element as a root node or as a singleton are simple: if the two rightmost Leonardo trees in the forest have adjacent orders (one is of order $k$ and the other of order $k - 1$), then we merge them (alongside the new root) to create a Leonardo tree of the next order ($k + 1$). Otherwise, we add a singleton node. The actual code uses the bits of an `unsigned int` to keep track of the orders of the Leonardo trees currently in the forest: a $1$ on the $k^\text{th}$ least-significant bit (LSB) of the variable signifies that a Leonardo tree of order $k$ is present. Do note that because of this method, we are restricted to sorting arrays that hold a number of elements no more than the sum of the first $32$ Leonardo numbers (that's a few million records; if we want to circumvent this, we can just use an `unsigned long`). For the purposes of this project, this is more than enough.
 
 <br />
 
 ### 3.3 Sorting the Roots of the Heapified Trees
 
-Before we can proceed with the actual sorting, we need to cover another subroutine of smooth sort. After it generates the forest of max-heaps, it must guarantee that the root of the rightmost tree is the greatest element in the array. This allows it to remove that node from the forest and place it into the sorted portion of the array (which is where it happens to be already). But for this to be true, the roots of all the trees in the forest must be sorted in ascending order. Sorting the roots of the Leonardo trees represents the second intermediate stage of the algorithm.
+Before we can proceed to doing the sort using the forest of Leonardo trees, we need to cover another subroutine of smooth sort. After it generates the forest of max-heaps, it must guarantee that the root of the rightmost tree is the greatest element in the array. This allows it to remove that node from the forest and place it into the sorted portion of the array (which is where it should've been already). But for this to be possible, the roots of all the trees in the forest must be sorted in ascending order. Sorting the roots of the Leonardo trees represents the second intermediate stage of the algorithm.
 
 ![Smoothsort second stage.](./README/figures/smooth-sort-root-sorting.png)
 
-Note that we perform an insertion sort for each of the roots starting from the leftmost tree. At the end of each pass, the last modified tree is heapified (and the rest are left as is: if the root of a max-heap is replaced by a greater element, the max-heap property must still be satisfied by that heap). Eventually, the roots will be in ascending order.
+We are essentially performing insertion sort on each of the roots starting from the leftmost tree. At the end of each pass, the last modified tree is heapified (and the rest are left as is: if the root of a max-heap is replaced by a larger element, the max-heap property must still be satisfied by that tree). Eventually, the roots will be in ascending order.
 
 <br />
 
 ### 3.4 Sorting Using the Heapified Trees
 
-Once the roots have been sorted, we can begin removing the greatest element of the forest until the array is fully sorted. Since the greatest element must always be the root of the rightmost tree, there is no need to move this element; rather, it is the structure of the heaps that change with each iteration.
+Once the roots have been sorted, we can begin removing the greatest element of the forest until the array is fully sorted. Since the greatest element must always be the root of the rightmost tree, there is actually no need to move this element; rather, most of the processing during this stage comes from fixing the structure of the remaining heaps.
 
-During each root removal, either one of two things will happen: **(1)** the root leaves behind no subtrees because it was a singleton, in which case we can proceed to remove the next root, or **(2)** the root exposes two new subtrees, the roots of which must be rearranged with the roots of the existing trees on their left. In the second case, we repeat the process illustrated in the previous subsection to maintain the property that all the roots within the forest are in ascending order; however, instead of doing this for all the roots, we only do this for the roots of the exposed subtrees (the rest of the roots should still be in order). Eventually, we reach the end of the array and arrive at a sorted list.
+During each root removal, either one of two things will happen: **(1)** the root leaves behind no subtrees because it was a singleton, in which case we can proceed to remove the next root, or **(2)** the root exposes two new subtrees, the roots of which must be rearranged with the roots of the existing trees on their left. In the second case, we repeat the process illustrated by the previous subsection. This fixes the roots of the forest and keeps them in ascending order, except this time we only need to shift the roots of the exposed subtrees (the rest of the roots should still be in order). Eventually, we reach the end of the array and arrive at a sorted list.
 
-Note that for each iteration, performing insertion sort on the new roots (if there are any) will take at most $\mathcal{O}(\log n)$ time because every array of length $N$ can be expressed as the sum of at most $\log n$ Leonardo numbers; in other words, we have about a logarithmic number of Leonardo heaps (with respect to the array size) at any given time. Heapifying the modified trees at the end of this insertion also takes $\mathcal{O}(\log n)$. We can add these together, and overall, each pass still takes $\mathcal{O}(\log n)$. If we multiply this by the number of iterations required, we get $\mathcal{O}(n \log n)$. Adding this with the time complexity of the first stage of smooth sort still yields $\mathcal{O}(n \log n)$.
+Note that for each iteration, performing insertion sort on the new roots (if there are any) will take at most $\mathcal{O}(\log n)$ time because every array of length $n$ can be turned into around $\log_\varphi n$ Leonardo trees. Heapifying the modified trees at the end of this insertion also takes $\mathcal{O}(\log n)$. We can add these together (since the operations happen one after the other), and overall, each pass still takes $\mathcal{O}(\log n)$. If we multiply this by the number of iterations required, we get $\mathcal{O}(n \log n)$. Adding this with the time complexity of the first stage of smooth sort still yields $\mathcal{O}(n \log n)$.
 
-No illustrations exist for this part of the algorithm, as the other illustrations suffice to provide an explanation for this already. Follow the first stage of smooth sort in reverse, and it should be easy to visualize how root removal looks; repeat the process outlined by the second stage, and understanding how each iteration sorts new roots should become clear. 
+No illustrations exist for this part of the algorithm, as the other previous illustrations should suffice. Follow the first stage of smooth sort in reverse, and it should be easy to visualize how root removal looks; repeat the process outlined by the second stage, and understanding how each iteration sorts new roots should be trivial. 
 
-It is left as an exercise to the reader to understand how smooth sort approaches linear time for nearly-sorted lists... (or you can ask me in person).
+<br />
+
+### 3.5 But Why Leonardo Trees? Why Not Binary Trees?
+
+Aren't binary trees recursive too? If you think about it, why use Leonardo trees at all—it's actually possible to perform smooth sort in the manner outlined above but with binary trees! Well, [Dijkstra puts forth a valid reason](https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=bec9f897d701a8326ccdfc97064f4ce2c07a732f): using Leonardo trees in place of binary trees incurs a speedup by a factor of about $1.2559$; while he likely left the derivation of this constant as an exercise to the reader, we take his word for it and implement the algorithm with Leonardo trees.
+
+On the other hand, I leave it as an exercise to the reader to understand how smooth sort approaches linear time for nearly-sorted lists... (or you can ask me in person).
 
 ![other algorithms](./README/headers/header-other-algorithms.png)
 ---
@@ -209,27 +227,27 @@ It is left as an exercise to the reader to understand how smooth sort approaches
 
 ### 4.1 Insertion Sort and Selection Sort
 
-Insertion sort and selection sort are both $\mathcal{O}(n^2)$ algorithms. However, they have a few nuances that make one better than the other in certain situations.
+Insertion and selection sort are both $\mathcal{O}(n^2)$ algorithms. However, they have a few nuances that make one better than the other in certain situations.
 
-Selection sort always performs the same number of comparisons, regardless of the state of the array. This means that when the given array is already sorted, selection sort won't even know about it until it's compared every pair of elements together. Insertion sort, on the other hand, can run in $\mathcal{O}(n)$ time in the best case. Because it only ever compares elements that are adjacent to each other, these comparisons can end up "terminating" a pass prematurely when the array is already sorted.
+As a general overview, selection sort "selects" the smallest (or greatest) element left in the ***unsorted portion** of the array*. Insertion sort "inserts" the current element into its correct location within the ***sorted portion** of the array*.
 
-Selection sort "selects" the smallest (or greatest) element left in the ***unsorted portion** of the array*. Insertion sort "inserts" the current element into its correct location within the ***sorted portion** of the array*.
+As a consequence of their implementations, selection sort always performs the same number of comparisons regardless of the initial state of the array. This implies that given a sorted array, selection sort won't even know its sorted until after comparing every possible pair of elements together. Insertion sort, on the other hand, can run in $\mathcal{O}(n)$ time in the best case. Because it only ever compares elements that are adjacent to each other, its conditional checks can end up "terminating" passes prematurely when the array is already sorted. However, because of the excessive number of memory calls required by insertion sort (shifting elements takes way more time than just comparing two values), it tends to be slower than selection sort.
 
 <br />
 
 ### 4.2 Merge Sort
 
-Merge sort takes a divide-and-conquer approach to sorting an array. Given any array, it splits it into two new arrays of half the size and calls the routine on those arrays. Eventually, arrays of size 1 will be left; these arrays are considered sorted by default. When sorted arrays are encountered, merging them can occur. Merging two arrays happens by repeatedly selecting the smaller of the leftmost elements in each array and pushing this unto the sorted array (note that the "sorted array" here refers to an auxiliary piece of memory; other implementations of merge sort exist with less space consumption, although these come with the cost of increasing the time complexity of the algorithm). Eventually, all the inner function calls resolve into sorted subarrays, and a sorted version of the array is gradually created. The final step of the algorithm (according to the implementation of this project) is to copy the sorted version of the array onto the original.
+Merge sort takes a divide-and-conquer approach to sorting an array. Given any array, the merge sort routine splits it into two new arrays of half the size and calls itself on those arrays. Eventually, arrays of size 1 will be left; these arrays are considered sorted by default. When sorted arrays are encountered, merging can then occur. Merges happen by repeatedly selecting the smaller of the leftmost elements in both arrays and pushing this unto the sorted array (note that the "sorted array" here refers to an auxiliary piece of memory; other implementations of merge sort exist with less than $\mathcal{O}(n)$ space consumption, although they come with the cost of increasing the time complexity of the algorithm). At some point, all the inner function calls resolve into even larger subarrays, and a sorted version of the array is gradually created. The final step of the algorithm (according to the implementation of this project) involves copying the sorted version of the array onto the original.
 
-Merge sort has a time complexity of $\mathcal{O}(n \log n)$. This is both its best case and worst case. The reason for this is that there will be at most $\log_2(n)$ levels of divisions of an array into halves; in other words, the deepest level of a nested merge sort function call will be at most $\log_2(n)$. And for each level, the total number of operations executed by all nested calls (within that level) will be on the order of $\mathcal{O}(n)$, because we're traversing each subarray linearly during these merges.
+Merge sort has a time complexity of $\mathcal{O}(n \log n)$. This is both its best case and its worst case. The reason for this is that there will be at most $\log_2(n)$ levels of divisions of an array into halves; in other words, the deepest level of a nested merge sort function call will be at most $\log_2(n)$. And for each level, the total number of operations executed by all nested calls will be on the order of $\mathcal{O}(n)$, because we're traversing each subarray linearly during the merges.
 
 <br />
 
 ### 4.3 Tim Sort
 
-Now I won't bother going in-depth with tim sort; it's not really the main algorithm I chose anyway. Nevertheless, I feel like it deserves a special mention. The original publication outlining tim sort actually takes inspiration [from another academic paper](https://dl.acm.org/doi/10.5555/313559.313859) which led me down a rabbit hole of information theory. This eventually helped me realize my ideas on how to benchmark the sorting algorithms.
+Now I won't bother going in-depth with tim sort; it's not really the main algorithm I chose anyway. Nevertheless, I feel like it deserves a special mention. The original publication outlining tim sort actually takes inspiration [from another academic paper](https://dl.acm.org/doi/10.5555/313559.313859) which led me down a rabbit hole of information theory. This paper eventually helped me realize my ideas on how to benchmark the sorting algorithms.
 
-Some caveats with the implementation of tim sort used by this project: it's not adaptive, and it's not completely faithful to the original. For one, the run size doesn't change based on the number of records, although in practice it should adapt to try and minimize the number of resulting merges utilized by the algorithm. Aside from this, the algorithm also performs merges only after defining the runs, as opposed to performing them when merge criteria are satisfied. Nevertheless, contrary to these oversimplifications, I still refer to this version of the algorithm as tim sort, since a lot of the implementations found online follow this pattern (despite their apparent irreverence to the original).
+Some caveats with the implementation of tim sort used by this project: it's not adaptive, and it's not completely faithful to the original. For one, the run size doesn't change based on the number of records, although in practice it should adapt to try and minimize the number of resulting merges utilized by the algorithm. Aside from this, the algorithm also performs merges only after defining the runs, as opposed to performing them when merge criteria are satisfied. Nevertheless, contrary to these oversimplifications, I still refer to this version of the algorithm as tim sort, since a lot of the implementations found online follow this pattern (despite its apparent irreverence to the original).
 
 ![shuffling, entropy, and correlation](./README/headers/header-shuffling-entropy-correlation.png)
 ---
