@@ -1,10 +1,25 @@
 /**
  * @ Author: Mo David
  * @ Create Time: 2024-05-24 11:21:27
- * @ Modified time: 2024-06-18 00:43:32
+ * @ Modified time: 2024-06-21 03:56:09
  * @ Description:
  * 
  * The main file.
+ * Now I usually expound quite a bit in this file as per tradition but I will only leave my acknowledgements
+ * here due to a lack of time and preparation. Nevertheless, don't let the brevity of this epigraph undermine
+ * the stature of this project.
+ * 
+ * [ Fisher-Yates Shuffling ]                                https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+ * [ Heap Sort According to Wikipedia ]                      https://en.wikipedia.org/wiki/Heapsort
+ * [ Measuring the Entropy of a Deck of Cards ]              https://stats.stackexchange.com/questions/78591/correlation-between-two-decks-of-cards/79552#79552
+ * [ Merge Sort According to Wikipedia ]                     https://en.wikipedia.org/wiki/Merge_sort
+ * [ Merge Sort with 0 Aux Space ]                           https://www.geeksforgeeks.org/in-place-merge-sort/
+ * [ Proper Random Numbers in C ]                            https://stackoverflow.com/questions/822323/how-to-generate-a-random-int-in-c
+ * [ Smooth Sort Demystified ]                               https://www.keithschwarz.com/smoothsort/#:~:text=Moreover%2C%20smoothsort%20is%20an%20in,space%20in%20the%20worst%20case.
+ * [ Speedy Log2 Implementation ]                            https://stackoverflow.com/questions/11376288/fast-computing-of-log2-for-64-bit-integers
+ * [ The Original Smooth Sort Paper by Dijkstra Himself! ]   https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=bec9f897d701a8326ccdfc97064f4ce2c07a732f
+ * [ Quote of Claude Shannon on Entropy ]                    https://mathoverflow.net/questions/403036/john-von-neumanns-remark-on-entropy
+ * 
  */
 
 // Import the needed utils
