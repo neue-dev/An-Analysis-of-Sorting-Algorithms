@@ -10,7 +10,6 @@
 [!] Running cycle 9 for heap sort... sorted in 1 ms, 878 ops.
 [!] Running cycle 10 for heap sort... sorted in 0 ms, 878 ops.
 [$] heap sort took an average of 0.4000 ms to sort N=100
-
 [$] heap sort took an average of 878 ops to sort N=100
 
 [!] Running cycle 1 for insertion sort... sorted in 1 ms, 2856 ops.
@@ -24,7 +23,6 @@
 [!] Running cycle 9 for insertion sort... sorted in 0 ms, 2856 ops.
 [!] Running cycle 10 for insertion sort... sorted in 1 ms, 2856 ops.
 [$] insertion sort took an average of 0.6000 ms to sort N=100
-
 [$] insertion sort took an average of 2856 ops to sort N=100
 
 [!] Running cycle 1 for merge sort... sorted in 1 ms, 1618 ops.
@@ -38,7 +36,6 @@
 [!] Running cycle 9 for merge sort... sorted in 0 ms, 1618 ops.
 [!] Running cycle 10 for merge sort... sorted in 0 ms, 1618 ops.
 [$] merge sort took an average of 0.4000 ms to sort N=100
-
 [$] merge sort took an average of 1618 ops to sort N=100
 
 [!] Running cycle 1 for selection sort... sorted in 0 ms, 5140 ops.
@@ -52,7 +49,6 @@
 [!] Running cycle 9 for selection sort... sorted in 0 ms, 5140 ops.
 [!] Running cycle 10 for selection sort... sorted in 1 ms, 5140 ops.
 [$] selection sort took an average of 0.3000 ms to sort N=100
-
 [$] selection sort took an average of 5140 ops to sort N=100
 
 [!] Running cycle 1 for smooth sort... sorted in 0 ms, 1414 ops.
@@ -66,7 +62,6 @@
 [!] Running cycle 9 for smooth sort... sorted in 0 ms, 1414 ops.
 [!] Running cycle 10 for smooth sort... sorted in 1 ms, 1414 ops.
 [$] smooth sort took an average of 0.5000 ms to sort N=100
-
 [$] smooth sort took an average of 1414 ops to sort N=100
 
 [!] Running cycle 1 for tim sort... sorted in 0 ms, 1096 ops.
@@ -80,7 +75,6 @@
 [!] Running cycle 9 for tim sort... sorted in 0 ms, 1096 ops.
 [!] Running cycle 10 for tim sort... sorted in 1 ms, 1096 ops.
 [$] tim sort took an average of 0.2000 ms to sort N=100
-
 [$] tim sort took an average of 1096 ops to sort N=100
 
 
@@ -96,7 +90,6 @@
 [!] Running cycle 9 for heap sort... sorted in 39 ms, 418922 ops.
 [!] Running cycle 10 for heap sort... sorted in 51 ms, 418922 ops.
 [$] heap sort took an average of 39.9000 ms to sort N=25000
-
 [$] heap sort took an average of 418922 ops to sort N=25000
 
 [!] Running cycle 1 for insertion sort... sorted in 8265 ms, 156009090 ops.
@@ -110,7 +103,6 @@
 [!] Running cycle 9 for insertion sort... sorted in 8110 ms, 156009090 ops.
 [!] Running cycle 10 for insertion sort... sorted in 8200 ms, 156009090 ops.
 [$] insertion sort took an average of 8039.3000 ms to sort N=25000
-
 [$] insertion sort took an average of 156009090 ops to sort N=25000
 
 [!] Running cycle 1 for merge sort... sorted in 72 ms, 800042 ops.
@@ -124,7 +116,6 @@
 [!] Running cycle 9 for merge sort... sorted in 60 ms, 800042 ops.
 [!] Running cycle 10 for merge sort... sorted in 59 ms, 800042 ops.
 [$] merge sort took an average of 61.5000 ms to sort N=25000
-
 [$] merge sort took an average of 800042 ops to sort N=25000
 
 [!] Running cycle 1 for selection sort... sorted in 3589 ms, 312537492 ops.
@@ -138,7 +129,6 @@
 [!] Running cycle 9 for selection sort... sorted in 3655 ms, 312537492 ops.
 [!] Running cycle 10 for selection sort... sorted in 3657 ms, 312537492 ops.
 [$] selection sort took an average of 3617.0000 ms to sort N=25000
-
 [$] selection sort took an average of 312537492 ops to sort N=25000
 
 [!] Running cycle 1 for smooth sort... sorted in 57 ms, 842653 ops.
@@ -152,7 +142,6 @@
 [!] Running cycle 9 for smooth sort... sorted in 55 ms, 842653 ops.
 [!] Running cycle 10 for smooth sort... sorted in 57 ms, 842653 ops.
 [$] smooth sort took an average of 56.3000 ms to sort N=25000
-
 [$] smooth sort took an average of 842653 ops to sort N=25000
 
 [!] Running cycle 1 for tim sort... sorted in 49 ms, 671449 ops.
@@ -166,7 +155,6 @@
 [!] Running cycle 9 for tim sort... sorted in 48 ms, 671449 ops.
 [!] Running cycle 10 for tim sort... sorted in 48 ms, 671449 ops.
 [$] tim sort took an average of 48.7000 ms to sort N=25000
-
 [$] tim sort took an average of 671449 ops to sort N=25000
 
 
@@ -182,7 +170,6 @@
 [!] Running cycle 9 for heap sort... sorted in 88 ms, 887555 ops.
 [!] Running cycle 10 for heap sort... sorted in 88 ms, 887555 ops.
 [$] heap sort took an average of 93.6000 ms to sort N=50000
-
 [$] heap sort took an average of 887555 ops to sort N=50000
 
 [!] Running cycle 1 for insertion sort... sorted in 35384 ms, 625794731 ops.
@@ -196,7 +183,6 @@
 [!] Running cycle 9 for insertion sort... sorted in 44365 ms, 625794731 ops.
 [!] Running cycle 10 for insertion sort... sorted in 43235 ms, 625794731 ops.
 [$] insertion sort took an average of 39824.6000 ms to sort N=50000
-
 [$] insertion sort took an average of 625794731 ops to sort N=50000
 
 [!] Running cycle 1 for merge sort... sorted in 178 ms, 1700044 ops.
@@ -210,7 +196,6 @@
 [!] Running cycle 9 for merge sort... sorted in 145 ms, 1700044 ops.
 [!] Running cycle 10 for merge sort... sorted in 146 ms, 1700044 ops.
 [$] merge sort took an average of 149.8000 ms to sort N=50000
-
 [$] merge sort took an average of 1700044 ops to sort N=50000
 
 [!] Running cycle 1 for selection sort... sorted in 23340 ms, 1250074987 ops.
@@ -224,7 +209,6 @@
 [!] Running cycle 9 for selection sort... sorted in 22895 ms, 1250074987 ops.
 [!] Running cycle 10 for selection sort... sorted in 21362 ms, 1250074987 ops.
 [$] selection sort took an average of 22959.9000 ms to sort N=50000
-
 [$] selection sort took an average of 1250074987 ops to sort N=50000
 
 [!] Running cycle 1 for smooth sort... sorted in 139 ms, 1807629 ops.
@@ -238,7 +222,6 @@
 [!] Running cycle 9 for smooth sort... sorted in 140 ms, 1807629 ops.
 [!] Running cycle 10 for smooth sort... sorted in 139 ms, 1807629 ops.
 [$] smooth sort took an average of 138.7000 ms to sort N=50000
-
 [$] smooth sort took an average of 1807629 ops to sort N=50000
 
 [!] Running cycle 1 for tim sort... sorted in 111 ms, 1442943 ops.
@@ -252,7 +235,6 @@
 [!] Running cycle 9 for tim sort... sorted in 118 ms, 1442943 ops.
 [!] Running cycle 10 for tim sort... sorted in 113 ms, 1442943 ops.
 [$] tim sort took an average of 111.7000 ms to sort N=50000
-
 [$] tim sort took an average of 1442943 ops to sort N=50000
 
 
@@ -268,7 +250,6 @@
 [!] Running cycle 9 for heap sort... sorted in 148 ms, 1373838 ops.
 [!] Running cycle 10 for heap sort... sorted in 148 ms, 1373838 ops.
 [$] heap sort took an average of 148.8000 ms to sort N=75000
-
 [$] heap sort took an average of 1373838 ops to sort N=75000
 
 [!] Running cycle 1 for insertion sort... sorted in 95489 ms, 1411869612 ops.
@@ -282,7 +263,6 @@
 [!] Running cycle 9 for insertion sort... sorted in 96619 ms, 1411869612 ops.
 [!] Running cycle 10 for insertion sort... sorted in 98481 ms, 1411869612 ops.
 [$] insertion sort took an average of 97120.4000 ms to sort N=75000
-
 [$] insertion sort took an average of 1411869612 ops to sort N=75000
 
 [!] Running cycle 1 for merge sort... sorted in 275 ms, 2700046 ops.
@@ -296,7 +276,6 @@
 [!] Running cycle 9 for merge sort... sorted in 286 ms, 2700046 ops.
 [!] Running cycle 10 for merge sort... sorted in 288 ms, 2700046 ops.
 [$] merge sort took an average of 279.6000 ms to sort N=75000
-
 [$] merge sort took an average of 2700046 ops to sort N=75000
 
 [!] Running cycle 1 for selection sort... sorted in 60350 ms, 2812612490 ops.
@@ -310,7 +289,6 @@
 [!] Running cycle 9 for selection sort... sorted in 59037 ms, 2812612490 ops.
 [!] Running cycle 10 for selection sort... sorted in 59274 ms, 2812612490 ops.
 [$] selection sort took an average of 60394.9000 ms to sort N=75000
-
 [$] selection sort took an average of 2812612490 ops to sort N=75000
 
 [!] Running cycle 1 for smooth sort... sorted in 239 ms, 2824141 ops.
@@ -324,7 +302,6 @@
 [!] Running cycle 9 for smooth sort... sorted in 244 ms, 2824141 ops.
 [!] Running cycle 10 for smooth sort... sorted in 241 ms, 2824141 ops.
 [$] smooth sort took an average of 241.7000 ms to sort N=75000
-
 [$] smooth sort took an average of 2824141 ops to sort N=75000
 
 [!] Running cycle 1 for tim sort... sorted in 237 ms, 2314729 ops.
@@ -338,7 +315,6 @@
 [!] Running cycle 9 for tim sort... sorted in 239 ms, 2314729 ops.
 [!] Running cycle 10 for tim sort... sorted in 238 ms, 2314729 ops.
 [$] tim sort took an average of 237.7000 ms to sort N=75000
-
 [$] tim sort took an average of 2314729 ops to sort N=75000
 
 
@@ -354,7 +330,6 @@
 [!] Running cycle 9 for heap sort... sorted in 226 ms, 1875310 ops.
 [!] Running cycle 10 for heap sort... sorted in 235 ms, 1875310 ops.
 [$] heap sort took an average of 230.6000 ms to sort N=100000
-
 [$] heap sort took an average of 1875310 ops to sort N=100000
 
 [!] Running cycle 1 for insertion sort... sorted in 173980 ms, 2489326458 ops.
@@ -368,7 +343,6 @@
 [!] Running cycle 9 for insertion sort... sorted in 186892 ms, 2489326458 ops.
 [!] Running cycle 10 for insertion sort... sorted in 185860 ms, 2489326458 ops.
 [$] insertion sort took an average of 181901.7000 ms to sort N=100000
-
 [$] insertion sort took an average of 2489326458 ops to sort N=100000
 
 [!] Running cycle 1 for merge sort... sorted in 393 ms, 3600046 ops.
@@ -382,7 +356,6 @@
 [!] Running cycle 9 for merge sort... sorted in 399 ms, 3600046 ops.
 [!] Running cycle 10 for merge sort... sorted in 398 ms, 3600046 ops.
 [$] merge sort took an average of 402.0000 ms to sort N=100000
-
 [$] merge sort took an average of 3600046 ops to sort N=100000
 
 [!] Running cycle 1 for selection sort... sorted in 117183 ms, 5000149988 ops.
@@ -396,7 +369,6 @@
 [!] Running cycle 9 for selection sort... sorted in 107657 ms, 5000149988 ops.
 [!] Running cycle 10 for selection sort... sorted in 109998 ms, 5000149988 ops.
 [$] selection sort took an average of 110583.4000 ms to sort N=100000
-
 [$] selection sort took an average of 5000149988 ops to sort N=100000
 
 [!] Running cycle 1 for smooth sort... sorted in 377 ms, 3860019 ops.
@@ -410,7 +382,6 @@
 [!] Running cycle 9 for smooth sort... sorted in 373 ms, 3860019 ops.
 [!] Running cycle 10 for smooth sort... sorted in 368 ms, 3860019 ops.
 [$] smooth sort took an average of 369.6000 ms to sort N=100000
-
 [$] smooth sort took an average of 3860019 ops to sort N=100000
 
 [!] Running cycle 1 for tim sort... sorted in 345 ms, 3088714 ops.
@@ -424,7 +395,6 @@
 [!] Running cycle 9 for tim sort... sorted in 342 ms, 3088714 ops.
 [!] Running cycle 10 for tim sort... sorted in 341 ms, 3088714 ops.
 [$] tim sort took an average of 341.6000 ms to sort N=100000
-
 [$] tim sort took an average of 3088714 ops to sort N=100000
 
 
@@ -441,7 +411,6 @@ ALMOST SORTED
 [!] Running cycle 9 for heap sort... sorted in 202 ms, 1936069 ops.
 [!] Running cycle 10 for heap sort... sorted in 187 ms, 1936069 ops.
 [$] heap sort took an average of 190.6000 ms to sort N=100000
-
 [$] heap sort took an average of 1936069 ops to sort N=100000
 
 [!] Running cycle 1 for insertion sort... sorted in 35688 ms, 572622325 ops.
@@ -455,7 +424,6 @@ ALMOST SORTED
 [!] Running cycle 9 for insertion sort... sorted in 33752 ms, 572622325 ops.
 [!] Running cycle 10 for insertion sort... sorted in 34444 ms, 572622325 ops.
 [$] insertion sort took an average of 33722.8000 ms to sort N=100000
-
 [$] insertion sort took an average of 572622325 ops to sort N=100000
 
 [!] Running cycle 1 for merge sort... sorted in 345 ms, 3600046 ops.
@@ -469,7 +437,6 @@ ALMOST SORTED
 [!] Running cycle 9 for merge sort... sorted in 336 ms, 3600046 ops.
 [!] Running cycle 10 for merge sort... sorted in 344 ms, 3600046 ops.
 [$] merge sort took an average of 343.5000 ms to sort N=100000
-
 [$] merge sort took an average of 3600046 ops to sort N=100000
 
 [!] Running cycle 1 for selection sort... sorted in 114736 ms, 5000059999 ops.
@@ -483,7 +450,6 @@ ALMOST SORTED
 [!] Running cycle 9 for selection sort... sorted in 114146 ms, 5000059999 ops.
 [!] Running cycle 10 for selection sort... sorted in 112375 ms, 5000059999 ops.
 [$] selection sort took an average of 112857.2000 ms to sort N=100000
-
 [$] selection sort took an average of 5000059999 ops to sort N=100000
 
 [!] Running cycle 1 for smooth sort... sorted in 123 ms, 1659917 ops.
@@ -497,7 +463,6 @@ ALMOST SORTED
 [!] Running cycle 9 for smooth sort... sorted in 121 ms, 1659917 ops.
 [!] Running cycle 10 for smooth sort... sorted in 122 ms, 1659917 ops.
 [$] smooth sort took an average of 120.8000 ms to sort N=100000
-
 [$] smooth sort took an average of 1659917 ops to sort N=100000
 
 [!] Running cycle 1 for tim sort... sorted in 299 ms, 2835761 ops.
@@ -511,7 +476,6 @@ ALMOST SORTED
 [!] Running cycle 9 for tim sort... sorted in 298 ms, 2835761 ops.
 [!] Running cycle 10 for tim sort... sorted in 301 ms, 2835761 ops.
 [$] tim sort took an average of 303.4000 ms to sort N=100000
-
 [$] tim sort took an average of 2835761 ops to sort N=100000
 
 
@@ -528,7 +492,6 @@ TOTALLY REVERSED
 [!] Running cycle 9 for heap sort... sorted in 156 ms, 1797435 ops.
 [!] Running cycle 10 for heap sort... sorted in 157 ms, 1797435 ops.
 [$] heap sort took an average of 158.1000 ms to sort N=100000
-
 [$] heap sort took an average of 1797435 ops to sort N=100000
 
 [!] Running cycle 1 for insertion sort... sorted in 362871 ms, 5000049999 ops.
@@ -542,7 +505,6 @@ TOTALLY REVERSED
 [!] Running cycle 9 for insertion sort... sorted in 378529 ms, 5000049999 ops.
 [!] Running cycle 10 for insertion sort... sorted in 367441 ms, 5000049999 ops.
 [$] insertion sort took an average of 369691.3000 ms to sort N=100000
-
 [$] insertion sort took an average of 5000049999 ops to sort N=100000
 
 [!] Running cycle 1 for merge sort... sorted in 391 ms, 3600046 ops.
@@ -556,7 +518,6 @@ TOTALLY REVERSED
 [!] Running cycle 9 for merge sort... sorted in 402 ms, 3600046 ops.
 [!] Running cycle 10 for merge sort... sorted in 393 ms, 3600046 ops.
 [$] merge sort took an average of 394.1000 ms to sort N=100000
-
 [$] merge sort took an average of 3600046 ops to sort N=100000
 
 [!] Running cycle 1 for selection sort... sorted in 125971 ms, 5000099999 ops.
@@ -570,7 +531,6 @@ TOTALLY REVERSED
 [!] Running cycle 9 for selection sort... sorted in 129704 ms, 5000099999 ops.
 [!] Running cycle 10 for selection sort... sorted in 143119 ms, 5000099999 ops.
 [$] selection sort took an average of 129937.2000 ms to sort N=100000
-
 [$] selection sort took an average of 5000099999 ops to sort N=100000
 
 [!] Running cycle 1 for smooth sort... sorted in 204 ms, 3284188 ops.
@@ -584,7 +544,6 @@ TOTALLY REVERSED
 [!] Running cycle 9 for smooth sort... sorted in 237 ms, 3284188 ops.
 [!] Running cycle 10 for smooth sort... sorted in 238 ms, 3284188 ops.
 [$] smooth sort took an average of 210.2000 ms to sort N=100000
-
 [$] smooth sort took an average of 3284188 ops to sort N=100000
 
 [!] Running cycle 1 for tim sort... sorted in 342 ms, 3462540 ops.
@@ -598,7 +557,6 @@ TOTALLY REVERSED
 [!] Running cycle 9 for tim sort... sorted in 353 ms, 3462540 ops.
 [!] Running cycle 10 for tim sort... sorted in 346 ms, 3462540 ops.
 [$] tim sort took an average of 348.7000 ms to sort N=100000
-
 [$] tim sort took an average of 3462540 ops to sort N=100000
 
 
